@@ -1,6 +1,6 @@
 {
   "name": "@angular/google-maps",
-  "version": "9.1.2-sha-618585d9a",
+  "version": "9.1.2-sha-7634bb8ac",
   "description": "Angular Google Maps",
   "main": "./bundles/google-maps.umd.js",
   "fesm5": "./fesm5/google-maps.js",

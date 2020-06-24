@@ -90,7 +90,7 @@ let GoogleMap = /** @class */ (() => {
         constructor(_elementRef, _ngZone, 
         /**
          * @deprecated `platformId` parameter to become required.
-         * @breaking-change 10.0.0
+         * @breaking-change 10.0.0-sha-d3f287d65
          */
         platformId) {
             this._elementRef = _elementRef;
@@ -194,7 +194,7 @@ let GoogleMap = /** @class */ (() => {
              * https://developers.google.com/maps/documentation/javascript/reference/map#Map.zoom_changed
              */
             this.zoomChanged = this._eventManager.getLazyEmitter('zoom_changed');
-            // @breaking-change 10.0.0 Remove null check for `platformId`.
+            // @breaking-change 10.0.0-sha-d3f287d65 Remove null check for `platformId`.
             this._isBrowser =
                 platformId ? isPlatformBrowser(platformId) : typeof window === 'object' && !!window;
             if (this._isBrowser) {

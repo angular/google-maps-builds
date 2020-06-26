@@ -142,7 +142,7 @@ export declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
     constructor(_elementRef: ElementRef, _ngZone: NgZone, 
     /**
      * @deprecated `platformId` parameter to become required.
-     * @breaking-change 10.0.0-sha-d3f287d65
+     * @breaking-change 10.0.0-sha-952f57631
      */
     platformId?: Object);
     ngOnChanges(): void;

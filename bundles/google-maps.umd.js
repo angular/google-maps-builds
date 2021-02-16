@@ -1050,7 +1050,7 @@
         };
         /**
          * @see
-         * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getCenter
+         * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getRadius
          */
         MapCircle.prototype.getRadius = function () {
             this._assertInitialized();
@@ -1815,7 +1815,7 @@
         });
         Object.defineProperty(MapMarker.prototype, "position", {
             /**
-             * Title of the marker. See:
+             * Position of the marker. See:
              * developers.google.com/maps/documentation/javascript/reference/marker#MarkerOptions.position
              */
             set: function (position) {

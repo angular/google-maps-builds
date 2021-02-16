@@ -697,7 +697,7 @@ class MapCircle {
     }
     /**
      * @see
-     * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getCenter
+     * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.getRadius
      */
     getRadius() {
         this._assertInitialized();
@@ -1423,7 +1423,7 @@ class MapMarker {
         this._title = title;
     }
     /**
-     * Title of the marker. See:
+     * Position of the marker. See:
      * developers.google.com/maps/documentation/javascript/reference/marker#MarkerOptions.position
      */
     set position(position) {

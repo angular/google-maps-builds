@@ -1,6 +1,6 @@
 {
   "name": "@angular/google-maps",
-  "version": "15.0.0-next.5",
+  "version": "15.0.0-rc.0",
   "description": "Angular Google Maps",
   "repository": {
     "type": "git",

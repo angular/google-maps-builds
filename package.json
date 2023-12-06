@@ -26,6 +26,7 @@
     "rxjs": "^6.5.3 || ^7.4.0"
   },
   "sideEffects": false,
+  "schematics": "./schematics/collection.json",
   "ng-update": {},
   "module": "./fesm2022/google-maps.mjs",
   "typings": "./index.d.ts",

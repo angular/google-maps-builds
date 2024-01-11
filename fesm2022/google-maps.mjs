@@ -68,6 +68,13 @@ class MapEventManager {
     }
 }
 
+/** Imports a Google Maps library. */
+function importLibrary(name, symbol) {
+    // TODO(crisbeto): needs to cast to `any` to avoid some internal limitations around typings.
+    // Should be cleaned up eventually.
+    return window.google.maps.importLibrary(name).then((library) => library[symbol]);
+}
+
 /// <reference types="google.maps" />
 /** default options set to the Googleplex */
 const DEFAULT_OPTIONS = {
@@ -248,14 +255,25 @@ class GoogleMap {
             // Create the object outside the zone so its events don't trigger change detection.
             // We'll bring it back in inside the `MapEventManager` only for the events that the
             // user has subscribed to.
-            this._ngZone.runOutsideAngular(() => {
-                this.googleMap = new google.maps.Map(this._mapEl, this._combineOptions());
-            });
-            this._eventManager.setTarget(this.googleMap);
-            this.mapInitialized.emit(this.googleMap);
+            if (google.maps.Map) {
+                this._initialize(google.maps.Map);
+            }
+            else {
+                this._ngZone.runOutsideAngular(() => {
+                    importLibrary('maps', 'Map').then(mapConstructor => this._initialize(mapConstructor));
+                });
+            }
         }
     }
+    _initialize(mapConstructor) {
+        this._ngZone.runOutsideAngular(() => {
+            this.googleMap = new mapConstructor(this._mapEl, this._combineOptions());
+            this._eventManager.setTarget(this.googleMap);
+            this.mapInitialized.emit(this.googleMap);
+        });
+    }
     ngOnDestroy() {
+        this.mapInitialized.complete();
         this._eventManager.destroy();
         if (this._isBrowser) {
             const googleMapsWindow = window;
@@ -398,6 +416,12 @@ class GoogleMap {
         this._assertInitialized();
         return this.googleMap.overlayMapTypes;
     }
+    /** Returns a promise that resolves when the map has been initialized. */
+    _resolveMap() {
+        return this.googleMap
+            ? Promise.resolve(this.googleMap)
+            : this.mapInitialized.pipe(take(1)).toPromise();
+    }
     _setSize() {
         if (this._mapEl) {
             const styles = this._mapEl.style;
@@ -427,22 +451,23 @@ class GoogleMap {
                 'Please wait for the API to load before trying to interact with it.');
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: GoogleMap, deps: [{ token: i0.ElementRef }, { token: i0.NgZone }, { token: PLATFORM_ID }], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.1.1", type: GoogleMap, selector: "google-map", inputs: { height: "height", width: "width", mapTypeId: "mapTypeId", center: "center", zoom: "zoom", options: "options" }, outputs: { mapInitialized: "mapInitialized", authFailure: "authFailure", boundsChanged: "boundsChanged", centerChanged: "centerChanged", mapClick: "mapClick", mapDblclick: "mapDblclick", mapDrag: "mapDrag", mapDragend: "mapDragend", mapDragstart: "mapDragstart", headingChanged: "headingChanged", idle: "idle", maptypeidChanged: "maptypeidChanged", mapMousemove: "mapMousemove", mapMouseout: "mapMouseout", mapMouseover: "mapMouseover", projectionChanged: "projectionChanged", mapRightclick: "mapRightclick", tilesloaded: "tilesloaded", tiltChanged: "tiltChanged", zoomChanged: "zoomChanged" }, exportAs: ["googleMap"], usesOnChanges: true, ngImport: i0, template: '<div class="map-container"></div><ng-content></ng-content>', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: GoogleMap, deps: [{ token: i0.ElementRef }, { token: i0.NgZone }, { token: PLATFORM_ID }], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.1.0-next.5", type: GoogleMap, isStandalone: true, selector: "google-map", inputs: { height: "height", width: "width", mapTypeId: "mapTypeId", center: "center", zoom: "zoom", options: "options" }, outputs: { mapInitialized: "mapInitialized", authFailure: "authFailure", boundsChanged: "boundsChanged", centerChanged: "centerChanged", mapClick: "mapClick", mapDblclick: "mapDblclick", mapDrag: "mapDrag", mapDragend: "mapDragend", mapDragstart: "mapDragstart", headingChanged: "headingChanged", idle: "idle", maptypeidChanged: "maptypeidChanged", mapMousemove: "mapMousemove", mapMouseout: "mapMouseout", mapMouseover: "mapMouseover", projectionChanged: "projectionChanged", mapRightclick: "mapRightclick", tilesloaded: "tilesloaded", tiltChanged: "tiltChanged", zoomChanged: "zoomChanged" }, exportAs: ["googleMap"], usesOnChanges: true, ngImport: i0, template: '<div class="map-container"></div><ng-content />', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: GoogleMap, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: GoogleMap, decorators: [{
             type: Component,
             args: [{
                     selector: 'google-map',
                     exportAs: 'googleMap',
+                    standalone: true,
                     changeDetection: ChangeDetectionStrategy.OnPush,
-                    template: '<div class="map-container"></div><ng-content></ng-content>',
+                    template: '<div class="map-container"></div><ng-content />',
                     encapsulation: ViewEncapsulation.None,
                 }]
-        }], ctorParameters: function () { return [{ type: i0.ElementRef }, { type: i0.NgZone }, { type: Object, decorators: [{
+        }], ctorParameters: () => [{ type: i0.ElementRef }, { type: i0.NgZone }, { type: Object, decorators: [{
                     type: Inject,
                     args: [PLATFORM_ID]
-                }] }]; }, propDecorators: { height: [{
+                }] }], propDecorators: { height: [{
                 type: Input
             }], width: [{
                 type: Input
@@ -531,16 +556,17 @@ class MapBaseLayer {
     _initializeObject() { }
     _setMap() { }
     _unsetMap() { }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapBaseLayer, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.1", type: MapBaseLayer, selector: "map-base-layer", exportAs: ["mapBaseLayer"], ngImport: i0 }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapBaseLayer, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapBaseLayer, isStandalone: true, selector: "map-base-layer", exportAs: ["mapBaseLayer"], ngImport: i0 }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapBaseLayer, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapBaseLayer, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-base-layer',
                     exportAs: 'mapBaseLayer',
+                    standalone: true,
                 }]
-        }], ctorParameters: function () { return [{ type: GoogleMap }, { type: i0.NgZone }]; } });
+        }], ctorParameters: () => [{ type: GoogleMap }, { type: i0.NgZone }] });
 
 /// <reference types="google.maps" />
 /**
@@ -548,18 +574,40 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImpor
  *
  * See developers.google.com/maps/documentation/javascript/reference/map#BicyclingLayer
  */
-class MapBicyclingLayer extends MapBaseLayer {
-    _initializeObject() {
-        this.bicyclingLayer = new google.maps.BicyclingLayer();
+class MapBicyclingLayer {
+    constructor() {
+        this._map = inject(GoogleMap);
+        this._zone = inject(NgZone);
+        /** Event emitted when the bicycling layer is initialized. */
+        this.bicyclingLayerInitialized = new EventEmitter();
     }
-    _setMap() {
-        this._assertLayerInitialized();
-        this.bicyclingLayer.setMap(this._map.googleMap);
-    }
-    _unsetMap() {
-        if (this.bicyclingLayer) {
-            this.bicyclingLayer.setMap(null);
+    ngOnInit() {
+        if (this._map._isBrowser) {
+            if (google.maps.BicyclingLayer && this._map.googleMap) {
+                this._initialize(this._map.googleMap, google.maps.BicyclingLayer);
+            }
+            else {
+                this._zone.runOutsideAngular(() => {
+                    Promise.all([
+                        this._map._resolveMap(),
+                        importLibrary('maps', 'BicyclingLayer'),
+                    ]).then(([map, layerConstructor]) => {
+                        this._initialize(map, layerConstructor);
+                    });
+                });
+            }
         }
+    }
+    _initialize(map, layerConstructor) {
+        this._zone.runOutsideAngular(() => {
+            this.bicyclingLayer = new layerConstructor();
+            this.bicyclingLayerInitialized.emit(this.bicyclingLayer);
+            this._assertLayerInitialized();
+            this.bicyclingLayer.setMap(map);
+        });
+    }
+    ngOnDestroy() {
+        this.bicyclingLayer?.setMap(null);
     }
     _assertLayerInitialized() {
         if (!this.bicyclingLayer) {
@@ -567,16 +615,19 @@ class MapBicyclingLayer extends MapBaseLayer {
                 'Please wait for the Transit Layer to load before trying to interact with it.');
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapBicyclingLayer, deps: null, target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.1", type: MapBicyclingLayer, selector: "map-bicycling-layer", exportAs: ["mapBicyclingLayer"], usesInheritance: true, ngImport: i0 }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapBicyclingLayer, deps: [], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapBicyclingLayer, isStandalone: true, selector: "map-bicycling-layer", outputs: { bicyclingLayerInitialized: "bicyclingLayerInitialized" }, exportAs: ["mapBicyclingLayer"], ngImport: i0 }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapBicyclingLayer, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapBicyclingLayer, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-bicycling-layer',
                     exportAs: 'mapBicyclingLayer',
+                    standalone: true,
                 }]
-        }] });
+        }], propDecorators: { bicyclingLayerInitialized: [{
+                type: Output
+            }] } });
 
 /// <reference types="google.maps" />
 /**
@@ -666,34 +717,51 @@ class MapCircle {
          * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.rightclick
          */
         this.circleRightclick = this._eventManager.getLazyEmitter('rightclick');
+        /** Event emitted when the circle is initialized. */
+        this.circleInitialized = new EventEmitter();
     }
     ngOnInit() {
-        if (this._map._isBrowser) {
-            this._combineOptions()
-                .pipe(take(1))
-                .subscribe(options => {
-                // Create the object outside the zone so its events don't trigger change detection.
-                // We'll bring it back in inside the `MapEventManager` only for the events that the
-                // user has subscribed to.
+        if (!this._map._isBrowser) {
+            return;
+        }
+        this._combineOptions()
+            .pipe(take(1))
+            .subscribe(options => {
+            if (google.maps.Circle && this._map.googleMap) {
+                this._initialize(this._map.googleMap, google.maps.Circle, options);
+            }
+            else {
                 this._ngZone.runOutsideAngular(() => {
-                    this.circle = new google.maps.Circle(options);
+                    Promise.all([
+                        this._map._resolveMap(),
+                        importLibrary('maps', 'Circle'),
+                    ]).then(([map, circleConstructor]) => {
+                        this._initialize(map, circleConstructor, options);
+                    });
                 });
-                this._assertInitialized();
-                this.circle.setMap(this._map.googleMap);
-                this._eventManager.setTarget(this.circle);
-            });
+            }
+        });
+    }
+    _initialize(map, circleConstructor, options) {
+        // Create the object outside the zone so its events don't trigger change detection.
+        // We'll bring it back in inside the `MapEventManager` only for the events that the
+        // user has subscribed to.
+        this._ngZone.runOutsideAngular(() => {
+            this.circle = new circleConstructor(options);
+            this._assertInitialized();
+            this.circle.setMap(map);
+            this._eventManager.setTarget(this.circle);
+            this.circleInitialized.emit(this.circle);
             this._watchForOptionsChanges();
             this._watchForCenterChanges();
             this._watchForRadiusChanges();
-        }
+        });
     }
     ngOnDestroy() {
         this._eventManager.destroy();
         this._destroyed.next();
         this._destroyed.complete();
-        if (this.circle) {
-            this.circle.setMap(null);
-        }
+        this.circle?.setMap(null);
     }
     /**
      * @see
@@ -777,26 +845,23 @@ class MapCircle {
     }
     _assertInitialized() {
         if (typeof ngDevMode === 'undefined' || ngDevMode) {
-            if (!this._map.googleMap) {
-                throw Error('Cannot access Google Map information before the API has been initialized. ' +
-                    'Please wait for the API to load before trying to interact with it.');
-            }
             if (!this.circle) {
                 throw Error('Cannot interact with a Google Map Circle before it has been ' +
                     'initialized. Please wait for the Circle to load before trying to interact with it.');
             }
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapCircle, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.1", type: MapCircle, selector: "map-circle", inputs: { options: "options", center: "center", radius: "radius" }, outputs: { centerChanged: "centerChanged", circleClick: "circleClick", circleDblclick: "circleDblclick", circleDrag: "circleDrag", circleDragend: "circleDragend", circleDragstart: "circleDragstart", circleMousedown: "circleMousedown", circleMousemove: "circleMousemove", circleMouseout: "circleMouseout", circleMouseover: "circleMouseover", circleMouseup: "circleMouseup", radiusChanged: "radiusChanged", circleRightclick: "circleRightclick" }, exportAs: ["mapCircle"], ngImport: i0 }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapCircle, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapCircle, isStandalone: true, selector: "map-circle", inputs: { options: "options", center: "center", radius: "radius" }, outputs: { centerChanged: "centerChanged", circleClick: "circleClick", circleDblclick: "circleDblclick", circleDrag: "circleDrag", circleDragend: "circleDragend", circleDragstart: "circleDragstart", circleMousedown: "circleMousedown", circleMousemove: "circleMousemove", circleMouseout: "circleMouseout", circleMouseover: "circleMouseover", circleMouseup: "circleMouseup", radiusChanged: "radiusChanged", circleRightclick: "circleRightclick", circleInitialized: "circleInitialized" }, exportAs: ["mapCircle"], ngImport: i0 }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapCircle, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapCircle, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-circle',
                     exportAs: 'mapCircle',
+                    standalone: true,
                 }]
-        }], ctorParameters: function () { return [{ type: GoogleMap }, { type: i0.NgZone }]; }, propDecorators: { options: [{
+        }], ctorParameters: () => [{ type: GoogleMap }, { type: i0.NgZone }], propDecorators: { options: [{
                 type: Input
             }], center: [{
                 type: Input
@@ -827,6 +892,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImpor
             }], radiusChanged: [{
                 type: Output
             }], circleRightclick: [{
+                type: Output
+            }], circleInitialized: [{
                 type: Output
             }] } });
 
@@ -861,19 +928,37 @@ class MapDirectionsRenderer {
          * #DirectionsRenderer.directions_changed
          */
         this.directionsChanged = this._eventManager.getLazyEmitter('directions_changed');
+        /** Event emitted when the directions renderer is initialized. */
+        this.directionsRendererInitialized = new EventEmitter();
     }
     ngOnInit() {
         if (this._googleMap._isBrowser) {
-            // Create the object outside the zone so its events don't trigger change detection.
-            // We'll bring it back in inside the `MapEventManager` only for the events that the
-            // user has subscribed to.
-            this._ngZone.runOutsideAngular(() => {
-                this.directionsRenderer = new google.maps.DirectionsRenderer(this._combineOptions());
-            });
-            this._assertInitialized();
-            this.directionsRenderer.setMap(this._googleMap.googleMap);
-            this._eventManager.setTarget(this.directionsRenderer);
+            if (google.maps.DirectionsRenderer && this._googleMap.googleMap) {
+                this._initialize(this._googleMap.googleMap, google.maps.DirectionsRenderer);
+            }
+            else {
+                this._ngZone.runOutsideAngular(() => {
+                    Promise.all([
+                        this._googleMap._resolveMap(),
+                        importLibrary('routes', 'DirectionsRenderer'),
+                    ]).then(([map, rendererConstructor]) => {
+                        this._initialize(map, rendererConstructor);
+                    });
+                });
+            }
         }
+    }
+    _initialize(map, rendererConstructor) {
+        // Create the object outside the zone so its events don't trigger change detection.
+        // We'll bring it back in inside the `MapEventManager` only for the events that the
+        // user has subscribed to.
+        this._ngZone.runOutsideAngular(() => {
+            this.directionsRenderer = new rendererConstructor(this._combineOptions());
+            this._assertInitialized();
+            this.directionsRenderer.setMap(map);
+            this._eventManager.setTarget(this.directionsRenderer);
+            this.directionsRendererInitialized.emit(this.directionsRenderer);
+        });
     }
     ngOnChanges(changes) {
         if (this.directionsRenderer) {
@@ -887,9 +972,7 @@ class MapDirectionsRenderer {
     }
     ngOnDestroy() {
         this._eventManager.destroy();
-        if (this.directionsRenderer) {
-            this.directionsRenderer.setMap(null);
-        }
+        this.directionsRenderer?.setMap(null);
     }
     /**
      * See developers.google.com/maps/documentation/javascript/reference/directions
@@ -925,10 +1008,6 @@ class MapDirectionsRenderer {
     }
     _assertInitialized() {
         if (typeof ngDevMode === 'undefined' || ngDevMode) {
-            if (!this._googleMap.googleMap) {
-                throw Error('Cannot access Google Map information before the API has been initialized. ' +
-                    'Please wait for the API to load before trying to interact with it.');
-            }
             if (!this.directionsRenderer) {
                 throw Error('Cannot interact with a Google Map Directions Renderer before it has been ' +
                     'initialized. Please wait for the Directions Renderer to load before trying ' +
@@ -936,20 +1015,23 @@ class MapDirectionsRenderer {
             }
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapDirectionsRenderer, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.1", type: MapDirectionsRenderer, selector: "map-directions-renderer", inputs: { directions: "directions", options: "options" }, outputs: { directionsChanged: "directionsChanged" }, exportAs: ["mapDirectionsRenderer"], usesOnChanges: true, ngImport: i0 }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapDirectionsRenderer, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapDirectionsRenderer, isStandalone: true, selector: "map-directions-renderer", inputs: { directions: "directions", options: "options" }, outputs: { directionsChanged: "directionsChanged", directionsRendererInitialized: "directionsRendererInitialized" }, exportAs: ["mapDirectionsRenderer"], usesOnChanges: true, ngImport: i0 }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapDirectionsRenderer, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapDirectionsRenderer, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-directions-renderer',
                     exportAs: 'mapDirectionsRenderer',
+                    standalone: true,
                 }]
-        }], ctorParameters: function () { return [{ type: GoogleMap }, { type: i0.NgZone }]; }, propDecorators: { directions: [{
+        }], ctorParameters: () => [{ type: GoogleMap }, { type: i0.NgZone }], propDecorators: { directions: [{
                 type: Input
             }], options: [{
                 type: Input
             }], directionsChanged: [{
+                type: Output
+            }], directionsRendererInitialized: [{
                 type: Output
             }] } });
 
@@ -996,6 +1078,8 @@ class MapGroundOverlay {
          * #GroundOverlay.dblclick
          */
         this.mapDblclick = this._eventManager.getLazyEmitter('dblclick');
+        /** Event emitted when the ground overlay is initialized. */
+        this.groundOverlayInitialized = new EventEmitter();
     }
     ngOnInit() {
         if (this._map._isBrowser) {
@@ -1007,32 +1091,51 @@ class MapGroundOverlay {
                     this.groundOverlay.setMap(null);
                     this.groundOverlay = undefined;
                 }
-                // Create the object outside the zone so its events don't trigger change detection.
-                // We'll bring it back in inside the `MapEventManager` only for the events that the
-                // user has subscribed to.
-                if (bounds) {
+                if (!bounds) {
+                    return;
+                }
+                if (google.maps.GroundOverlay && this._map.googleMap) {
+                    this._initialize(this._map.googleMap, google.maps.GroundOverlay, bounds);
+                }
+                else {
                     this._ngZone.runOutsideAngular(() => {
-                        this.groundOverlay = new google.maps.GroundOverlay(this._url.getValue(), bounds, {
-                            clickable: this.clickable,
-                            opacity: this._opacity.value,
+                        Promise.all([
+                            this._map._resolveMap(),
+                            importLibrary('maps', 'GroundOverlay'),
+                        ]).then(([map, overlayConstructor]) => {
+                            this._initialize(map, overlayConstructor, bounds);
                         });
                     });
-                    this._assertInitialized();
-                    this.groundOverlay.setMap(this._map.googleMap);
-                    this._eventManager.setTarget(this.groundOverlay);
                 }
             });
-            this._watchForOpacityChanges();
-            this._watchForUrlChanges();
         }
+    }
+    _initialize(map, overlayConstructor, bounds) {
+        // Create the object outside the zone so its events don't trigger change detection.
+        // We'll bring it back in inside the `MapEventManager` only for the events that the
+        // user has subscribed to.
+        this._ngZone.runOutsideAngular(() => {
+            this.groundOverlay = new overlayConstructor(this._url.getValue(), bounds, {
+                clickable: this.clickable,
+                opacity: this._opacity.value,
+            });
+            this._assertInitialized();
+            this.groundOverlay.setMap(map);
+            this._eventManager.setTarget(this.groundOverlay);
+            this.groundOverlayInitialized.emit(this.groundOverlay);
+            // We only need to set up the watchers once.
+            if (!this._hasWatchers) {
+                this._hasWatchers = true;
+                this._watchForOpacityChanges();
+                this._watchForUrlChanges();
+            }
+        });
     }
     ngOnDestroy() {
         this._eventManager.destroy();
         this._destroyed.next();
         this._destroyed.complete();
-        if (this.groundOverlay) {
-            this.groundOverlay.setMap(null);
-        }
+        this.groundOverlay?.setMap(null);
     }
     /**
      * See
@@ -1064,43 +1167,40 @@ class MapGroundOverlay {
     _watchForOpacityChanges() {
         this._opacity.pipe(takeUntil(this._destroyed)).subscribe(opacity => {
             if (opacity != null) {
-                this._assertInitialized();
-                this.groundOverlay.setOpacity(opacity);
+                this.groundOverlay?.setOpacity(opacity);
             }
         });
     }
     _watchForUrlChanges() {
         this._url.pipe(takeUntil(this._destroyed)).subscribe(url => {
-            this._assertInitialized();
             const overlay = this.groundOverlay;
-            overlay.set('url', url);
-            // Google Maps only redraws the overlay if we re-set the map.
-            overlay.setMap(null);
-            overlay.setMap(this._map.googleMap);
+            if (overlay) {
+                overlay.set('url', url);
+                // Google Maps only redraws the overlay if we re-set the map.
+                overlay.setMap(null);
+                overlay.setMap(this._map.googleMap);
+            }
         });
     }
     _assertInitialized() {
         if (typeof ngDevMode === 'undefined' || ngDevMode) {
-            if (!this._map.googleMap) {
-                throw Error('Cannot access Google Map information before the API has been initialized. ' +
-                    'Please wait for the API to load before trying to interact with it.');
-            }
             if (!this.groundOverlay) {
                 throw Error('Cannot interact with a Google Map GroundOverlay before it has been initialized. ' +
                     'Please wait for the GroundOverlay to load before trying to interact with it.');
             }
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapGroundOverlay, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.1", type: MapGroundOverlay, selector: "map-ground-overlay", inputs: { url: "url", bounds: "bounds", clickable: "clickable", opacity: "opacity" }, outputs: { mapClick: "mapClick", mapDblclick: "mapDblclick" }, exportAs: ["mapGroundOverlay"], ngImport: i0 }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapGroundOverlay, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapGroundOverlay, isStandalone: true, selector: "map-ground-overlay", inputs: { url: "url", bounds: "bounds", clickable: "clickable", opacity: "opacity" }, outputs: { mapClick: "mapClick", mapDblclick: "mapDblclick", groundOverlayInitialized: "groundOverlayInitialized" }, exportAs: ["mapGroundOverlay"], ngImport: i0 }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapGroundOverlay, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapGroundOverlay, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-ground-overlay',
                     exportAs: 'mapGroundOverlay',
+                    standalone: true,
                 }]
-        }], ctorParameters: function () { return [{ type: GoogleMap }, { type: i0.NgZone }]; }, propDecorators: { url: [{
+        }], ctorParameters: () => [{ type: GoogleMap }, { type: i0.NgZone }], propDecorators: { url: [{
                 type: Input
             }], bounds: [{
                 type: Input
@@ -1111,6 +1211,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImpor
             }], mapClick: [{
                 type: Output
             }], mapDblclick: [{
+                type: Output
+            }], groundOverlayInitialized: [{
                 type: Output
             }] } });
 
@@ -1163,22 +1265,36 @@ class MapInfoWindow {
          * #InfoWindow.zindex_changed
          */
         this.zindexChanged = this._eventManager.getLazyEmitter('zindex_changed');
+        /** Event emitted when the info window is initialized. */
+        this.infoWindowInitialized = new EventEmitter();
     }
     ngOnInit() {
         if (this._googleMap._isBrowser) {
-            const combinedOptionsChanges = this._combineOptions();
-            combinedOptionsChanges.pipe(take(1)).subscribe(options => {
-                // Create the object outside the zone so its events don't trigger change detection.
-                // We'll bring it back in inside the `MapEventManager` only for the events that the
-                // user has subscribed to.
-                this._ngZone.runOutsideAngular(() => {
-                    this.infoWindow = new google.maps.InfoWindow(options);
-                });
-                this._eventManager.setTarget(this.infoWindow);
+            this._combineOptions()
+                .pipe(take(1))
+                .subscribe(options => {
+                if (google.maps.InfoWindow) {
+                    this._initialize(google.maps.InfoWindow, options);
+                }
+                else {
+                    this._ngZone.runOutsideAngular(() => {
+                        importLibrary('maps', 'InfoWindow').then(infoWindowConstructor => this._initialize(infoWindowConstructor, options));
+                    });
+                }
             });
+        }
+    }
+    _initialize(infoWindowConstructor, options) {
+        // Create the object outside the zone so its events don't trigger change detection.
+        // We'll bring it back in inside the `MapEventManager` only for the events that the
+        // user has subscribed to.
+        this._ngZone.runOutsideAngular(() => {
+            this.infoWindow = new infoWindowConstructor(options);
+            this._eventManager.setTarget(this.infoWindow);
+            this.infoWindowInitialized.emit(this.infoWindow);
             this._watchForOptionsChanges();
             this._watchForPositionChanges();
-        }
+        });
     }
     ngOnDestroy() {
         this._eventManager.destroy();
@@ -1269,10 +1385,6 @@ class MapInfoWindow {
     }
     _assertInitialized() {
         if (typeof ngDevMode === 'undefined' || ngDevMode) {
-            if (!this._googleMap.googleMap) {
-                throw Error('Cannot access Google Map information before the API has been initialized. ' +
-                    'Please wait for the API to load before trying to interact with it.');
-            }
             if (!this.infoWindow) {
                 throw Error('Cannot interact with a Google Map Info Window before it has been ' +
                     'initialized. Please wait for the Info Window to load before trying to interact with ' +
@@ -1280,17 +1392,18 @@ class MapInfoWindow {
             }
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapInfoWindow, deps: [{ token: GoogleMap }, { token: i0.ElementRef }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.1", type: MapInfoWindow, selector: "map-info-window", inputs: { options: "options", position: "position" }, outputs: { closeclick: "closeclick", contentChanged: "contentChanged", domready: "domready", positionChanged: "positionChanged", zindexChanged: "zindexChanged" }, host: { styleAttribute: "display: none" }, exportAs: ["mapInfoWindow"], ngImport: i0 }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapInfoWindow, deps: [{ token: GoogleMap }, { token: i0.ElementRef }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapInfoWindow, isStandalone: true, selector: "map-info-window", inputs: { options: "options", position: "position" }, outputs: { closeclick: "closeclick", contentChanged: "contentChanged", domready: "domready", positionChanged: "positionChanged", zindexChanged: "zindexChanged", infoWindowInitialized: "infoWindowInitialized" }, host: { styleAttribute: "display: none" }, exportAs: ["mapInfoWindow"], ngImport: i0 }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapInfoWindow, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapInfoWindow, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-info-window',
                     exportAs: 'mapInfoWindow',
+                    standalone: true,
                     host: { 'style': 'display: none' },
                 }]
-        }], ctorParameters: function () { return [{ type: GoogleMap }, { type: i0.ElementRef }, { type: i0.NgZone }]; }, propDecorators: { options: [{
+        }], ctorParameters: () => [{ type: GoogleMap }, { type: i0.ElementRef }, { type: i0.NgZone }], propDecorators: { options: [{
                 type: Input
             }], position: [{
                 type: Input
@@ -1303,6 +1416,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImpor
             }], positionChanged: [{
                 type: Output
             }], zindexChanged: [{
+                type: Output
+            }], infoWindowInitialized: [{
                 type: Output
             }] } });
 
@@ -1340,31 +1455,49 @@ class MapKmlLayer {
          * See developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer.status_changed
          */
         this.statusChanged = this._eventManager.getLazyEmitter('status_changed');
+        /** Event emitted when the KML layer is initialized. */
+        this.kmlLayerInitialized = new EventEmitter();
     }
     ngOnInit() {
         if (this._map._isBrowser) {
             this._combineOptions()
                 .pipe(take(1))
                 .subscribe(options => {
-                // Create the object outside the zone so its events don't trigger change detection.
-                // We'll bring it back in inside the `MapEventManager` only for the events that the
-                // user has subscribed to.
-                this._ngZone.runOutsideAngular(() => (this.kmlLayer = new google.maps.KmlLayer(options)));
-                this._assertInitialized();
-                this.kmlLayer.setMap(this._map.googleMap);
-                this._eventManager.setTarget(this.kmlLayer);
+                if (google.maps.KmlLayer && this._map.googleMap) {
+                    this._initialize(this._map.googleMap, google.maps.KmlLayer, options);
+                }
+                else {
+                    this._ngZone.runOutsideAngular(() => {
+                        Promise.all([
+                            this._map._resolveMap(),
+                            importLibrary('maps', 'KmlLayer'),
+                        ]).then(([map, layerConstructor]) => {
+                            this._initialize(map, layerConstructor, options);
+                        });
+                    });
+                }
             });
+        }
+    }
+    _initialize(map, layerConstructor, options) {
+        // Create the object outside the zone so its events don't trigger change detection.
+        // We'll bring it back in inside the `MapEventManager` only for the events that the
+        // user has subscribed to.
+        this._ngZone.runOutsideAngular(() => {
+            this.kmlLayer = new layerConstructor(options);
+            this._assertInitialized();
+            this.kmlLayer.setMap(map);
+            this._eventManager.setTarget(this.kmlLayer);
+            this.kmlLayerInitialized.emit(this.kmlLayer);
             this._watchForOptionsChanges();
             this._watchForUrlChanges();
-        }
+        });
     }
     ngOnDestroy() {
         this._eventManager.destroy();
         this._destroyed.next();
         this._destroyed.complete();
-        if (this.kmlLayer) {
-            this.kmlLayer.setMap(null);
-        }
+        this.kmlLayer?.setMap(null);
     }
     /**
      * See
@@ -1429,26 +1562,23 @@ class MapKmlLayer {
     }
     _assertInitialized() {
         if (typeof ngDevMode === 'undefined' || ngDevMode) {
-            if (!this._map.googleMap) {
-                throw Error('Cannot access Google Map information before the API has been initialized. ' +
-                    'Please wait for the API to load before trying to interact with it.');
-            }
             if (!this.kmlLayer) {
                 throw Error('Cannot interact with a Google Map KmlLayer before it has been ' +
                     'initialized. Please wait for the KmlLayer to load before trying to interact with it.');
             }
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapKmlLayer, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.1", type: MapKmlLayer, selector: "map-kml-layer", inputs: { options: "options", url: "url" }, outputs: { kmlClick: "kmlClick", defaultviewportChanged: "defaultviewportChanged", statusChanged: "statusChanged" }, exportAs: ["mapKmlLayer"], ngImport: i0 }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapKmlLayer, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapKmlLayer, isStandalone: true, selector: "map-kml-layer", inputs: { options: "options", url: "url" }, outputs: { kmlClick: "kmlClick", defaultviewportChanged: "defaultviewportChanged", statusChanged: "statusChanged", kmlLayerInitialized: "kmlLayerInitialized" }, exportAs: ["mapKmlLayer"], ngImport: i0 }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapKmlLayer, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapKmlLayer, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-kml-layer',
                     exportAs: 'mapKmlLayer',
+                    standalone: true,
                 }]
-        }], ctorParameters: function () { return [{ type: GoogleMap }, { type: i0.NgZone }]; }, propDecorators: { options: [{
+        }], ctorParameters: () => [{ type: GoogleMap }, { type: i0.NgZone }], propDecorators: { options: [{
                 type: Input
             }], url: [{
                 type: Input
@@ -1457,6 +1587,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImpor
             }], defaultviewportChanged: [{
                 type: Output
             }], statusChanged: [{
+                type: Output
+            }], kmlLayerInitialized: [{
                 type: Output
             }] } });
 
@@ -1632,19 +1764,38 @@ class MapMarker {
          * developers.google.com/maps/documentation/javascript/reference/marker#Marker.zindex_changed
          */
         this.zindexChanged = this._eventManager.getLazyEmitter('zindex_changed');
+        /** Event emitted when the marker is initialized. */
+        this.markerInitialized = new EventEmitter();
     }
     ngOnInit() {
-        if (this._googleMap._isBrowser) {
-            // Create the object outside the zone so its events don't trigger change detection.
-            // We'll bring it back in inside the `MapEventManager` only for the events that the
-            // user has subscribed to.
-            this._ngZone.runOutsideAngular(() => {
-                this.marker = new google.maps.Marker(this._combineOptions());
-            });
-            this._assertInitialized();
-            this.marker.setMap(this._googleMap.googleMap);
-            this._eventManager.setTarget(this.marker);
+        if (!this._googleMap._isBrowser) {
+            return;
         }
+        if (google.maps.Marker && this._googleMap.googleMap) {
+            this._initialize(this._googleMap.googleMap, google.maps.Marker);
+        }
+        else {
+            this._ngZone.runOutsideAngular(() => {
+                Promise.all([
+                    this._googleMap._resolveMap(),
+                    importLibrary('marker', 'Marker'),
+                ]).then(([map, markerConstrutor]) => {
+                    this._initialize(map, markerConstrutor);
+                });
+            });
+        }
+    }
+    _initialize(map, markerConstructor) {
+        // Create the object outside the zone so its events don't trigger change detection.
+        // We'll bring it back in inside the `MapEventManager` only for the events that the
+        // user has subscribed to.
+        this._ngZone.runOutsideAngular(() => {
+            this.marker = new markerConstructor(this._combineOptions());
+            this._assertInitialized();
+            this.marker.setMap(map);
+            this._eventManager.setTarget(this.marker);
+            this.markerInitialized.next(this.marker);
+        });
     }
     ngOnChanges(changes) {
         const { marker, _title, _position, _label, _clickable, _icon, _visible } = this;
@@ -1673,10 +1824,9 @@ class MapMarker {
         }
     }
     ngOnDestroy() {
+        this.markerInitialized.complete();
         this._eventManager.destroy();
-        if (this.marker) {
-            this.marker.setMap(null);
-        }
+        this.marker?.setMap(null);
     }
     /**
      * See
@@ -1779,6 +1929,12 @@ class MapMarker {
         this._assertInitialized();
         return this.marker;
     }
+    /** Returns a promise that resolves when the marker has been initialized. */
+    _resolveMarker() {
+        return this.marker
+            ? Promise.resolve(this.marker)
+            : this.markerInitialized.pipe(take(1)).toPromise();
+    }
     /** Creates a combined options object using the passed-in options and the individual inputs. */
     _combineOptions() {
         const options = this._options || DEFAULT_MARKER_OPTIONS;
@@ -1795,26 +1951,23 @@ class MapMarker {
     }
     _assertInitialized() {
         if (typeof ngDevMode === 'undefined' || ngDevMode) {
-            if (!this._googleMap.googleMap) {
-                throw Error('Cannot access Google Map information before the API has been initialized. ' +
-                    'Please wait for the API to load before trying to interact with it.');
-            }
             if (!this.marker) {
                 throw Error('Cannot interact with a Google Map Marker before it has been ' +
                     'initialized. Please wait for the Marker to load before trying to interact with it.');
             }
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapMarker, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.1", type: MapMarker, selector: "map-marker", inputs: { title: "title", position: "position", label: "label", clickable: "clickable", options: "options", icon: "icon", visible: "visible" }, outputs: { animationChanged: "animationChanged", mapClick: "mapClick", clickableChanged: "clickableChanged", cursorChanged: "cursorChanged", mapDblclick: "mapDblclick", mapDrag: "mapDrag", mapDragend: "mapDragend", draggableChanged: "draggableChanged", mapDragstart: "mapDragstart", flatChanged: "flatChanged", iconChanged: "iconChanged", mapMousedown: "mapMousedown", mapMouseout: "mapMouseout", mapMouseover: "mapMouseover", mapMouseup: "mapMouseup", positionChanged: "positionChanged", mapRightclick: "mapRightclick", shapeChanged: "shapeChanged", titleChanged: "titleChanged", visibleChanged: "visibleChanged", zindexChanged: "zindexChanged" }, exportAs: ["mapMarker"], usesOnChanges: true, ngImport: i0 }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapMarker, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapMarker, isStandalone: true, selector: "map-marker", inputs: { title: "title", position: "position", label: "label", clickable: "clickable", options: "options", icon: "icon", visible: "visible" }, outputs: { animationChanged: "animationChanged", mapClick: "mapClick", clickableChanged: "clickableChanged", cursorChanged: "cursorChanged", mapDblclick: "mapDblclick", mapDrag: "mapDrag", mapDragend: "mapDragend", draggableChanged: "draggableChanged", mapDragstart: "mapDragstart", flatChanged: "flatChanged", iconChanged: "iconChanged", mapMousedown: "mapMousedown", mapMouseout: "mapMouseout", mapMouseover: "mapMouseover", mapMouseup: "mapMouseup", positionChanged: "positionChanged", mapRightclick: "mapRightclick", shapeChanged: "shapeChanged", titleChanged: "titleChanged", visibleChanged: "visibleChanged", zindexChanged: "zindexChanged", markerInitialized: "markerInitialized" }, exportAs: ["mapMarker"], usesOnChanges: true, ngImport: i0 }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapMarker, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapMarker, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-marker',
                     exportAs: 'mapMarker',
+                    standalone: true,
                 }]
-        }], ctorParameters: function () { return [{ type: GoogleMap }, { type: i0.NgZone }]; }, propDecorators: { title: [{
+        }], ctorParameters: () => [{ type: GoogleMap }, { type: i0.NgZone }], propDecorators: { title: [{
                 type: Input
             }], position: [{
                 type: Input
@@ -1869,6 +2022,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImpor
             }], visibleChanged: [{
                 type: Output
             }], zindexChanged: [{
+                type: Output
+            }], markerInitialized: [{
                 type: Output
             }] } });
 
@@ -1952,29 +2107,43 @@ class MapMarkerClusterer {
         this.clusteringend = this._eventManager.getLazyEmitter('clusteringend');
         /** Emits when a cluster has been clicked. */
         this.clusterClick = this._eventManager.getLazyEmitter('click');
-        this._canInitialize = this._googleMap._isBrowser;
+        /** Event emitted when the clusterer is initialized. */
+        this.markerClustererInitialized = new EventEmitter();
+        this._canInitialize = _googleMap._isBrowser;
     }
     ngOnInit() {
         if (this._canInitialize) {
-            if (typeof MarkerClusterer !== 'function' &&
-                (typeof ngDevMode === 'undefined' || ngDevMode)) {
-                throw Error('MarkerClusterer class not found, cannot construct a marker cluster. ' +
-                    'Please install the MarkerClustererPlus library: ' +
-                    'https://github.com/googlemaps/js-markerclustererplus');
-            }
-            // Create the object outside the zone so its events don't trigger change detection.
-            // We'll bring it back in inside the `MapEventManager` only for the events that the
-            // user has subscribed to.
             this._ngZone.runOutsideAngular(() => {
-                this.markerClusterer = new MarkerClusterer(this._googleMap.googleMap, [], this._combineOptions());
+                this._googleMap._resolveMap().then(map => {
+                    if (typeof MarkerClusterer !== 'function' &&
+                        (typeof ngDevMode === 'undefined' || ngDevMode)) {
+                        throw Error('MarkerClusterer class not found, cannot construct a marker cluster. ' +
+                            'Please install the MarkerClustererPlus library: ' +
+                            'https://github.com/googlemaps/js-markerclustererplus');
+                    }
+                    // Create the object outside the zone so its events don't trigger change detection.
+                    // We'll bring it back in inside the `MapEventManager` only for the events that the
+                    // user has subscribed to.
+                    this.markerClusterer = this._ngZone.runOutsideAngular(() => {
+                        return new MarkerClusterer(map, [], this._combineOptions());
+                    });
+                    this._assertInitialized();
+                    this._eventManager.setTarget(this.markerClusterer);
+                    this.markerClustererInitialized.emit(this.markerClusterer);
+                });
             });
-            this._assertInitialized();
-            this._eventManager.setTarget(this.markerClusterer);
         }
     }
     ngAfterContentInit() {
         if (this._canInitialize) {
-            this._watchForMarkerChanges();
+            if (this.markerClusterer) {
+                this._watchForMarkerChanges();
+            }
+            else {
+                this.markerClustererInitialized
+                    .pipe(take(1), takeUntil(this._destroy))
+                    .subscribe(() => this._watchForMarkerChanges());
+            }
         }
     }
     ngOnChanges(changes) {
@@ -2040,9 +2209,7 @@ class MapMarkerClusterer {
         this._destroy.next();
         this._destroy.complete();
         this._eventManager.destroy();
-        if (this.markerClusterer) {
-            this.markerClusterer.setMap(null);
-        }
+        this.markerClusterer?.setMap(null);
     }
     fitMapToMarkers(padding) {
         this._assertInitialized();
@@ -2150,68 +2317,71 @@ class MapMarkerClusterer {
     }
     _watchForMarkerChanges() {
         this._assertInitialized();
-        const initialMarkers = [];
-        for (const marker of this._getInternalMarkers(this._markers.toArray())) {
-            this._currentMarkers.add(marker);
-            initialMarkers.push(marker);
-        }
-        this.markerClusterer.addMarkers(initialMarkers);
+        this._ngZone.runOutsideAngular(() => {
+            this._getInternalMarkers(this._markers).then(markers => {
+                const initialMarkers = [];
+                for (const marker of markers) {
+                    this._currentMarkers.add(marker);
+                    initialMarkers.push(marker);
+                }
+                this.markerClusterer.addMarkers(initialMarkers);
+            });
+        });
         this._markers.changes
             .pipe(takeUntil(this._destroy))
             .subscribe((markerComponents) => {
             this._assertInitialized();
-            const newMarkers = new Set(this._getInternalMarkers(markerComponents));
-            const markersToAdd = [];
-            const markersToRemove = [];
-            for (const marker of Array.from(newMarkers)) {
-                if (!this._currentMarkers.has(marker)) {
-                    this._currentMarkers.add(marker);
-                    markersToAdd.push(marker);
-                }
-            }
-            for (const marker of Array.from(this._currentMarkers)) {
-                if (!newMarkers.has(marker)) {
-                    markersToRemove.push(marker);
-                }
-            }
-            this.markerClusterer.addMarkers(markersToAdd, true);
-            this.markerClusterer.removeMarkers(markersToRemove, true);
-            this.markerClusterer.repaint();
-            for (const marker of markersToRemove) {
-                this._currentMarkers.delete(marker);
-            }
+            this._ngZone.runOutsideAngular(() => {
+                this._getInternalMarkers(markerComponents).then(markers => {
+                    const newMarkers = new Set(markers);
+                    const markersToAdd = [];
+                    const markersToRemove = [];
+                    for (const marker of Array.from(newMarkers)) {
+                        if (!this._currentMarkers.has(marker)) {
+                            this._currentMarkers.add(marker);
+                            markersToAdd.push(marker);
+                        }
+                    }
+                    for (const marker of Array.from(this._currentMarkers)) {
+                        if (!newMarkers.has(marker)) {
+                            markersToRemove.push(marker);
+                        }
+                    }
+                    this.markerClusterer.addMarkers(markersToAdd, true);
+                    this.markerClusterer.removeMarkers(markersToRemove, true);
+                    this.markerClusterer.repaint();
+                    for (const marker of markersToRemove) {
+                        this._currentMarkers.delete(marker);
+                    }
+                });
+            });
         });
     }
     _getInternalMarkers(markers) {
-        return markers
-            .filter(markerComponent => !!markerComponent.marker)
-            .map(markerComponent => markerComponent.marker);
+        return Promise.all(markers.map(markerComponent => markerComponent._resolveMarker()));
     }
     _assertInitialized() {
         if (typeof ngDevMode === 'undefined' || ngDevMode) {
-            if (!this._googleMap.googleMap) {
-                throw Error('Cannot access Google Map information before the API has been initialized. ' +
-                    'Please wait for the API to load before trying to interact with it.');
-            }
             if (!this.markerClusterer) {
                 throw Error('Cannot interact with a MarkerClusterer before it has been initialized. ' +
                     'Please wait for the MarkerClusterer to load before trying to interact with it.');
             }
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapMarkerClusterer, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "16.1.1", type: MapMarkerClusterer, selector: "map-marker-clusterer", inputs: { ariaLabelFn: "ariaLabelFn", averageCenter: "averageCenter", batchSize: "batchSize", batchSizeIE: "batchSizeIE", calculator: "calculator", clusterClass: "clusterClass", enableRetinaIcons: "enableRetinaIcons", gridSize: "gridSize", ignoreHidden: "ignoreHidden", imageExtension: "imageExtension", imagePath: "imagePath", imageSizes: "imageSizes", maxZoom: "maxZoom", minimumClusterSize: "minimumClusterSize", styles: "styles", title: "title", zIndex: "zIndex", zoomOnClick: "zoomOnClick", options: "options" }, outputs: { clusteringbegin: "clusteringbegin", clusteringend: "clusteringend", clusterClick: "clusterClick" }, queries: [{ propertyName: "_markers", predicate: MapMarker, descendants: true }], exportAs: ["mapMarkerClusterer"], usesOnChanges: true, ngImport: i0, template: '<ng-content></ng-content>', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapMarkerClusterer, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapMarkerClusterer, isStandalone: true, selector: "map-marker-clusterer", inputs: { ariaLabelFn: "ariaLabelFn", averageCenter: "averageCenter", batchSize: "batchSize", batchSizeIE: "batchSizeIE", calculator: "calculator", clusterClass: "clusterClass", enableRetinaIcons: "enableRetinaIcons", gridSize: "gridSize", ignoreHidden: "ignoreHidden", imageExtension: "imageExtension", imagePath: "imagePath", imageSizes: "imageSizes", maxZoom: "maxZoom", minimumClusterSize: "minimumClusterSize", styles: "styles", title: "title", zIndex: "zIndex", zoomOnClick: "zoomOnClick", options: "options" }, outputs: { clusteringbegin: "clusteringbegin", clusteringend: "clusteringend", clusterClick: "clusterClick", markerClustererInitialized: "markerClustererInitialized" }, queries: [{ propertyName: "_markers", predicate: MapMarker, descendants: true }], exportAs: ["mapMarkerClusterer"], usesOnChanges: true, ngImport: i0, template: '<ng-content />', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapMarkerClusterer, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapMarkerClusterer, decorators: [{
             type: Component,
             args: [{
                     selector: 'map-marker-clusterer',
                     exportAs: 'mapMarkerClusterer',
                     changeDetection: ChangeDetectionStrategy.OnPush,
-                    template: '<ng-content></ng-content>',
+                    standalone: true,
+                    template: '<ng-content />',
                     encapsulation: ViewEncapsulation.None,
                 }]
-        }], ctorParameters: function () { return [{ type: GoogleMap }, { type: i0.NgZone }]; }, propDecorators: { ariaLabelFn: [{
+        }], ctorParameters: () => [{ type: GoogleMap }, { type: i0.NgZone }], propDecorators: { ariaLabelFn: [{
                 type: Input
             }], averageCenter: [{
                 type: Input
@@ -2258,6 +2428,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImpor
             }], _markers: [{
                 type: ContentChildren,
                 args: [MapMarker, { descendants: true }]
+            }], markerClustererInitialized: [{
+                type: Output
             }] } });
 
 /// <reference types="google.maps" />
@@ -2324,33 +2496,49 @@ class MapPolygon {
          * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.rightclick
          */
         this.polygonRightclick = this._eventManager.getLazyEmitter('rightclick');
+        /** Event emitted when the polygon is initialized. */
+        this.polygonInitialized = new EventEmitter();
     }
     ngOnInit() {
         if (this._map._isBrowser) {
             this._combineOptions()
                 .pipe(take(1))
                 .subscribe(options => {
-                // Create the object outside the zone so its events don't trigger change detection.
-                // We'll bring it back in inside the `MapEventManager` only for the events that the
-                // user has subscribed to.
-                this._ngZone.runOutsideAngular(() => {
-                    this.polygon = new google.maps.Polygon(options);
-                });
-                this._assertInitialized();
-                this.polygon.setMap(this._map.googleMap);
-                this._eventManager.setTarget(this.polygon);
+                if (google.maps.Polygon && this._map.googleMap) {
+                    this._initialize(this._map.googleMap, google.maps.Polygon, options);
+                }
+                else {
+                    this._ngZone.runOutsideAngular(() => {
+                        Promise.all([
+                            this._map._resolveMap(),
+                            importLibrary('maps', 'Polygon'),
+                        ]).then(([map, polygonConstructor]) => {
+                            this._initialize(map, polygonConstructor, options);
+                        });
+                    });
+                }
             });
+        }
+    }
+    _initialize(map, polygonConstructor, options) {
+        // Create the object outside the zone so its events don't trigger change detection.
+        // We'll bring it back in inside the `MapEventManager` only for the events that the
+        // user has subscribed to.
+        this._ngZone.runOutsideAngular(() => {
+            this.polygon = new polygonConstructor(options);
+            this._assertInitialized();
+            this.polygon.setMap(map);
+            this._eventManager.setTarget(this.polygon);
+            this.polygonInitialized.emit(this.polygon);
             this._watchForOptionsChanges();
             this._watchForPathChanges();
-        }
+        });
     }
     ngOnDestroy() {
         this._eventManager.destroy();
         this._destroyed.next();
         this._destroyed.complete();
-        if (this.polygon) {
-            this.polygon.setMap(null);
-        }
+        this.polygon?.setMap(null);
     }
     /**
      * See
@@ -2413,26 +2601,23 @@ class MapPolygon {
     }
     _assertInitialized() {
         if (typeof ngDevMode === 'undefined' || ngDevMode) {
-            if (!this._map.googleMap) {
-                throw Error('Cannot access Google Map information before the API has been initialized. ' +
-                    'Please wait for the API to load before trying to interact with it.');
-            }
             if (!this.polygon) {
                 throw Error('Cannot interact with a Google Map Polygon before it has been ' +
                     'initialized. Please wait for the Polygon to load before trying to interact with it.');
             }
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapPolygon, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.1", type: MapPolygon, selector: "map-polygon", inputs: { options: "options", paths: "paths" }, outputs: { polygonClick: "polygonClick", polygonDblclick: "polygonDblclick", polygonDrag: "polygonDrag", polygonDragend: "polygonDragend", polygonDragstart: "polygonDragstart", polygonMousedown: "polygonMousedown", polygonMousemove: "polygonMousemove", polygonMouseout: "polygonMouseout", polygonMouseover: "polygonMouseover", polygonMouseup: "polygonMouseup", polygonRightclick: "polygonRightclick" }, exportAs: ["mapPolygon"], ngImport: i0 }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapPolygon, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapPolygon, isStandalone: true, selector: "map-polygon", inputs: { options: "options", paths: "paths" }, outputs: { polygonClick: "polygonClick", polygonDblclick: "polygonDblclick", polygonDrag: "polygonDrag", polygonDragend: "polygonDragend", polygonDragstart: "polygonDragstart", polygonMousedown: "polygonMousedown", polygonMousemove: "polygonMousemove", polygonMouseout: "polygonMouseout", polygonMouseover: "polygonMouseover", polygonMouseup: "polygonMouseup", polygonRightclick: "polygonRightclick", polygonInitialized: "polygonInitialized" }, exportAs: ["mapPolygon"], ngImport: i0 }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapPolygon, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapPolygon, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-polygon',
                     exportAs: 'mapPolygon',
+                    standalone: true,
                 }]
-        }], ctorParameters: function () { return [{ type: GoogleMap }, { type: i0.NgZone }]; }, propDecorators: { options: [{
+        }], ctorParameters: () => [{ type: GoogleMap }, { type: i0.NgZone }], propDecorators: { options: [{
                 type: Input
             }], paths: [{
                 type: Input
@@ -2457,6 +2642,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImpor
             }], polygonMouseup: [{
                 type: Output
             }], polygonRightclick: [{
+                type: Output
+            }], polygonInitialized: [{
                 type: Output
             }] } });
 
@@ -2524,31 +2711,49 @@ class MapPolyline {
          * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.rightclick
          */
         this.polylineRightclick = this._eventManager.getLazyEmitter('rightclick');
+        /** Event emitted when the polyline is initialized. */
+        this.polylineInitialized = new EventEmitter();
     }
     ngOnInit() {
         if (this._map._isBrowser) {
             this._combineOptions()
                 .pipe(take(1))
                 .subscribe(options => {
-                // Create the object outside the zone so its events don't trigger change detection.
-                // We'll bring it back in inside the `MapEventManager` only for the events that the
-                // user has subscribed to.
-                this._ngZone.runOutsideAngular(() => (this.polyline = new google.maps.Polyline(options)));
-                this._assertInitialized();
-                this.polyline.setMap(this._map.googleMap);
-                this._eventManager.setTarget(this.polyline);
+                if (google.maps.Polyline && this._map.googleMap) {
+                    this._initialize(this._map.googleMap, google.maps.Polyline, options);
+                }
+                else {
+                    this._ngZone.runOutsideAngular(() => {
+                        Promise.all([
+                            this._map._resolveMap(),
+                            importLibrary('maps', 'Polyline'),
+                        ]).then(([map, polylineConstructor]) => {
+                            this._initialize(map, polylineConstructor, options);
+                        });
+                    });
+                }
             });
+        }
+    }
+    _initialize(map, polylineConstructor, options) {
+        // Create the object outside the zone so its events don't trigger change detection.
+        // We'll bring it back in inside the `MapEventManager` only for the events that the
+        // user has subscribed to.
+        this._ngZone.runOutsideAngular(() => {
+            this.polyline = new polylineConstructor(options);
+            this._assertInitialized();
+            this.polyline.setMap(map);
+            this._eventManager.setTarget(this.polyline);
+            this.polylineInitialized.emit(this.polyline);
             this._watchForOptionsChanges();
             this._watchForPathChanges();
-        }
+        });
     }
     ngOnDestroy() {
         this._eventManager.destroy();
         this._destroyed.next();
         this._destroyed.complete();
-        if (this.polyline) {
-            this.polyline.setMap(null);
-        }
+        this.polyline?.setMap(null);
     }
     /**
      * See
@@ -2604,26 +2809,23 @@ class MapPolyline {
     }
     _assertInitialized() {
         if (typeof ngDevMode === 'undefined' || ngDevMode) {
-            if (!this._map.googleMap) {
-                throw Error('Cannot access Google Map information before the API has been initialized. ' +
-                    'Please wait for the API to load before trying to interact with it.');
-            }
             if (!this.polyline) {
                 throw Error('Cannot interact with a Google Map Polyline before it has been ' +
                     'initialized. Please wait for the Polyline to load before trying to interact with it.');
             }
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapPolyline, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.1", type: MapPolyline, selector: "map-polyline", inputs: { options: "options", path: "path" }, outputs: { polylineClick: "polylineClick", polylineDblclick: "polylineDblclick", polylineDrag: "polylineDrag", polylineDragend: "polylineDragend", polylineDragstart: "polylineDragstart", polylineMousedown: "polylineMousedown", polylineMousemove: "polylineMousemove", polylineMouseout: "polylineMouseout", polylineMouseover: "polylineMouseover", polylineMouseup: "polylineMouseup", polylineRightclick: "polylineRightclick" }, exportAs: ["mapPolyline"], ngImport: i0 }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapPolyline, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapPolyline, isStandalone: true, selector: "map-polyline", inputs: { options: "options", path: "path" }, outputs: { polylineClick: "polylineClick", polylineDblclick: "polylineDblclick", polylineDrag: "polylineDrag", polylineDragend: "polylineDragend", polylineDragstart: "polylineDragstart", polylineMousedown: "polylineMousedown", polylineMousemove: "polylineMousemove", polylineMouseout: "polylineMouseout", polylineMouseover: "polylineMouseover", polylineMouseup: "polylineMouseup", polylineRightclick: "polylineRightclick", polylineInitialized: "polylineInitialized" }, exportAs: ["mapPolyline"], ngImport: i0 }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapPolyline, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapPolyline, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-polyline',
                     exportAs: 'mapPolyline',
+                    standalone: true,
                 }]
-        }], ctorParameters: function () { return [{ type: GoogleMap }, { type: i0.NgZone }]; }, propDecorators: { options: [{
+        }], ctorParameters: () => [{ type: GoogleMap }, { type: i0.NgZone }], propDecorators: { options: [{
                 type: Input
             }], path: [{
                 type: Input
@@ -2648,6 +2850,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImpor
             }], polylineMouseup: [{
                 type: Output
             }], polylineRightclick: [{
+                type: Output
+            }], polylineInitialized: [{
                 type: Output
             }] } });
 
@@ -2730,33 +2934,49 @@ class MapRectangle {
          * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.rightclick
          */
         this.rectangleRightclick = this._eventManager.getLazyEmitter('rightclick');
+        /** Event emitted when the rectangle is initialized. */
+        this.rectangleInitialized = new EventEmitter();
     }
     ngOnInit() {
         if (this._map._isBrowser) {
             this._combineOptions()
                 .pipe(take(1))
                 .subscribe(options => {
-                // Create the object outside the zone so its events don't trigger change detection.
-                // We'll bring it back in inside the `MapEventManager` only for the events that the
-                // user has subscribed to.
-                this._ngZone.runOutsideAngular(() => {
-                    this.rectangle = new google.maps.Rectangle(options);
-                });
-                this._assertInitialized();
-                this.rectangle.setMap(this._map.googleMap);
-                this._eventManager.setTarget(this.rectangle);
+                if (google.maps.Rectangle && this._map.googleMap) {
+                    this._initialize(this._map.googleMap, google.maps.Rectangle, options);
+                }
+                else {
+                    this._ngZone.runOutsideAngular(() => {
+                        Promise.all([
+                            this._map._resolveMap(),
+                            importLibrary('maps', 'Rectangle'),
+                        ]).then(([map, rectangleConstructor]) => {
+                            this._initialize(map, rectangleConstructor, options);
+                        });
+                    });
+                }
             });
+        }
+    }
+    _initialize(map, rectangleConstructor, options) {
+        // Create the object outside the zone so its events don't trigger change detection.
+        // We'll bring it back in inside the `MapEventManager` only for the events that the
+        // user has subscribed to.
+        this._ngZone.runOutsideAngular(() => {
+            this.rectangle = new rectangleConstructor(options);
+            this._assertInitialized();
+            this.rectangle.setMap(map);
+            this._eventManager.setTarget(this.rectangle);
+            this.rectangleInitialized.emit(this.rectangle);
             this._watchForOptionsChanges();
             this._watchForBoundsChanges();
-        }
+        });
     }
     ngOnDestroy() {
         this._eventManager.destroy();
         this._destroyed.next();
         this._destroyed.complete();
-        if (this.rectangle) {
-            this.rectangle.setMap(null);
-        }
+        this.rectangle?.setMap(null);
     }
     /**
      * See
@@ -2815,26 +3035,23 @@ class MapRectangle {
     }
     _assertInitialized() {
         if (typeof ngDevMode === 'undefined' || ngDevMode) {
-            if (!this._map.googleMap) {
-                throw Error('Cannot access Google Map information before the API has been initialized. ' +
-                    'Please wait for the API to load before trying to interact with it.');
-            }
             if (!this.rectangle) {
                 throw Error('Cannot interact with a Google Map Rectangle before it has been initialized. ' +
                     'Please wait for the Rectangle to load before trying to interact with it.');
             }
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapRectangle, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.1", type: MapRectangle, selector: "map-rectangle", inputs: { options: "options", bounds: "bounds" }, outputs: { boundsChanged: "boundsChanged", rectangleClick: "rectangleClick", rectangleDblclick: "rectangleDblclick", rectangleDrag: "rectangleDrag", rectangleDragend: "rectangleDragend", rectangleDragstart: "rectangleDragstart", rectangleMousedown: "rectangleMousedown", rectangleMousemove: "rectangleMousemove", rectangleMouseout: "rectangleMouseout", rectangleMouseover: "rectangleMouseover", rectangleMouseup: "rectangleMouseup", rectangleRightclick: "rectangleRightclick" }, exportAs: ["mapRectangle"], ngImport: i0 }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapRectangle, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapRectangle, isStandalone: true, selector: "map-rectangle", inputs: { options: "options", bounds: "bounds" }, outputs: { boundsChanged: "boundsChanged", rectangleClick: "rectangleClick", rectangleDblclick: "rectangleDblclick", rectangleDrag: "rectangleDrag", rectangleDragend: "rectangleDragend", rectangleDragstart: "rectangleDragstart", rectangleMousedown: "rectangleMousedown", rectangleMousemove: "rectangleMousemove", rectangleMouseout: "rectangleMouseout", rectangleMouseover: "rectangleMouseover", rectangleMouseup: "rectangleMouseup", rectangleRightclick: "rectangleRightclick", rectangleInitialized: "rectangleInitialized" }, exportAs: ["mapRectangle"], ngImport: i0 }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapRectangle, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapRectangle, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-rectangle',
                     exportAs: 'mapRectangle',
+                    standalone: true,
                 }]
-        }], ctorParameters: function () { return [{ type: GoogleMap }, { type: i0.NgZone }]; }, propDecorators: { options: [{
+        }], ctorParameters: () => [{ type: GoogleMap }, { type: i0.NgZone }], propDecorators: { options: [{
                 type: Input
             }], bounds: [{
                 type: Input
@@ -2862,6 +3079,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImpor
                 type: Output
             }], rectangleRightclick: [{
                 type: Output
+            }], rectangleInitialized: [{
+                type: Output
             }] } });
 
 /// <reference types="google.maps" />
@@ -2882,28 +3101,43 @@ class MapTrafficLayer {
         this._ngZone = _ngZone;
         this._autoRefresh = new BehaviorSubject(true);
         this._destroyed = new Subject();
+        /** Event emitted when the traffic layer is initialized. */
+        this.trafficLayerInitialized = new EventEmitter();
     }
     ngOnInit() {
         if (this._map._isBrowser) {
             this._combineOptions()
                 .pipe(take(1))
                 .subscribe(options => {
-                // Create the object outside the zone so its events don't trigger change detection.
-                this._ngZone.runOutsideAngular(() => {
-                    this.trafficLayer = new google.maps.TrafficLayer(options);
-                });
-                this._assertInitialized();
-                this.trafficLayer.setMap(this._map.googleMap);
+                if (google.maps.TrafficLayer && this._map.googleMap) {
+                    this._initialize(this._map.googleMap, google.maps.TrafficLayer, options);
+                }
+                else {
+                    this._ngZone.runOutsideAngular(() => {
+                        Promise.all([
+                            this._map._resolveMap(),
+                            importLibrary('maps', 'TrafficLayer'),
+                        ]).then(([map, layerConstructor]) => {
+                            this._initialize(map, layerConstructor, options);
+                        });
+                    });
+                }
             });
-            this._watchForAutoRefreshChanges();
         }
+    }
+    _initialize(map, layerConstructor, options) {
+        this._ngZone.runOutsideAngular(() => {
+            this.trafficLayer = new layerConstructor(options);
+            this._assertInitialized();
+            this.trafficLayer.setMap(map);
+            this.trafficLayerInitialized.emit(this.trafficLayer);
+            this._watchForAutoRefreshChanges();
+        });
     }
     ngOnDestroy() {
         this._destroyed.next();
         this._destroyed.complete();
-        if (this.trafficLayer) {
-            this.trafficLayer.setMap(null);
-        }
+        this.trafficLayer?.setMap(null);
     }
     _combineOptions() {
         return this._autoRefresh.pipe(map(autoRefresh => {
@@ -2920,26 +3154,25 @@ class MapTrafficLayer {
         });
     }
     _assertInitialized() {
-        if (!this._map.googleMap) {
-            throw Error('Cannot access Google Map information before the API has been initialized. ' +
-                'Please wait for the API to load before trying to interact with it.');
-        }
         if (!this.trafficLayer) {
             throw Error('Cannot interact with a Google Map Traffic Layer before it has been initialized. ' +
                 'Please wait for the Traffic Layer to load before trying to interact with it.');
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapTrafficLayer, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.1", type: MapTrafficLayer, selector: "map-traffic-layer", inputs: { autoRefresh: "autoRefresh" }, exportAs: ["mapTrafficLayer"], ngImport: i0 }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapTrafficLayer, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapTrafficLayer, isStandalone: true, selector: "map-traffic-layer", inputs: { autoRefresh: "autoRefresh" }, outputs: { trafficLayerInitialized: "trafficLayerInitialized" }, exportAs: ["mapTrafficLayer"], ngImport: i0 }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapTrafficLayer, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapTrafficLayer, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-traffic-layer',
                     exportAs: 'mapTrafficLayer',
+                    standalone: true,
                 }]
-        }], ctorParameters: function () { return [{ type: GoogleMap }, { type: i0.NgZone }]; }, propDecorators: { autoRefresh: [{
+        }], ctorParameters: () => [{ type: GoogleMap }, { type: i0.NgZone }], propDecorators: { autoRefresh: [{
                 type: Input
+            }], trafficLayerInitialized: [{
+                type: Output
             }] } });
 
 /// <reference types="google.maps" />
@@ -2948,18 +3181,40 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImpor
  *
  * See developers.google.com/maps/documentation/javascript/reference/map#TransitLayer
  */
-class MapTransitLayer extends MapBaseLayer {
-    _initializeObject() {
-        this.transitLayer = new google.maps.TransitLayer();
+class MapTransitLayer {
+    constructor() {
+        this._map = inject(GoogleMap);
+        this._zone = inject(NgZone);
+        /** Event emitted when the transit layer is initialized. */
+        this.transitLayerInitialized = new EventEmitter();
     }
-    _setMap() {
-        this._assertLayerInitialized();
-        this.transitLayer.setMap(this._map.googleMap);
-    }
-    _unsetMap() {
-        if (this.transitLayer) {
-            this.transitLayer.setMap(null);
+    ngOnInit() {
+        if (this._map._isBrowser) {
+            if (google.maps.TransitLayer && this._map.googleMap) {
+                this._initialize(this._map.googleMap, google.maps.TransitLayer);
+            }
+            else {
+                this._zone.runOutsideAngular(() => {
+                    Promise.all([
+                        this._map._resolveMap(),
+                        importLibrary('maps', 'TransitLayer'),
+                    ]).then(([map, layerConstructor]) => {
+                        this._initialize(map, layerConstructor);
+                    });
+                });
+            }
         }
+    }
+    _initialize(map, layerConstructor) {
+        this._zone.runOutsideAngular(() => {
+            this.transitLayer = new layerConstructor();
+            this.transitLayerInitialized.emit(this.transitLayer);
+            this._assertLayerInitialized();
+            this.transitLayer.setMap(map);
+        });
+    }
+    ngOnDestroy() {
+        this.transitLayer?.setMap(null);
     }
     _assertLayerInitialized() {
         if (!this.transitLayer) {
@@ -2967,16 +3222,19 @@ class MapTransitLayer extends MapBaseLayer {
                 'Please wait for the Transit Layer to load before trying to interact with it.');
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapTransitLayer, deps: null, target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.1", type: MapTransitLayer, selector: "map-transit-layer", exportAs: ["mapTransitLayer"], usesInheritance: true, ngImport: i0 }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapTransitLayer, deps: [], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapTransitLayer, isStandalone: true, selector: "map-transit-layer", outputs: { transitLayerInitialized: "transitLayerInitialized" }, exportAs: ["mapTransitLayer"], ngImport: i0 }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapTransitLayer, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapTransitLayer, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-transit-layer',
                     exportAs: 'mapTransitLayer',
+                    standalone: true,
                 }]
-        }] });
+        }], propDecorators: { transitLayerInitialized: [{
+                type: Output
+            }] } });
 
 /// <reference types="google.maps" />
 /**
@@ -3002,23 +3260,43 @@ class MapHeatmapLayer {
     constructor(_googleMap, _ngZone) {
         this._googleMap = _googleMap;
         this._ngZone = _ngZone;
+        /** Event emitted when the heatmap is initialized. */
+        this.heatmapInitialized = new EventEmitter();
     }
     ngOnInit() {
         if (this._googleMap._isBrowser) {
-            if (!window.google?.maps?.visualization && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+            if (!window.google?.maps?.visualization &&
+                !window.google?.maps.importLibrary &&
+                (typeof ngDevMode === 'undefined' || ngDevMode)) {
                 throw Error('Namespace `google.maps.visualization` not found, cannot construct heatmap. ' +
                     'Please install the Google Maps JavaScript API with the "visualization" library: ' +
                     'https://developers.google.com/maps/documentation/javascript/visualization');
             }
-            // Create the object outside the zone so its events don't trigger change detection.
-            // We'll bring it back in inside the `MapEventManager` only for the events that the
-            // user has subscribed to.
-            this._ngZone.runOutsideAngular(() => {
-                this.heatmap = new google.maps.visualization.HeatmapLayer(this._combineOptions());
-            });
-            this._assertInitialized();
-            this.heatmap.setMap(this._googleMap.googleMap);
+            if (google.maps.visualization?.HeatmapLayer && this._googleMap.googleMap) {
+                this._initialize(this._googleMap.googleMap, google.maps.visualization.HeatmapLayer);
+            }
+            else {
+                this._ngZone.runOutsideAngular(() => {
+                    Promise.all([
+                        this._googleMap._resolveMap(),
+                        importLibrary('visualization', 'HeatmapLayer'),
+                    ]).then(([map, heatmapConstructor]) => {
+                        this._initialize(map, heatmapConstructor);
+                    });
+                });
+            }
         }
+    }
+    _initialize(map, heatmapConstructor) {
+        // Create the object outside the zone so its events don't trigger change detection.
+        // We'll bring it back in inside the `MapEventManager` only for the events that the
+        // user has subscribed to.
+        this._ngZone.runOutsideAngular(() => {
+            this.heatmap = new heatmapConstructor(this._combineOptions());
+            this._assertInitialized();
+            this.heatmap.setMap(map);
+            this.heatmapInitialized.emit(this.heatmap);
+        });
     }
     ngOnChanges(changes) {
         const { _data, heatmap } = this;
@@ -3032,9 +3310,7 @@ class MapHeatmapLayer {
         }
     }
     ngOnDestroy() {
-        if (this.heatmap) {
-            this.heatmap.setMap(null);
-        }
+        this.heatmap?.setMap(null);
     }
     /**
      * Gets the data that is currently shown on the heatmap.
@@ -3071,29 +3347,28 @@ class MapHeatmapLayer {
     /** Asserts that the heatmap object has been initialized. */
     _assertInitialized() {
         if (typeof ngDevMode === 'undefined' || ngDevMode) {
-            if (!this._googleMap.googleMap) {
-                throw Error('Cannot access Google Map information before the API has been initialized. ' +
-                    'Please wait for the API to load before trying to interact with it.');
-            }
             if (!this.heatmap) {
                 throw Error('Cannot interact with a Google Map HeatmapLayer before it has been ' +
                     'initialized. Please wait for the heatmap to load before trying to interact with it.');
             }
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapHeatmapLayer, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "16.1.1", type: MapHeatmapLayer, selector: "map-heatmap-layer", inputs: { data: "data", options: "options" }, exportAs: ["mapHeatmapLayer"], usesOnChanges: true, ngImport: i0 }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapHeatmapLayer, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.0-next.5", type: MapHeatmapLayer, isStandalone: true, selector: "map-heatmap-layer", inputs: { data: "data", options: "options" }, outputs: { heatmapInitialized: "heatmapInitialized" }, exportAs: ["mapHeatmapLayer"], usesOnChanges: true, ngImport: i0 }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapHeatmapLayer, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapHeatmapLayer, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-heatmap-layer',
                     exportAs: 'mapHeatmapLayer',
+                    standalone: true,
                 }]
-        }], ctorParameters: function () { return [{ type: GoogleMap }, { type: i0.NgZone }]; }, propDecorators: { data: [{
+        }], ctorParameters: () => [{ type: GoogleMap }, { type: i0.NgZone }], propDecorators: { data: [{
                 type: Input
             }], options: [{
                 type: Input
+            }], heatmapInitialized: [{
+                type: Output
             }] } });
 /** Asserts that an object is a `LatLngLiteral`. */
 function isLatLngLiteral(value) {
@@ -3107,6 +3382,7 @@ const COMPONENTS = [
     MapCircle,
     MapDirectionsRenderer,
     MapGroundOverlay,
+    MapHeatmapLayer,
     MapInfoWindow,
     MapKmlLayer,
     MapMarker,
@@ -3116,16 +3392,16 @@ const COMPONENTS = [
     MapRectangle,
     MapTrafficLayer,
     MapTransitLayer,
-    MapHeatmapLayer,
 ];
 class GoogleMapsModule {
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: GoogleMapsModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
-    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "16.1.1", ngImport: i0, type: GoogleMapsModule, declarations: [GoogleMap,
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: GoogleMapsModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
+    static { this.ɵmod = i0.ɵɵngDeclareNgModule({ minVersion: "14.0.0", version: "17.1.0-next.5", ngImport: i0, type: GoogleMapsModule, imports: [GoogleMap,
             MapBaseLayer,
             MapBicyclingLayer,
             MapCircle,
             MapDirectionsRenderer,
             MapGroundOverlay,
+            MapHeatmapLayer,
             MapInfoWindow,
             MapKmlLayer,
             MapMarker,
@@ -3134,13 +3410,13 @@ class GoogleMapsModule {
             MapPolyline,
             MapRectangle,
             MapTrafficLayer,
-            MapTransitLayer,
-            MapHeatmapLayer], exports: [GoogleMap,
+            MapTransitLayer], exports: [GoogleMap,
             MapBaseLayer,
             MapBicyclingLayer,
             MapCircle,
             MapDirectionsRenderer,
             MapGroundOverlay,
+            MapHeatmapLayer,
             MapInfoWindow,
             MapKmlLayer,
             MapMarker,
@@ -3149,14 +3425,13 @@ class GoogleMapsModule {
             MapPolyline,
             MapRectangle,
             MapTrafficLayer,
-            MapTransitLayer,
-            MapHeatmapLayer] }); }
-    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: GoogleMapsModule }); }
+            MapTransitLayer] }); }
+    static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: GoogleMapsModule }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: GoogleMapsModule, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: GoogleMapsModule, decorators: [{
             type: NgModule,
             args: [{
-                    declarations: COMPONENTS,
+                    imports: COMPONENTS,
                     exports: COMPONENTS,
                 }]
         }] });
@@ -3179,26 +3454,37 @@ class MapDirectionsService {
      */
     route(request) {
         return new Observable(observer => {
-            // Initialize the `DirectionsService` lazily since the Google Maps API may
-            // not have been loaded when the provider is instantiated.
-            if (!this._directionsService) {
-                this._directionsService = new google.maps.DirectionsService();
-            }
-            this._directionsService.route(request, (result, status) => {
-                this._ngZone.run(() => {
-                    observer.next({ result: result || undefined, status });
-                    observer.complete();
+            this._getService().then(service => {
+                service.route(request, (result, status) => {
+                    this._ngZone.run(() => {
+                        observer.next({ result: result || undefined, status });
+                        observer.complete();
+                    });
                 });
             });
         });
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapDirectionsService, deps: [{ token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Injectable }); }
-    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapDirectionsService, providedIn: 'root' }); }
+    _getService() {
+        if (!this._directionsService) {
+            if (google.maps.DirectionsService) {
+                this._directionsService = new google.maps.DirectionsService();
+            }
+            else {
+                return importLibrary('routes', 'DirectionsService').then(serviceConstructor => {
+                    this._directionsService = new serviceConstructor();
+                    return this._directionsService;
+                });
+            }
+        }
+        return Promise.resolve(this._directionsService);
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapDirectionsService, deps: [{ token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Injectable }); }
+    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapDirectionsService, providedIn: 'root' }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapDirectionsService, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapDirectionsService, decorators: [{
             type: Injectable,
             args: [{ providedIn: 'root' }]
-        }], ctorParameters: function () { return [{ type: i0.NgZone }]; } });
+        }], ctorParameters: () => [{ type: i0.NgZone }] });
 
 /// <reference types="google.maps" />
 /**
@@ -3214,26 +3500,37 @@ class MapGeocoder {
      */
     geocode(request) {
         return new Observable(observer => {
-            // Initialize the `Geocoder` lazily since the Google Maps API may
-            // not have been loaded when the provider is instantiated.
-            if (!this._geocoder) {
-                this._geocoder = new google.maps.Geocoder();
-            }
-            this._geocoder.geocode(request, (results, status) => {
-                this._ngZone.run(() => {
-                    observer.next({ results: results || [], status });
-                    observer.complete();
+            this._getGeocoder().then(geocoder => {
+                geocoder.geocode(request, (results, status) => {
+                    this._ngZone.run(() => {
+                        observer.next({ results: results || [], status });
+                        observer.complete();
+                    });
                 });
             });
         });
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapGeocoder, deps: [{ token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Injectable }); }
-    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapGeocoder, providedIn: 'root' }); }
+    _getGeocoder() {
+        if (!this._geocoder) {
+            if (google.maps.Geocoder) {
+                this._geocoder = new google.maps.Geocoder();
+            }
+            else {
+                return importLibrary('geocoding', 'Geocoder').then(geocoderConstructor => {
+                    this._geocoder = new geocoderConstructor();
+                    return this._geocoder;
+                });
+            }
+        }
+        return Promise.resolve(this._geocoder);
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapGeocoder, deps: [{ token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Injectable }); }
+    static { this.ɵprov = i0.ɵɵngDeclareInjectable({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapGeocoder, providedIn: 'root' }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "16.1.1", ngImport: i0, type: MapGeocoder, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.0-next.5", ngImport: i0, type: MapGeocoder, decorators: [{
             type: Injectable,
             args: [{ providedIn: 'root' }]
-        }], ctorParameters: function () { return [{ type: i0.NgZone }]; } });
+        }], ctorParameters: () => [{ type: i0.NgZone }] });
 
 /**
  * Generated bundle index. Do not edit.

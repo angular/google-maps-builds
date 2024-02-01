@@ -230,7 +230,6 @@ export declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
     constructor(_elementRef: ElementRef, _ngZone: NgZone, platformId: Object);
     ngOnChanges(changes: SimpleChanges): void;
     ngOnInit(): void;
-    private _initialize;
     ngOnDestroy(): void;
     /**
      * See
@@ -317,20 +316,18 @@ export declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
      * https://developers.google.com/maps/documentation/javascript/reference/map#Map.overlayMapTypes
      */
     get overlayMapTypes(): google.maps.MVCArray<google.maps.MapType | null>;
-    /** Returns a promise that resolves when the map has been initialized. */
-    _resolveMap(): Promise<google.maps.Map>;
     private _setSize;
     /** Combines the center and zoom and the other map options into a single object */
     private _combineOptions;
     /** Asserts that the map has been initialized. */
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<GoogleMap, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<GoogleMap, "google-map", ["googleMap"], { "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "mapTypeId": { "alias": "mapTypeId"; "required": false; }; "center": { "alias": "center"; "required": false; }; "zoom": { "alias": "zoom"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "mapInitialized": "mapInitialized"; "authFailure": "authFailure"; "boundsChanged": "boundsChanged"; "centerChanged": "centerChanged"; "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "headingChanged": "headingChanged"; "idle": "idle"; "maptypeidChanged": "maptypeidChanged"; "mapMousemove": "mapMousemove"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "projectionChanged": "projectionChanged"; "mapRightclick": "mapRightclick"; "tilesloaded": "tilesloaded"; "tiltChanged": "tiltChanged"; "zoomChanged": "zoomChanged"; }, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<GoogleMap, "google-map", ["googleMap"], { "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "mapTypeId": { "alias": "mapTypeId"; "required": false; }; "center": { "alias": "center"; "required": false; }; "zoom": { "alias": "zoom"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "mapInitialized": "mapInitialized"; "authFailure": "authFailure"; "boundsChanged": "boundsChanged"; "centerChanged": "centerChanged"; "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "headingChanged": "headingChanged"; "idle": "idle"; "maptypeidChanged": "maptypeidChanged"; "mapMousemove": "mapMousemove"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "projectionChanged": "projectionChanged"; "mapRightclick": "mapRightclick"; "tilesloaded": "tilesloaded"; "tiltChanged": "tiltChanged"; "zoomChanged": "zoomChanged"; }, never, ["*"], false, never>;
 }
 
 export declare class GoogleMapsModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<GoogleMapsModule, never>;
-    static ɵmod: i0.ɵɵNgModuleDeclaration<GoogleMapsModule, never, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapMarkerClusterer, typeof i12.MapPolygon, typeof i13.MapPolyline, typeof i14.MapRectangle, typeof i15.MapTrafficLayer, typeof i16.MapTransitLayer], [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapMarkerClusterer, typeof i12.MapPolygon, typeof i13.MapPolyline, typeof i14.MapRectangle, typeof i15.MapTrafficLayer, typeof i16.MapTransitLayer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<GoogleMapsModule, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapInfoWindow, typeof i8.MapKmlLayer, typeof i9.MapMarker, typeof i10.MapMarkerClusterer, typeof i11.MapPolygon, typeof i12.MapPolyline, typeof i13.MapRectangle, typeof i14.MapTrafficLayer, typeof i15.MapTransitLayer, typeof i16.MapHeatmapLayer], never, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapInfoWindow, typeof i8.MapKmlLayer, typeof i9.MapMarker, typeof i10.MapMarkerClusterer, typeof i11.MapPolygon, typeof i12.MapPolyline, typeof i13.MapRectangle, typeof i14.MapTrafficLayer, typeof i15.MapTransitLayer, typeof i16.MapHeatmapLayer]>;
     static ɵinj: i0.ɵɵInjectorDeclaration<GoogleMapsModule>;
 }
 
@@ -348,44 +345,44 @@ declare namespace i1 {
 
 declare namespace i10 {
     export {
-        DEFAULT_MARKER_OPTIONS,
-        MapMarker
+        MapMarkerClusterer
     }
 }
 
 declare namespace i11 {
     export {
-        MapMarkerClusterer
+        MapPolygon
     }
 }
 
 declare namespace i12 {
     export {
-        MapPolygon
+        MapPolyline
     }
 }
 
 declare namespace i13 {
     export {
-        MapPolyline
+        MapRectangle
     }
 }
 
 declare namespace i14 {
     export {
-        MapRectangle
+        MapTrafficLayer
     }
 }
 
 declare namespace i15 {
     export {
-        MapTrafficLayer
+        MapTransitLayer
     }
 }
 
 declare namespace i16 {
     export {
-        MapTransitLayer
+        HeatmapData,
+        MapHeatmapLayer
     }
 }
 
@@ -421,20 +418,20 @@ declare namespace i6 {
 
 declare namespace i7 {
     export {
-        HeatmapData,
-        MapHeatmapLayer
+        MapInfoWindow
     }
 }
 
 declare namespace i8 {
     export {
-        MapInfoWindow
+        MapKmlLayer
     }
 }
 
 declare namespace i9 {
     export {
-        MapKmlLayer
+        DEFAULT_MARKER_OPTIONS,
+        MapMarker
     }
 }
 
@@ -455,7 +452,7 @@ export declare class MapBaseLayer implements OnInit, OnDestroy {
     protected _setMap(): void;
     protected _unsetMap(): void;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapBaseLayer, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapBaseLayer, "map-base-layer", ["mapBaseLayer"], {}, {}, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapBaseLayer, "map-base-layer", ["mapBaseLayer"], {}, {}, never, never, false, never>;
 }
 
 /**
@@ -463,23 +460,19 @@ export declare class MapBaseLayer implements OnInit, OnDestroy {
  *
  * See developers.google.com/maps/documentation/javascript/reference/map#BicyclingLayer
  */
-export declare class MapBicyclingLayer implements OnInit, OnDestroy {
-    private _map;
-    private _zone;
+export declare class MapBicyclingLayer extends MapBaseLayer {
     /**
      * The underlying google.maps.BicyclingLayer object.
      *
      * See developers.google.com/maps/documentation/javascript/reference/map#BicyclingLayer
      */
     bicyclingLayer?: google.maps.BicyclingLayer;
-    /** Event emitted when the bicycling layer is initialized. */
-    readonly bicyclingLayerInitialized: EventEmitter<google.maps.BicyclingLayer>;
-    ngOnInit(): void;
-    private _initialize;
-    ngOnDestroy(): void;
+    protected _initializeObject(): void;
+    protected _setMap(): void;
+    protected _unsetMap(): void;
     private _assertLayerInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapBicyclingLayer, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapBicyclingLayer, "map-bicycling-layer", ["mapBicyclingLayer"], {}, { "bicyclingLayerInitialized": "bicyclingLayerInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapBicyclingLayer, "map-bicycling-layer", ["mapBicyclingLayer"], {}, {}, never, never, false, never>;
 }
 
 /**
@@ -568,11 +561,8 @@ export declare class MapCircle implements OnInit, OnDestroy {
      * developers.google.com/maps/documentation/javascript/reference/polygon#Circle.rightclick
      */
     readonly circleRightclick: Observable<google.maps.MapMouseEvent>;
-    /** Event emitted when the circle is initialized. */
-    readonly circleInitialized: EventEmitter<google.maps.Circle>;
     constructor(_map: GoogleMap, _ngZone: NgZone);
     ngOnInit(): void;
-    private _initialize;
     ngOnDestroy(): void;
     /**
      * @see
@@ -610,7 +600,7 @@ export declare class MapCircle implements OnInit, OnDestroy {
     private _watchForRadiusChanges;
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapCircle, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapCircle, "map-circle", ["mapCircle"], { "options": { "alias": "options"; "required": false; }; "center": { "alias": "center"; "required": false; }; "radius": { "alias": "radius"; "required": false; }; }, { "centerChanged": "centerChanged"; "circleClick": "circleClick"; "circleDblclick": "circleDblclick"; "circleDrag": "circleDrag"; "circleDragend": "circleDragend"; "circleDragstart": "circleDragstart"; "circleMousedown": "circleMousedown"; "circleMousemove": "circleMousemove"; "circleMouseout": "circleMouseout"; "circleMouseover": "circleMouseover"; "circleMouseup": "circleMouseup"; "radiusChanged": "radiusChanged"; "circleRightclick": "circleRightclick"; "circleInitialized": "circleInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapCircle, "map-circle", ["mapCircle"], { "options": { "alias": "options"; "required": false; }; "center": { "alias": "center"; "required": false; }; "radius": { "alias": "radius"; "required": false; }; }, { "centerChanged": "centerChanged"; "circleClick": "circleClick"; "circleDblclick": "circleDblclick"; "circleDrag": "circleDrag"; "circleDragend": "circleDragend"; "circleDragstart": "circleDragstart"; "circleMousedown": "circleMousedown"; "circleMousemove": "circleMousemove"; "circleMouseout": "circleMouseout"; "circleMouseover": "circleMouseover"; "circleMouseup": "circleMouseup"; "radiusChanged": "radiusChanged"; "circleRightclick": "circleRightclick"; }, never, never, false, never>;
 }
 
 /**
@@ -640,13 +630,10 @@ export declare class MapDirectionsRenderer implements OnInit, OnChanges, OnDestr
      * #DirectionsRenderer.directions_changed
      */
     readonly directionsChanged: Observable<void>;
-    /** Event emitted when the directions renderer is initialized. */
-    readonly directionsRendererInitialized: EventEmitter<google.maps.DirectionsRenderer>;
     /** The underlying google.maps.DirectionsRenderer object. */
     directionsRenderer?: google.maps.DirectionsRenderer;
     constructor(_googleMap: GoogleMap, _ngZone: NgZone);
     ngOnInit(): void;
-    private _initialize;
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
     /**
@@ -667,7 +654,7 @@ export declare class MapDirectionsRenderer implements OnInit, OnChanges, OnDestr
     private _combineOptions;
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapDirectionsRenderer, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapDirectionsRenderer, "map-directions-renderer", ["mapDirectionsRenderer"], { "directions": { "alias": "directions"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "directionsChanged": "directionsChanged"; "directionsRendererInitialized": "directionsRendererInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapDirectionsRenderer, "map-directions-renderer", ["mapDirectionsRenderer"], { "directions": { "alias": "directions"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "directionsChanged": "directionsChanged"; }, never, never, false, never>;
 }
 
 export declare interface MapDirectionsResponse {
@@ -691,7 +678,6 @@ export declare class MapDirectionsService {
      * #DirectionsService.route
      */
     route(request: google.maps.DirectionsRequest): Observable<MapDirectionsResponse>;
-    private _getService;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapDirectionsService, never>;
     static ɵprov: i0.ɵɵInjectableDeclaration<MapDirectionsService>;
 }
@@ -730,7 +716,6 @@ export declare class MapGeocoder {
      * See developers.google.com/maps/documentation/javascript/reference/geocoder#Geocoder.geocode
      */
     geocode(request: google.maps.GeocoderRequest): Observable<MapGeocoderResponse>;
-    private _getGeocoder;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapGeocoder, never>;
     static ɵprov: i0.ɵɵInjectableDeclaration<MapGeocoder>;
 }
@@ -753,7 +738,6 @@ export declare class MapGroundOverlay implements OnInit, OnDestroy {
     private readonly _url;
     private readonly _bounds;
     private readonly _destroyed;
-    private _hasWatchers;
     /**
      * The underlying google.maps.GroundOverlay object.
      *
@@ -780,11 +764,8 @@ export declare class MapGroundOverlay implements OnInit, OnDestroy {
      * #GroundOverlay.dblclick
      */
     readonly mapDblclick: Observable<google.maps.MapMouseEvent>;
-    /** Event emitted when the ground overlay is initialized. */
-    readonly groundOverlayInitialized: EventEmitter<google.maps.GroundOverlay>;
     constructor(_map: GoogleMap, _ngZone: NgZone);
     ngOnInit(): void;
-    private _initialize;
     ngOnDestroy(): void;
     /**
      * See
@@ -808,7 +789,7 @@ export declare class MapGroundOverlay implements OnInit, OnDestroy {
     private _watchForUrlChanges;
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapGroundOverlay, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapGroundOverlay, "map-ground-overlay", ["mapGroundOverlay"], { "url": { "alias": "url"; "required": false; }; "bounds": { "alias": "bounds"; "required": false; }; "clickable": { "alias": "clickable"; "required": false; }; "opacity": { "alias": "opacity"; "required": false; }; }, { "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "groundOverlayInitialized": "groundOverlayInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapGroundOverlay, "map-ground-overlay", ["mapGroundOverlay"], { "url": { "alias": "url"; "required": false; }; "bounds": { "alias": "bounds"; "required": false; }; "clickable": { "alias": "clickable"; "required": false; }; "opacity": { "alias": "opacity"; "required": false; }; }, { "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; }, never, never, false, never>;
 }
 
 /**
@@ -837,11 +818,8 @@ export declare class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
      * See: https://developers.google.com/maps/documentation/javascript/reference/visualization
      */
     heatmap?: google.maps.visualization.HeatmapLayer;
-    /** Event emitted when the heatmap is initialized. */
-    readonly heatmapInitialized: EventEmitter<google.maps.visualization.HeatmapLayer>;
     constructor(_googleMap: GoogleMap, _ngZone: NgZone);
     ngOnInit(): void;
-    private _initialize;
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
     /**
@@ -863,7 +841,7 @@ export declare class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
     /** Asserts that the heatmap object has been initialized. */
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapHeatmapLayer, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapHeatmapLayer, "map-heatmap-layer", ["mapHeatmapLayer"], { "data": { "alias": "data"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "heatmapInitialized": "heatmapInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapHeatmapLayer, "map-heatmap-layer", ["mapHeatmapLayer"], { "data": { "alias": "data"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, {}, never, never, false, never>;
 }
 
 /**
@@ -915,11 +893,8 @@ export declare class MapInfoWindow implements OnInit, OnDestroy {
      * #InfoWindow.zindex_changed
      */
     readonly zindexChanged: Observable<void>;
-    /** Event emitted when the info window is initialized. */
-    readonly infoWindowInitialized: EventEmitter<google.maps.InfoWindow>;
     constructor(_googleMap: GoogleMap, _elementRef: ElementRef<HTMLElement>, _ngZone: NgZone);
     ngOnInit(): void;
-    private _initialize;
     ngOnDestroy(): void;
     /**
      * See developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.close
@@ -951,7 +926,7 @@ export declare class MapInfoWindow implements OnInit, OnDestroy {
     private _watchForPositionChanges;
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapInfoWindow, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapInfoWindow, "map-info-window", ["mapInfoWindow"], { "options": { "alias": "options"; "required": false; }; "position": { "alias": "position"; "required": false; }; }, { "closeclick": "closeclick"; "contentChanged": "contentChanged"; "domready": "domready"; "positionChanged": "positionChanged"; "zindexChanged": "zindexChanged"; "infoWindowInitialized": "infoWindowInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapInfoWindow, "map-info-window", ["mapInfoWindow"], { "options": { "alias": "options"; "required": false; }; "position": { "alias": "position"; "required": false; }; }, { "closeclick": "closeclick"; "contentChanged": "contentChanged"; "domready": "domready"; "positionChanged": "positionChanged"; "zindexChanged": "zindexChanged"; }, never, never, false, never>;
 }
 
 /**
@@ -988,11 +963,8 @@ export declare class MapKmlLayer implements OnInit, OnDestroy {
      * See developers.google.com/maps/documentation/javascript/reference/kml#KmlLayer.status_changed
      */
     readonly statusChanged: Observable<void>;
-    /** Event emitted when the KML layer is initialized. */
-    readonly kmlLayerInitialized: EventEmitter<google.maps.KmlLayer>;
     constructor(_map: GoogleMap, _ngZone: NgZone);
     ngOnInit(): void;
-    private _initialize;
     ngOnDestroy(): void;
     /**
      * See
@@ -1020,7 +992,7 @@ export declare class MapKmlLayer implements OnInit, OnDestroy {
     private _watchForUrlChanges;
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapKmlLayer, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapKmlLayer, "map-kml-layer", ["mapKmlLayer"], { "options": { "alias": "options"; "required": false; }; "url": { "alias": "url"; "required": false; }; }, { "kmlClick": "kmlClick"; "defaultviewportChanged": "defaultviewportChanged"; "statusChanged": "statusChanged"; "kmlLayerInitialized": "kmlLayerInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapKmlLayer, "map-kml-layer", ["mapKmlLayer"], { "options": { "alias": "options"; "required": false; }; "url": { "alias": "url"; "required": false; }; }, { "kmlClick": "kmlClick"; "defaultviewportChanged": "defaultviewportChanged"; "statusChanged": "statusChanged"; }, never, never, false, never>;
 }
 
 /**
@@ -1179,8 +1151,6 @@ export declare class MapMarker implements OnInit, OnChanges, OnDestroy, MapAncho
      * developers.google.com/maps/documentation/javascript/reference/marker#Marker.zindex_changed
      */
     readonly zindexChanged: Observable<void>;
-    /** Event emitted when the marker is initialized. */
-    readonly markerInitialized: EventEmitter<google.maps.Marker>;
     /**
      * The underlying google.maps.Marker object.
      *
@@ -1189,7 +1159,6 @@ export declare class MapMarker implements OnInit, OnChanges, OnDestroy, MapAncho
     marker?: google.maps.Marker;
     constructor(_googleMap: GoogleMap, _ngZone: NgZone);
     ngOnInit(): void;
-    private _initialize;
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
     /**
@@ -1254,13 +1223,11 @@ export declare class MapMarker implements OnInit, OnChanges, OnDestroy, MapAncho
     getZIndex(): number | null;
     /** Gets the anchor point that can be used to attach other Google Maps objects. */
     getAnchor(): google.maps.MVCObject;
-    /** Returns a promise that resolves when the marker has been initialized. */
-    _resolveMarker(): Promise<google.maps.Marker>;
     /** Creates a combined options object using the passed-in options and the individual inputs. */
     private _combineOptions;
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapMarker, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapMarker, "map-marker", ["mapMarker"], { "title": { "alias": "title"; "required": false; }; "position": { "alias": "position"; "required": false; }; "label": { "alias": "label"; "required": false; }; "clickable": { "alias": "clickable"; "required": false; }; "options": { "alias": "options"; "required": false; }; "icon": { "alias": "icon"; "required": false; }; "visible": { "alias": "visible"; "required": false; }; }, { "animationChanged": "animationChanged"; "mapClick": "mapClick"; "clickableChanged": "clickableChanged"; "cursorChanged": "cursorChanged"; "mapDblclick": "mapDblclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "draggableChanged": "draggableChanged"; "mapDragstart": "mapDragstart"; "flatChanged": "flatChanged"; "iconChanged": "iconChanged"; "mapMousedown": "mapMousedown"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "mapMouseup": "mapMouseup"; "positionChanged": "positionChanged"; "mapRightclick": "mapRightclick"; "shapeChanged": "shapeChanged"; "titleChanged": "titleChanged"; "visibleChanged": "visibleChanged"; "zindexChanged": "zindexChanged"; "markerInitialized": "markerInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapMarker, "map-marker", ["mapMarker"], { "title": { "alias": "title"; "required": false; }; "position": { "alias": "position"; "required": false; }; "label": { "alias": "label"; "required": false; }; "clickable": { "alias": "clickable"; "required": false; }; "options": { "alias": "options"; "required": false; }; "icon": { "alias": "icon"; "required": false; }; "visible": { "alias": "visible"; "required": false; }; }, { "animationChanged": "animationChanged"; "mapClick": "mapClick"; "clickableChanged": "clickableChanged"; "cursorChanged": "cursorChanged"; "mapDblclick": "mapDblclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "draggableChanged": "draggableChanged"; "mapDragstart": "mapDragstart"; "flatChanged": "flatChanged"; "iconChanged": "iconChanged"; "mapMousedown": "mapMousedown"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "mapMouseup": "mapMouseup"; "positionChanged": "positionChanged"; "mapRightclick": "mapRightclick"; "shapeChanged": "shapeChanged"; "titleChanged": "titleChanged"; "visibleChanged": "visibleChanged"; "zindexChanged": "zindexChanged"; }, never, never, false, never>;
 }
 
 /**
@@ -1334,8 +1301,6 @@ export declare class MapMarkerClusterer implements OnInit, AfterContentInit, OnC
      * _google_markerclustererplus.markerclusterer.html
      */
     markerClusterer?: MarkerClusterer;
-    /** Event emitted when the clusterer is initialized. */
-    readonly markerClustererInitialized: EventEmitter<MarkerClusterer>;
     constructor(_googleMap: GoogleMap, _ngZone: NgZone);
     ngOnInit(): void;
     ngAfterContentInit(): void;
@@ -1366,7 +1331,7 @@ export declare class MapMarkerClusterer implements OnInit, AfterContentInit, OnC
     private _getInternalMarkers;
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapMarkerClusterer, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<MapMarkerClusterer, "map-marker-clusterer", ["mapMarkerClusterer"], { "ariaLabelFn": { "alias": "ariaLabelFn"; "required": false; }; "averageCenter": { "alias": "averageCenter"; "required": false; }; "batchSize": { "alias": "batchSize"; "required": false; }; "batchSizeIE": { "alias": "batchSizeIE"; "required": false; }; "calculator": { "alias": "calculator"; "required": false; }; "clusterClass": { "alias": "clusterClass"; "required": false; }; "enableRetinaIcons": { "alias": "enableRetinaIcons"; "required": false; }; "gridSize": { "alias": "gridSize"; "required": false; }; "ignoreHidden": { "alias": "ignoreHidden"; "required": false; }; "imageExtension": { "alias": "imageExtension"; "required": false; }; "imagePath": { "alias": "imagePath"; "required": false; }; "imageSizes": { "alias": "imageSizes"; "required": false; }; "maxZoom": { "alias": "maxZoom"; "required": false; }; "minimumClusterSize": { "alias": "minimumClusterSize"; "required": false; }; "styles": { "alias": "styles"; "required": false; }; "title": { "alias": "title"; "required": false; }; "zIndex": { "alias": "zIndex"; "required": false; }; "zoomOnClick": { "alias": "zoomOnClick"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "clusteringbegin": "clusteringbegin"; "clusteringend": "clusteringend"; "clusterClick": "clusterClick"; "markerClustererInitialized": "markerClustererInitialized"; }, ["_markers"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MapMarkerClusterer, "map-marker-clusterer", ["mapMarkerClusterer"], { "ariaLabelFn": { "alias": "ariaLabelFn"; "required": false; }; "averageCenter": { "alias": "averageCenter"; "required": false; }; "batchSize": { "alias": "batchSize"; "required": false; }; "batchSizeIE": { "alias": "batchSizeIE"; "required": false; }; "calculator": { "alias": "calculator"; "required": false; }; "clusterClass": { "alias": "clusterClass"; "required": false; }; "enableRetinaIcons": { "alias": "enableRetinaIcons"; "required": false; }; "gridSize": { "alias": "gridSize"; "required": false; }; "ignoreHidden": { "alias": "ignoreHidden"; "required": false; }; "imageExtension": { "alias": "imageExtension"; "required": false; }; "imagePath": { "alias": "imagePath"; "required": false; }; "imageSizes": { "alias": "imageSizes"; "required": false; }; "maxZoom": { "alias": "maxZoom"; "required": false; }; "minimumClusterSize": { "alias": "minimumClusterSize"; "required": false; }; "styles": { "alias": "styles"; "required": false; }; "title": { "alias": "title"; "required": false; }; "zIndex": { "alias": "zIndex"; "required": false; }; "zoomOnClick": { "alias": "zoomOnClick"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "clusteringbegin": "clusteringbegin"; "clusteringend": "clusteringend"; "clusterClick": "clusterClick"; }, ["_markers"], ["*"], false, never>;
 }
 
 /**
@@ -1433,11 +1398,8 @@ export declare class MapPolygon implements OnInit, OnDestroy {
      * See developers.google.com/maps/documentation/javascript/reference/polygon#Polygon.rightclick
      */
     readonly polygonRightclick: Observable<google.maps.PolyMouseEvent>;
-    /** Event emitted when the polygon is initialized. */
-    readonly polygonInitialized: EventEmitter<google.maps.Polygon>;
     constructor(_map: GoogleMap, _ngZone: NgZone);
     ngOnInit(): void;
-    private _initialize;
     ngOnDestroy(): void;
     /**
      * See
@@ -1465,7 +1427,7 @@ export declare class MapPolygon implements OnInit, OnDestroy {
     private _watchForPathChanges;
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapPolygon, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapPolygon, "map-polygon", ["mapPolygon"], { "options": { "alias": "options"; "required": false; }; "paths": { "alias": "paths"; "required": false; }; }, { "polygonClick": "polygonClick"; "polygonDblclick": "polygonDblclick"; "polygonDrag": "polygonDrag"; "polygonDragend": "polygonDragend"; "polygonDragstart": "polygonDragstart"; "polygonMousedown": "polygonMousedown"; "polygonMousemove": "polygonMousemove"; "polygonMouseout": "polygonMouseout"; "polygonMouseover": "polygonMouseover"; "polygonMouseup": "polygonMouseup"; "polygonRightclick": "polygonRightclick"; "polygonInitialized": "polygonInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapPolygon, "map-polygon", ["mapPolygon"], { "options": { "alias": "options"; "required": false; }; "paths": { "alias": "paths"; "required": false; }; }, { "polygonClick": "polygonClick"; "polygonDblclick": "polygonDblclick"; "polygonDrag": "polygonDrag"; "polygonDragend": "polygonDragend"; "polygonDragstart": "polygonDragstart"; "polygonMousedown": "polygonMousedown"; "polygonMousemove": "polygonMousemove"; "polygonMouseout": "polygonMouseout"; "polygonMouseover": "polygonMouseover"; "polygonMouseup": "polygonMouseup"; "polygonRightclick": "polygonRightclick"; }, never, never, false, never>;
 }
 
 /**
@@ -1532,11 +1494,8 @@ export declare class MapPolyline implements OnInit, OnDestroy {
      * See developers.google.com/maps/documentation/javascript/reference/polygon#Polyline.rightclick
      */
     readonly polylineRightclick: Observable<google.maps.PolyMouseEvent>;
-    /** Event emitted when the polyline is initialized. */
-    readonly polylineInitialized: EventEmitter<google.maps.Polyline>;
     constructor(_map: GoogleMap, _ngZone: NgZone);
     ngOnInit(): void;
-    private _initialize;
     ngOnDestroy(): void;
     /**
      * See
@@ -1560,7 +1519,7 @@ export declare class MapPolyline implements OnInit, OnDestroy {
     private _watchForPathChanges;
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapPolyline, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapPolyline, "map-polyline", ["mapPolyline"], { "options": { "alias": "options"; "required": false; }; "path": { "alias": "path"; "required": false; }; }, { "polylineClick": "polylineClick"; "polylineDblclick": "polylineDblclick"; "polylineDrag": "polylineDrag"; "polylineDragend": "polylineDragend"; "polylineDragstart": "polylineDragstart"; "polylineMousedown": "polylineMousedown"; "polylineMousemove": "polylineMousemove"; "polylineMouseout": "polylineMouseout"; "polylineMouseover": "polylineMouseover"; "polylineMouseup": "polylineMouseup"; "polylineRightclick": "polylineRightclick"; "polylineInitialized": "polylineInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapPolyline, "map-polyline", ["mapPolyline"], { "options": { "alias": "options"; "required": false; }; "path": { "alias": "path"; "required": false; }; }, { "polylineClick": "polylineClick"; "polylineDblclick": "polylineDblclick"; "polylineDrag": "polylineDrag"; "polylineDragend": "polylineDragend"; "polylineDragstart": "polylineDragstart"; "polylineMousedown": "polylineMousedown"; "polylineMousemove": "polylineMousemove"; "polylineMouseout": "polylineMouseout"; "polylineMouseover": "polylineMouseover"; "polylineMouseup": "polylineMouseup"; "polylineRightclick": "polylineRightclick"; }, never, never, false, never>;
 }
 
 /**
@@ -1642,11 +1601,8 @@ export declare class MapRectangle implements OnInit, OnDestroy {
      * developers.google.com/maps/documentation/javascript/reference/polygon#Rectangle.rightclick
      */
     readonly rectangleRightclick: Observable<google.maps.MapMouseEvent>;
-    /** Event emitted when the rectangle is initialized. */
-    readonly rectangleInitialized: EventEmitter<google.maps.Rectangle>;
     constructor(_map: GoogleMap, _ngZone: NgZone);
     ngOnInit(): void;
-    private _initialize;
     ngOnDestroy(): void;
     /**
      * See
@@ -1673,7 +1629,7 @@ export declare class MapRectangle implements OnInit, OnDestroy {
     private _watchForBoundsChanges;
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapRectangle, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapRectangle, "map-rectangle", ["mapRectangle"], { "options": { "alias": "options"; "required": false; }; "bounds": { "alias": "bounds"; "required": false; }; }, { "boundsChanged": "boundsChanged"; "rectangleClick": "rectangleClick"; "rectangleDblclick": "rectangleDblclick"; "rectangleDrag": "rectangleDrag"; "rectangleDragend": "rectangleDragend"; "rectangleDragstart": "rectangleDragstart"; "rectangleMousedown": "rectangleMousedown"; "rectangleMousemove": "rectangleMousemove"; "rectangleMouseout": "rectangleMouseout"; "rectangleMouseover": "rectangleMouseover"; "rectangleMouseup": "rectangleMouseup"; "rectangleRightclick": "rectangleRightclick"; "rectangleInitialized": "rectangleInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapRectangle, "map-rectangle", ["mapRectangle"], { "options": { "alias": "options"; "required": false; }; "bounds": { "alias": "bounds"; "required": false; }; }, { "boundsChanged": "boundsChanged"; "rectangleClick": "rectangleClick"; "rectangleDblclick": "rectangleDblclick"; "rectangleDrag": "rectangleDrag"; "rectangleDragend": "rectangleDragend"; "rectangleDragstart": "rectangleDragstart"; "rectangleMousedown": "rectangleMousedown"; "rectangleMousemove": "rectangleMousemove"; "rectangleMouseout": "rectangleMouseout"; "rectangleMouseover": "rectangleMouseover"; "rectangleMouseup": "rectangleMouseup"; "rectangleRightclick": "rectangleRightclick"; }, never, never, false, never>;
 }
 
 /**
@@ -1696,17 +1652,14 @@ export declare class MapTrafficLayer implements OnInit, OnDestroy {
      * Whether the traffic layer refreshes with updated information automatically.
      */
     set autoRefresh(autoRefresh: boolean);
-    /** Event emitted when the traffic layer is initialized. */
-    readonly trafficLayerInitialized: EventEmitter<google.maps.TrafficLayer>;
     constructor(_map: GoogleMap, _ngZone: NgZone);
     ngOnInit(): void;
-    private _initialize;
     ngOnDestroy(): void;
     private _combineOptions;
     private _watchForAutoRefreshChanges;
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapTrafficLayer, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapTrafficLayer, "map-traffic-layer", ["mapTrafficLayer"], { "autoRefresh": { "alias": "autoRefresh"; "required": false; }; }, { "trafficLayerInitialized": "trafficLayerInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapTrafficLayer, "map-traffic-layer", ["mapTrafficLayer"], { "autoRefresh": { "alias": "autoRefresh"; "required": false; }; }, {}, never, never, false, never>;
 }
 
 /**
@@ -1714,23 +1667,19 @@ export declare class MapTrafficLayer implements OnInit, OnDestroy {
  *
  * See developers.google.com/maps/documentation/javascript/reference/map#TransitLayer
  */
-export declare class MapTransitLayer implements OnInit, OnDestroy {
-    private _map;
-    private _zone;
+export declare class MapTransitLayer extends MapBaseLayer {
     /**
      * The underlying google.maps.TransitLayer object.
      *
      * See developers.google.com/maps/documentation/javascript/reference/map#TransitLayer
      */
     transitLayer?: google.maps.TransitLayer;
-    /** Event emitted when the transit layer is initialized. */
-    readonly transitLayerInitialized: EventEmitter<google.maps.TransitLayer>;
-    ngOnInit(): void;
-    private _initialize;
-    ngOnDestroy(): void;
+    protected _initializeObject(): void;
+    protected _setMap(): void;
+    protected _unsetMap(): void;
     private _assertLayerInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapTransitLayer, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapTransitLayer, "map-transit-layer", ["mapTransitLayer"], {}, { "transitLayerInitialized": "transitLayerInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapTransitLayer, "map-transit-layer", ["mapTransitLayer"], {}, {}, never, never, false, never>;
 }
 
 

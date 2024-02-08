@@ -447,7 +447,7 @@ class GoogleMap {
         }
     }
     static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.1", ngImport: i0, type: GoogleMap, deps: [{ token: i0.ElementRef }, { token: i0.NgZone }, { token: PLATFORM_ID }], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.1.1", type: GoogleMap, isStandalone: true, selector: "google-map", inputs: { height: "height", width: "width", mapTypeId: "mapTypeId", center: "center", zoom: "zoom", options: "options" }, outputs: { mapInitialized: "mapInitialized", authFailure: "authFailure", boundsChanged: "boundsChanged", centerChanged: "centerChanged", mapClick: "mapClick", mapDblclick: "mapDblclick", mapDrag: "mapDrag", mapDragend: "mapDragend", mapDragstart: "mapDragstart", headingChanged: "headingChanged", idle: "idle", maptypeidChanged: "maptypeidChanged", mapMousemove: "mapMousemove", mapMouseout: "mapMouseout", mapMouseover: "mapMouseover", projectionChanged: "projectionChanged", mapRightclick: "mapRightclick", tilesloaded: "tilesloaded", tiltChanged: "tiltChanged", zoomChanged: "zoomChanged" }, exportAs: ["googleMap"], usesOnChanges: true, ngImport: i0, template: '<div class="map-container"></div><ng-content />', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "17.1.1", type: GoogleMap, isStandalone: true, selector: "google-map", inputs: { height: "height", width: "width", mapId: "mapId", mapTypeId: "mapTypeId", center: "center", zoom: "zoom", options: "options" }, outputs: { mapInitialized: "mapInitialized", authFailure: "authFailure", boundsChanged: "boundsChanged", centerChanged: "centerChanged", mapClick: "mapClick", mapDblclick: "mapDblclick", mapDrag: "mapDrag", mapDragend: "mapDragend", mapDragstart: "mapDragstart", headingChanged: "headingChanged", idle: "idle", maptypeidChanged: "maptypeidChanged", mapMousemove: "mapMousemove", mapMouseout: "mapMouseout", mapMouseover: "mapMouseover", projectionChanged: "projectionChanged", mapRightclick: "mapRightclick", tilesloaded: "tilesloaded", tiltChanged: "tiltChanged", zoomChanged: "zoomChanged" }, exportAs: ["googleMap"], usesOnChanges: true, ngImport: i0, template: '<div class="map-container"></div><ng-content />', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
 }
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.1", ngImport: i0, type: GoogleMap, decorators: [{
             type: Component,
@@ -465,6 +465,8 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.1", ngImpor
                 }] }], propDecorators: { height: [{
                 type: Input
             }], width: [{
+                type: Input
+            }], mapId: [{
                 type: Input
             }], mapTypeId: [{
                 type: Input
@@ -1324,6 +1326,20 @@ class MapInfoWindow {
         return this.infoWindow.getZIndex();
     }
     /**
+     * Opens the MapInfoWindow using the provided AdvancedMarkerElement.
+     */
+    openAdvancedMarkerElement(advancedMarkerElement, content) {
+        this._assertInitialized();
+        if (!advancedMarkerElement) {
+            return;
+        }
+        this.infoWindow.close();
+        if (content) {
+            this.infoWindow.setContent(content);
+        }
+        this.infoWindow.open(this._googleMap.googleMap, advancedMarkerElement);
+    }
+    /**
      * Opens the MapInfoWindow using the provided anchor. If the anchor is not set,
      * then the position property of the options input is used instead.
      */
@@ -1578,7 +1594,7 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.1", ngImpor
  * Default options for the Google Maps marker component. Displays a marker
  * at the Googleplex.
  */
-const DEFAULT_MARKER_OPTIONS = {
+const DEFAULT_MARKER_OPTIONS$1 = {
     position: { lat: 37.421995, lng: -122.084092 },
 };
 /**
@@ -1915,7 +1931,7 @@ class MapMarker {
     }
     /** Creates a combined options object using the passed-in options and the individual inputs. */
     _combineOptions() {
-        const options = this._options || DEFAULT_MARKER_OPTIONS;
+        const options = this._options || DEFAULT_MARKER_OPTIONS$1;
         return {
             ...options,
             title: this._title || options.title,
@@ -3338,6 +3354,202 @@ function isLatLngLiteral(value) {
     return value && typeof value.lat === 'number' && typeof value.lng === 'number';
 }
 
+/// <reference types="google.maps" />
+/**
+ * Default options for the Google Maps marker component. Displays a marker
+ * at the Googleplex.
+ */
+const DEFAULT_MARKER_OPTIONS = {
+    position: { lat: 37.221995, lng: -122.184092 },
+};
+/**
+ * Angular component that renders a Google Maps marker via the Google Maps JavaScript API.
+ *
+ * See developers.google.com/maps/documentation/javascript/reference/marker
+ */
+class MapAdvancedMarker {
+    /**
+     * Rollover text. If provided, an accessibility text (e.g. for use with screen readers) will be added to the AdvancedMarkerElement with the provided value.
+     * See: https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.title
+     */
+    set title(title) {
+        this._title = title;
+    }
+    /**
+     * Sets the AdvancedMarkerElement's position. An AdvancedMarkerElement may be constructed without a position, but will not be displayed until its position is provided - for example, by a user's actions or choices. An AdvancedMarkerElement's position can be provided by setting AdvancedMarkerElement.position if not provided at the construction.
+     * Note: AdvancedMarkerElement with altitude is only supported on vector maps.
+     * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.position
+     */
+    set position(position) {
+        this._position = position;
+    }
+    /**
+     * The DOM Element backing the visual of an AdvancedMarkerElement.
+     * Note: AdvancedMarkerElement does not clone the passed-in DOM element. Once the DOM element is passed to an AdvancedMarkerElement, passing the same DOM element to another AdvancedMarkerElement will move the DOM element and cause the previous AdvancedMarkerElement to look empty.
+     * See: https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.content
+     */
+    set content(content) {
+        this._content = content;
+    }
+    /**
+     * If true, the AdvancedMarkerElement can be dragged.
+     * Note: AdvancedMarkerElement with altitude is not draggable.
+     * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.gmpDraggable
+     */
+    set gmpDraggable(draggable) {
+        this._draggable = draggable;
+    }
+    /**
+     * Options for constructing an AdvancedMarkerElement.
+     * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions
+     */
+    set options(options) {
+        this._options = options;
+    }
+    /**
+     * AdvancedMarkerElements on the map are prioritized by zIndex, with higher values indicating higher display.
+     * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.zIndex
+     */
+    set zIndex(zIndex) {
+        this._zIndex = zIndex;
+    }
+    constructor(_googleMap, _ngZone) {
+        this._googleMap = _googleMap;
+        this._ngZone = _ngZone;
+        this._eventManager = new MapEventManager(inject(NgZone));
+        /**
+         * This event is fired when the AdvancedMarkerElement element is clicked.
+         * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.click
+         */
+        this.mapClick = this._eventManager.getLazyEmitter('click');
+        /**
+         * This event is repeatedly fired while the user drags the AdvancedMarkerElement.
+         * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.drag
+         */
+        this.mapDrag = this._eventManager.getLazyEmitter('drag');
+        /**
+         * This event is fired when the user stops dragging the AdvancedMarkerElement.
+         * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.dragend
+         */
+        this.mapDragend = this._eventManager.getLazyEmitter('dragend');
+        /**
+         * This event is fired when the user starts dragging the AdvancedMarkerElement.
+         * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.dragstart
+         */
+        this.mapDragstart = this._eventManager.getLazyEmitter('dragstart');
+        /** Event emitted when the marker is initialized. */
+        this.markerInitialized = new EventEmitter();
+    }
+    ngOnInit() {
+        if (!this._googleMap._isBrowser) {
+            return;
+        }
+        if (google.maps.marker?.AdvancedMarkerElement && this._googleMap.googleMap) {
+            this._initialize(this._googleMap.googleMap, google.maps.marker.AdvancedMarkerElement);
+        }
+        else {
+            this._ngZone.runOutsideAngular(() => {
+                Promise.all([this._googleMap._resolveMap(), google.maps.importLibrary('marker')]).then(([map, lib]) => {
+                    this._initialize(map, lib.AdvancedMarkerElement);
+                });
+            });
+        }
+    }
+    _initialize(map, advancedMarkerConstructor) {
+        // Create the object outside the zone so its events don't trigger change detection.
+        // We'll bring it back in inside the `MapEventManager` only for the events that the
+        // user has subscribed to.
+        this._ngZone.runOutsideAngular(() => {
+            this.advancedMarker = new advancedMarkerConstructor(this._combineOptions());
+            this._assertInitialized();
+            this.advancedMarker.map = map;
+            this._eventManager.setTarget(this.advancedMarker);
+            this.markerInitialized.next(this.advancedMarker);
+        });
+    }
+    ngOnChanges(changes) {
+        const { advancedMarker, _content, _position, _title, _draggable, _zIndex } = this;
+        if (advancedMarker) {
+            if (changes['title']) {
+                advancedMarker.title = _title;
+            }
+            if (changes['content']) {
+                advancedMarker.content = _content;
+            }
+            if (changes['gmpDraggable']) {
+                advancedMarker.gmpDraggable = _draggable;
+            }
+            if (changes['content']) {
+                advancedMarker.content = _content;
+            }
+            if (changes['position']) {
+                advancedMarker.position = _position;
+            }
+            if (changes['zIndex']) {
+                advancedMarker.zIndex = _zIndex;
+            }
+        }
+    }
+    ngOnDestroy() {
+        this.markerInitialized.complete();
+        this._eventManager.destroy();
+    }
+    /** Creates a combined options object using the passed-in options and the individual inputs. */
+    _combineOptions() {
+        const options = this._options || DEFAULT_MARKER_OPTIONS;
+        return {
+            ...options,
+            title: this._title || options.title,
+            position: this._position || options.position,
+            content: this._content || options.content,
+            zIndex: this._zIndex ?? options.zIndex,
+            gmpDraggable: this._draggable ?? options.gmpDraggable,
+            map: this._googleMap.googleMap,
+        };
+    }
+    /** Asserts that the map has been initialized. */
+    _assertInitialized() {
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+            if (!this.advancedMarker) {
+                throw Error('Cannot interact with a Google Map Marker before it has been ' +
+                    'initialized. Please wait for the Marker to load before trying to interact with it.');
+            }
+        }
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "17.1.1", ngImport: i0, type: MapAdvancedMarker, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "17.1.1", type: MapAdvancedMarker, isStandalone: true, selector: "map-advanced-marker", inputs: { title: "title", position: "position", content: "content", gmpDraggable: "gmpDraggable", options: "options", zIndex: "zIndex" }, outputs: { mapClick: "mapClick", mapDrag: "mapDrag", mapDragend: "mapDragend", mapDragstart: "mapDragstart", markerInitialized: "markerInitialized" }, exportAs: ["mapAdvancedMarker"], usesOnChanges: true, ngImport: i0 }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.1", ngImport: i0, type: MapAdvancedMarker, decorators: [{
+            type: Directive,
+            args: [{
+                    selector: 'map-advanced-marker',
+                    exportAs: 'mapAdvancedMarker',
+                    standalone: true,
+                }]
+        }], ctorParameters: () => [{ type: GoogleMap }, { type: i0.NgZone }], propDecorators: { title: [{
+                type: Input
+            }], position: [{
+                type: Input
+            }], content: [{
+                type: Input
+            }], gmpDraggable: [{
+                type: Input
+            }], options: [{
+                type: Input
+            }], zIndex: [{
+                type: Input
+            }], mapClick: [{
+                type: Output
+            }], mapDrag: [{
+                type: Output
+            }], mapDragend: [{
+                type: Output
+            }], mapDragstart: [{
+                type: Output
+            }], markerInitialized: [{
+                type: Output
+            }] } });
+
 const COMPONENTS = [
     GoogleMap,
     MapBaseLayer,
@@ -3349,6 +3561,7 @@ const COMPONENTS = [
     MapInfoWindow,
     MapKmlLayer,
     MapMarker,
+    MapAdvancedMarker,
     MapMarkerClusterer,
     MapPolygon,
     MapPolyline,
@@ -3368,6 +3581,7 @@ class GoogleMapsModule {
             MapInfoWindow,
             MapKmlLayer,
             MapMarker,
+            MapAdvancedMarker,
             MapMarkerClusterer,
             MapPolygon,
             MapPolyline,
@@ -3383,6 +3597,7 @@ class GoogleMapsModule {
             MapInfoWindow,
             MapKmlLayer,
             MapMarker,
+            MapAdvancedMarker,
             MapMarkerClusterer,
             MapPolygon,
             MapPolyline,
@@ -3499,5 +3714,5 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "17.1.1", ngImpor
  * Generated bundle index. Do not edit.
  */
 
-export { GoogleMap, GoogleMapsModule, MapBaseLayer, MapBicyclingLayer, MapCircle, MapDirectionsRenderer, MapDirectionsService, MapEventManager, MapGeocoder, MapGroundOverlay, MapHeatmapLayer, MapInfoWindow, MapKmlLayer, MapMarker, MapMarkerClusterer, MapPolygon, MapPolyline, MapRectangle, MapTrafficLayer, MapTransitLayer };
+export { GoogleMap, GoogleMapsModule, MapAdvancedMarker, MapBaseLayer, MapBicyclingLayer, MapCircle, MapDirectionsRenderer, MapDirectionsService, MapEventManager, MapGeocoder, MapGroundOverlay, MapHeatmapLayer, MapInfoWindow, MapKmlLayer, MapMarker, MapMarkerClusterer, MapPolygon, MapPolyline, MapRectangle, MapTrafficLayer, MapTransitLayer };
 //# sourceMappingURL=google-maps.mjs.map

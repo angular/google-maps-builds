@@ -90,6 +90,17 @@ declare const DEFAULT_MARKER_OPTIONS: {
     };
 };
 
+/**
+ * Default options for the Google Maps marker component. Displays a marker
+ * at the Googleplex.
+ */
+declare const DEFAULT_MARKER_OPTIONS_2: {
+    position: {
+        lat: number;
+        lng: number;
+    };
+};
+
 /** default options set to the Googleplex */
 declare const DEFAULT_OPTIONS: google.maps.MapOptions;
 
@@ -119,6 +130,11 @@ export declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
     height: string | number | null;
     /** Width of the map. Set this to `null` if you'd like to control the width through CSS. */
     width: string | number | null;
+    /**
+     * The Map ID of the map. This parameter cannot be set or changed after a map is instantiated.
+     * See: https://developers.google.com/maps/documentation/javascript/reference/map#MapOptions.mapId
+     */
+    mapId: string | undefined;
     /**
      * Type of map that should be rendered. E.g. hybrid map, terrain map etc.
      * See: https://developers.google.com/maps/documentation/javascript/reference/map#MapTypeId
@@ -325,12 +341,12 @@ export declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
     /** Asserts that the map has been initialized. */
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<GoogleMap, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<GoogleMap, "google-map", ["googleMap"], { "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "mapTypeId": { "alias": "mapTypeId"; "required": false; }; "center": { "alias": "center"; "required": false; }; "zoom": { "alias": "zoom"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "mapInitialized": "mapInitialized"; "authFailure": "authFailure"; "boundsChanged": "boundsChanged"; "centerChanged": "centerChanged"; "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "headingChanged": "headingChanged"; "idle": "idle"; "maptypeidChanged": "maptypeidChanged"; "mapMousemove": "mapMousemove"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "projectionChanged": "projectionChanged"; "mapRightclick": "mapRightclick"; "tilesloaded": "tilesloaded"; "tiltChanged": "tiltChanged"; "zoomChanged": "zoomChanged"; }, never, ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<GoogleMap, "google-map", ["googleMap"], { "height": { "alias": "height"; "required": false; }; "width": { "alias": "width"; "required": false; }; "mapId": { "alias": "mapId"; "required": false; }; "mapTypeId": { "alias": "mapTypeId"; "required": false; }; "center": { "alias": "center"; "required": false; }; "zoom": { "alias": "zoom"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "mapInitialized": "mapInitialized"; "authFailure": "authFailure"; "boundsChanged": "boundsChanged"; "centerChanged": "centerChanged"; "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "headingChanged": "headingChanged"; "idle": "idle"; "maptypeidChanged": "maptypeidChanged"; "mapMousemove": "mapMousemove"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "projectionChanged": "projectionChanged"; "mapRightclick": "mapRightclick"; "tilesloaded": "tilesloaded"; "tiltChanged": "tiltChanged"; "zoomChanged": "zoomChanged"; }, never, ["*"], true, never>;
 }
 
 export declare class GoogleMapsModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<GoogleMapsModule, never>;
-    static ɵmod: i0.ɵɵNgModuleDeclaration<GoogleMapsModule, never, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapMarkerClusterer, typeof i12.MapPolygon, typeof i13.MapPolyline, typeof i14.MapRectangle, typeof i15.MapTrafficLayer, typeof i16.MapTransitLayer], [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapMarkerClusterer, typeof i12.MapPolygon, typeof i13.MapPolyline, typeof i14.MapRectangle, typeof i15.MapTrafficLayer, typeof i16.MapTransitLayer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<GoogleMapsModule, never, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.MapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer], [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.MapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer]>;
     static ɵinj: i0.ɵɵInjectorDeclaration<GoogleMapsModule>;
 }
 
@@ -355,35 +371,42 @@ declare namespace i10 {
 
 declare namespace i11 {
     export {
-        MapMarkerClusterer
+        DEFAULT_MARKER_OPTIONS_2 as DEFAULT_MARKER_OPTIONS,
+        MapAdvancedMarker
     }
 }
 
 declare namespace i12 {
     export {
-        MapPolygon
+        MapMarkerClusterer
     }
 }
 
 declare namespace i13 {
     export {
-        MapPolyline
+        MapPolygon
     }
 }
 
 declare namespace i14 {
     export {
-        MapRectangle
+        MapPolyline
     }
 }
 
 declare namespace i15 {
     export {
-        MapTrafficLayer
+        MapRectangle
     }
 }
 
 declare namespace i16 {
+    export {
+        MapTrafficLayer
+    }
+}
+
+declare namespace i17 {
     export {
         MapTransitLayer
     }
@@ -436,6 +459,95 @@ declare namespace i9 {
     export {
         MapKmlLayer
     }
+}
+
+/**
+ * Angular component that renders a Google Maps marker via the Google Maps JavaScript API.
+ *
+ * See developers.google.com/maps/documentation/javascript/reference/marker
+ */
+export declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy {
+    private readonly _googleMap;
+    private _ngZone;
+    private _eventManager;
+    /**
+     * Rollover text. If provided, an accessibility text (e.g. for use with screen readers) will be added to the AdvancedMarkerElement with the provided value.
+     * See: https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.title
+     */
+    set title(title: string);
+    private _title;
+    /**
+     * Sets the AdvancedMarkerElement's position. An AdvancedMarkerElement may be constructed without a position, but will not be displayed until its position is provided - for example, by a user's actions or choices. An AdvancedMarkerElement's position can be provided by setting AdvancedMarkerElement.position if not provided at the construction.
+     * Note: AdvancedMarkerElement with altitude is only supported on vector maps.
+     * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.position
+     */
+    set position(position: google.maps.LatLngLiteral | google.maps.LatLng | google.maps.LatLngAltitude | google.maps.LatLngAltitudeLiteral);
+    private _position;
+    /**
+     * The DOM Element backing the visual of an AdvancedMarkerElement.
+     * Note: AdvancedMarkerElement does not clone the passed-in DOM element. Once the DOM element is passed to an AdvancedMarkerElement, passing the same DOM element to another AdvancedMarkerElement will move the DOM element and cause the previous AdvancedMarkerElement to look empty.
+     * See: https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.content
+     */
+    set content(content: Node | google.maps.marker.PinElement);
+    private _content;
+    /**
+     * If true, the AdvancedMarkerElement can be dragged.
+     * Note: AdvancedMarkerElement with altitude is not draggable.
+     * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.gmpDraggable
+     */
+    set gmpDraggable(draggable: boolean);
+    private _draggable;
+    /**
+     * Options for constructing an AdvancedMarkerElement.
+     * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions
+     */
+    set options(options: google.maps.marker.AdvancedMarkerElementOptions);
+    private _options;
+    /**
+     * AdvancedMarkerElements on the map are prioritized by zIndex, with higher values indicating higher display.
+     * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.zIndex
+     */
+    set zIndex(zIndex: number);
+    private _zIndex;
+    /**
+     * This event is fired when the AdvancedMarkerElement element is clicked.
+     * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.click
+     */
+    readonly mapClick: Observable<google.maps.MapMouseEvent>;
+    /**
+     * This event is repeatedly fired while the user drags the AdvancedMarkerElement.
+     * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.drag
+     */
+    readonly mapDrag: Observable<google.maps.MapMouseEvent>;
+    /**
+     * This event is fired when the user stops dragging the AdvancedMarkerElement.
+     * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.dragend
+     */
+    readonly mapDragend: Observable<google.maps.MapMouseEvent>;
+    /**
+     * This event is fired when the user starts dragging the AdvancedMarkerElement.
+     * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.dragstart
+     */
+    readonly mapDragstart: Observable<google.maps.MapMouseEvent>;
+    /** Event emitted when the marker is initialized. */
+    readonly markerInitialized: EventEmitter<google.maps.marker.AdvancedMarkerElement>;
+    /**
+     * The underlying google.maps.marker.AdvancedMarkerElement object.
+     *
+     * See developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement
+     */
+    advancedMarker: google.maps.marker.AdvancedMarkerElement;
+    constructor(_googleMap: GoogleMap, _ngZone: NgZone);
+    ngOnInit(): void;
+    private _initialize;
+    ngOnChanges(changes: SimpleChanges): void;
+    ngOnDestroy(): void;
+    /** Creates a combined options object using the passed-in options and the individual inputs. */
+    private _combineOptions;
+    /** Asserts that the map has been initialized. */
+    private _assertInitialized;
+    static ɵfac: i0.ɵɵFactoryDeclaration<MapAdvancedMarker, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapAdvancedMarker, "map-advanced-marker", ["mapAdvancedMarker"], { "title": { "alias": "title"; "required": false; }; "position": { "alias": "position"; "required": false; }; "content": { "alias": "content"; "required": false; }; "gmpDraggable": { "alias": "gmpDraggable"; "required": false; }; "options": { "alias": "options"; "required": false; }; "zIndex": { "alias": "zIndex"; "required": false; }; }, { "mapClick": "mapClick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "markerInitialized": "markerInitialized"; }, never, never, true, never>;
 }
 
 
@@ -941,6 +1053,10 @@ export declare class MapInfoWindow implements OnInit, OnDestroy {
      * developers.google.com/maps/documentation/javascript/reference/info-window#InfoWindow.getZIndex
      */
     getZIndex(): number;
+    /**
+     * Opens the MapInfoWindow using the provided AdvancedMarkerElement.
+     */
+    openAdvancedMarkerElement(advancedMarkerElement: google.maps.marker.AdvancedMarkerElement, content?: string | Element | Text): void;
     /**
      * Opens the MapInfoWindow using the provided anchor. If the anchor is not set,
      * then the position property of the options input is used instead.

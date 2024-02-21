@@ -437,6 +437,7 @@ class GoogleMap {
             // Passing in an undefined `mapTypeId` seems to break tile loading
             // so make sure that we have some kind of default (see #22082).
             mapTypeId: this.mapTypeId || options.mapTypeId || DEFAULT_OPTIONS.mapTypeId,
+            mapId: this.mapId || options.mapId,
         };
     }
     /** Asserts that the map has been initialized. */
@@ -3493,6 +3494,9 @@ class MapAdvancedMarker {
     ngOnDestroy() {
         this.markerInitialized.complete();
         this._eventManager.destroy();
+        if (this.advancedMarker) {
+            this.advancedMarker.map = null;
+        }
     }
     /** Creates a combined options object using the passed-in options and the individual inputs. */
     _combineOptions() {

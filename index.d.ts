@@ -466,7 +466,7 @@ declare namespace i9 {
  *
  * See developers.google.com/maps/documentation/javascript/reference/marker
  */
-export declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy {
+export declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
     private readonly _googleMap;
     private _ngZone;
     private _eventManager;
@@ -488,7 +488,7 @@ export declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy {
      * Note: AdvancedMarkerElement does not clone the passed-in DOM element. Once the DOM element is passed to an AdvancedMarkerElement, passing the same DOM element to another AdvancedMarkerElement will move the DOM element and cause the previous AdvancedMarkerElement to look empty.
      * See: https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.content
      */
-    set content(content: Node | google.maps.marker.PinElement);
+    set content(content: Node | google.maps.marker.PinElement | null);
     private _content;
     /**
      * If true, the AdvancedMarkerElement can be dragged.
@@ -542,6 +542,7 @@ export declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy {
     private _initialize;
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
+    getAnchor(): google.maps.marker.AdvancedMarkerElement;
     /** Creates a combined options object using the passed-in options and the individual inputs. */
     private _combineOptions;
     /** Asserts that the map has been initialized. */
@@ -553,7 +554,7 @@ export declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy {
 
 /// <reference types="google.maps" />
 export declare interface MapAnchorPoint {
-    getAnchor(): google.maps.MVCObject;
+    getAnchor(): google.maps.MVCObject | google.maps.marker.AdvancedMarkerElement;
 }
 
 export declare class MapBaseLayer implements OnInit, OnDestroy {
@@ -1055,13 +1056,15 @@ export declare class MapInfoWindow implements OnInit, OnDestroy {
     getZIndex(): number;
     /**
      * Opens the MapInfoWindow using the provided AdvancedMarkerElement.
+     * @deprecated Use the `open` method instead.
+     * @breaking-change 20.0.0
      */
     openAdvancedMarkerElement(advancedMarkerElement: google.maps.marker.AdvancedMarkerElement, content?: string | Element | Text): void;
     /**
      * Opens the MapInfoWindow using the provided anchor. If the anchor is not set,
      * then the position property of the options input is used instead.
      */
-    open(anchor?: MapAnchorPoint, shouldFocus?: boolean): void;
+    open(anchor?: MapAnchorPoint, shouldFocus?: boolean, content?: string | Element | Text): void;
     private _combineOptions;
     private _watchForOptionsChanges;
     private _watchForPositionChanges;

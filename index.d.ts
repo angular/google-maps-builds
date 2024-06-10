@@ -552,7 +552,7 @@ export declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, 
 }
 
 
-/// <reference types="google.maps" />
+/// <reference types="google.maps" preserve="true" />
 export declare interface MapAnchorPoint {
     getAnchor(): google.maps.MVCObject | google.maps.marker.AdvancedMarkerElement;
 }
@@ -1853,7 +1853,7 @@ export declare class MapTransitLayer implements OnInit, OnDestroy {
 }
 
 
-/// <reference types="google.maps" />
+/// <reference types="google.maps" preserve="true" />
 /**
  * Class for clustering markers on a Google Map.
  *

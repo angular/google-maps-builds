@@ -37,8 +37,6 @@
     },
     ".": {
       "types": "./index.d.ts",
-      "esm2022": "./esm2022/google-maps_public_index.mjs",
-      "esm": "./esm2022/google-maps_public_index.mjs",
       "default": "./fesm2022/google-maps.mjs"
     }
   }

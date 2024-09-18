@@ -3427,6 +3427,26 @@ class MapAdvancedMarker {
          */
         this.mapClick = this._eventManager.getLazyEmitter('click');
         /**
+         * This event is fired when the AdvancedMarkerElement is double-clicked.
+         */
+        this.mapDblclick = this._eventManager.getLazyEmitter('dblclick');
+        /**
+         * This event is fired when the mouse moves out of the AdvancedMarkerElement.
+         */
+        this.mapMouseout = this._eventManager.getLazyEmitter('mouseout');
+        /**
+         * This event is fired when the mouse moves over the AdvancedMarkerElement.
+         */
+        this.mapMouseover = this._eventManager.getLazyEmitter('mouseover');
+        /**
+         * This event is fired when the mouse button is released over the AdvancedMarkerElement.
+         */
+        this.mapMouseup = this._eventManager.getLazyEmitter('mouseup');
+        /**
+         * This event is fired when the AdvancedMarkerElement is right-clicked.
+         */
+        this.mapRightclick = this._eventManager.getLazyEmitter('rightclick');
+        /**
          * This event is repeatedly fired while the user drags the AdvancedMarkerElement.
          * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.drag
          */
@@ -3528,7 +3548,7 @@ class MapAdvancedMarker {
         }
     }
     static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.0.0-next.3", ngImport: i0, type: MapAdvancedMarker, deps: [{ token: GoogleMap }, { token: i0.NgZone }], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "19.0.0-next.3", type: MapAdvancedMarker, isStandalone: true, selector: "map-advanced-marker", inputs: { title: "title", position: "position", content: "content", gmpDraggable: "gmpDraggable", options: "options", zIndex: "zIndex" }, outputs: { mapClick: "mapClick", mapDrag: "mapDrag", mapDragend: "mapDragend", mapDragstart: "mapDragstart", markerInitialized: "markerInitialized" }, exportAs: ["mapAdvancedMarker"], usesOnChanges: true, ngImport: i0 }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "19.0.0-next.3", type: MapAdvancedMarker, isStandalone: true, selector: "map-advanced-marker", inputs: { title: "title", position: "position", content: "content", gmpDraggable: "gmpDraggable", options: "options", zIndex: "zIndex" }, outputs: { mapClick: "mapClick", mapDblclick: "mapDblclick", mapMouseout: "mapMouseout", mapMouseover: "mapMouseover", mapMouseup: "mapMouseup", mapRightclick: "mapRightclick", mapDrag: "mapDrag", mapDragend: "mapDragend", mapDragstart: "mapDragstart", markerInitialized: "markerInitialized" }, exportAs: ["mapAdvancedMarker"], usesOnChanges: true, ngImport: i0 }); }
 }
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.0.0-next.3", ngImport: i0, type: MapAdvancedMarker, decorators: [{
             type: Directive,
@@ -3550,6 +3570,16 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.0.0-next.3", 
             }], zIndex: [{
                 type: Input
             }], mapClick: [{
+                type: Output
+            }], mapDblclick: [{
+                type: Output
+            }], mapMouseout: [{
+                type: Output
+            }], mapMouseover: [{
+                type: Output
+            }], mapMouseup: [{
+                type: Output
+            }], mapRightclick: [{
                 type: Output
             }], mapDrag: [{
                 type: Output

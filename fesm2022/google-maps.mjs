@@ -3496,9 +3496,6 @@ class MapAdvancedMarker {
             if (changes['title']) {
                 advancedMarker.title = _title;
             }
-            if (changes['content']) {
-                advancedMarker.content = _content;
-            }
             if (changes['gmpDraggable']) {
                 advancedMarker.gmpDraggable = _draggable;
             }

@@ -1,7 +1,7 @@
 import * as i0 from '@angular/core';
-import { inject, ElementRef, NgZone, EventEmitter, PLATFORM_ID, Component, ChangeDetectionStrategy, ViewEncapsulation, Input, Output, Directive, ContentChildren, NgModule, Injectable } from '@angular/core';
+import { inject, ElementRef, NgZone, EventEmitter, PLATFORM_ID, Component, ChangeDetectionStrategy, ViewEncapsulation, Input, Output, Directive, InjectionToken, ContentChildren, NgModule, Injectable } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { BehaviorSubject, Observable, Subject, combineLatest } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, combineLatest, Subscription } from 'rxjs';
 import { switchMap, take, map, takeUntil } from 'rxjs/operators';
 
 /** Manages event on a Google Maps object, ensuring that events are added only when necessary. */
@@ -1583,6 +1583,9 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.0.0-next.10",
                 type: Output
             }] } });
 
+/** Token that marker directives can use to expose themselves to the clusterer. */
+const MAP_MARKER = new InjectionToken('MAP_MARKER');
+
 // Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
 /**
  * Default options for the Google Maps marker component. Displays a marker
@@ -1946,13 +1949,24 @@ class MapMarker {
         }
     }
     static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.0.0-next.10", ngImport: i0, type: MapMarker, deps: [], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "19.0.0-next.10", type: MapMarker, isStandalone: true, selector: "map-marker", inputs: { title: "title", position: "position", label: "label", clickable: "clickable", options: "options", icon: "icon", visible: "visible" }, outputs: { animationChanged: "animationChanged", mapClick: "mapClick", clickableChanged: "clickableChanged", cursorChanged: "cursorChanged", mapDblclick: "mapDblclick", mapDrag: "mapDrag", mapDragend: "mapDragend", draggableChanged: "draggableChanged", mapDragstart: "mapDragstart", flatChanged: "flatChanged", iconChanged: "iconChanged", mapMousedown: "mapMousedown", mapMouseout: "mapMouseout", mapMouseover: "mapMouseover", mapMouseup: "mapMouseup", positionChanged: "positionChanged", mapRightclick: "mapRightclick", shapeChanged: "shapeChanged", titleChanged: "titleChanged", visibleChanged: "visibleChanged", zindexChanged: "zindexChanged", markerInitialized: "markerInitialized" }, exportAs: ["mapMarker"], usesOnChanges: true, ngImport: i0 }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "19.0.0-next.10", type: MapMarker, isStandalone: true, selector: "map-marker", inputs: { title: "title", position: "position", label: "label", clickable: "clickable", options: "options", icon: "icon", visible: "visible" }, outputs: { animationChanged: "animationChanged", mapClick: "mapClick", clickableChanged: "clickableChanged", cursorChanged: "cursorChanged", mapDblclick: "mapDblclick", mapDrag: "mapDrag", mapDragend: "mapDragend", draggableChanged: "draggableChanged", mapDragstart: "mapDragstart", flatChanged: "flatChanged", iconChanged: "iconChanged", mapMousedown: "mapMousedown", mapMouseout: "mapMouseout", mapMouseover: "mapMouseover", mapMouseup: "mapMouseup", positionChanged: "positionChanged", mapRightclick: "mapRightclick", shapeChanged: "shapeChanged", titleChanged: "titleChanged", visibleChanged: "visibleChanged", zindexChanged: "zindexChanged", markerInitialized: "markerInitialized" }, providers: [
+            {
+                provide: MAP_MARKER,
+                useExisting: MapMarker,
+            },
+        ], exportAs: ["mapMarker"], usesOnChanges: true, ngImport: i0 }); }
 }
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.0.0-next.10", ngImport: i0, type: MapMarker, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-marker',
                     exportAs: 'mapMarker',
+                    providers: [
+                        {
+                            provide: MAP_MARKER,
+                            useExisting: MapMarker,
+                        },
+                    ],
                 }]
         }], ctorParameters: () => [], propDecorators: { title: [{
                 type: Input
@@ -2019,10 +2033,14 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.0.0-next.10",
 const DEFAULT_CLUSTERER_OPTIONS = {};
 /**
  * Angular component for implementing a Google Maps Marker Clusterer.
- *
  * See https://developers.google.com/maps/documentation/javascript/marker-clustering
+ *
+ * @deprecated This component is using a deprecated clustering implementation. Use the
+ *   `map-marker-clusterer` component instead.
+ * @breaking-change 21.0.0
+ *
  */
-class MapMarkerClusterer {
+class DeprecatedMapMarkerClusterer {
     set averageCenter(averageCenter) {
         this._averageCenter = averageCenter;
     }
@@ -2356,13 +2374,13 @@ class MapMarkerClusterer {
             }
         }
     }
-    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.0.0-next.10", ngImport: i0, type: MapMarkerClusterer, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
-    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "19.0.0-next.10", type: MapMarkerClusterer, isStandalone: true, selector: "map-marker-clusterer", inputs: { ariaLabelFn: "ariaLabelFn", averageCenter: "averageCenter", batchSize: "batchSize", batchSizeIE: "batchSizeIE", calculator: "calculator", clusterClass: "clusterClass", enableRetinaIcons: "enableRetinaIcons", gridSize: "gridSize", ignoreHidden: "ignoreHidden", imageExtension: "imageExtension", imagePath: "imagePath", imageSizes: "imageSizes", maxZoom: "maxZoom", minimumClusterSize: "minimumClusterSize", styles: "styles", title: "title", zIndex: "zIndex", zoomOnClick: "zoomOnClick", options: "options" }, outputs: { clusteringbegin: "clusteringbegin", clusteringend: "clusteringend", clusterClick: "clusterClick", markerClustererInitialized: "markerClustererInitialized" }, queries: [{ propertyName: "_markers", predicate: MapMarker, descendants: true }], exportAs: ["mapMarkerClusterer"], usesOnChanges: true, ngImport: i0, template: '<ng-content/>', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.0.0-next.10", ngImport: i0, type: DeprecatedMapMarkerClusterer, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "19.0.0-next.10", type: DeprecatedMapMarkerClusterer, isStandalone: true, selector: "deprecated-map-marker-clusterer", inputs: { ariaLabelFn: "ariaLabelFn", averageCenter: "averageCenter", batchSize: "batchSize", batchSizeIE: "batchSizeIE", calculator: "calculator", clusterClass: "clusterClass", enableRetinaIcons: "enableRetinaIcons", gridSize: "gridSize", ignoreHidden: "ignoreHidden", imageExtension: "imageExtension", imagePath: "imagePath", imageSizes: "imageSizes", maxZoom: "maxZoom", minimumClusterSize: "minimumClusterSize", styles: "styles", title: "title", zIndex: "zIndex", zoomOnClick: "zoomOnClick", options: "options" }, outputs: { clusteringbegin: "clusteringbegin", clusteringend: "clusteringend", clusterClick: "clusterClick", markerClustererInitialized: "markerClustererInitialized" }, queries: [{ propertyName: "_markers", predicate: MapMarker, descendants: true }], exportAs: ["mapMarkerClusterer"], usesOnChanges: true, ngImport: i0, template: '<ng-content/>', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
 }
-i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.0.0-next.10", ngImport: i0, type: MapMarkerClusterer, decorators: [{
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.0.0-next.10", ngImport: i0, type: DeprecatedMapMarkerClusterer, decorators: [{
             type: Component,
             args: [{
-                    selector: 'map-marker-clusterer',
+                    selector: 'deprecated-map-marker-clusterer',
                     exportAs: 'mapMarkerClusterer',
                     changeDetection: ChangeDetectionStrategy.OnPush,
                     template: '<ng-content/>',
@@ -3505,6 +3523,12 @@ class MapAdvancedMarker {
         this._assertInitialized();
         return this.advancedMarker;
     }
+    /** Returns a promise that resolves when the marker has been initialized. */
+    _resolveMarker() {
+        return this.advancedMarker
+            ? Promise.resolve(this.advancedMarker)
+            : this.markerInitialized.pipe(take(1)).toPromise();
+    }
     /** Creates a combined options object using the passed-in options and the individual inputs. */
     _combineOptions() {
         const options = this._options || DEFAULT_MARKER_OPTIONS;
@@ -3528,13 +3552,24 @@ class MapAdvancedMarker {
         }
     }
     static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.0.0-next.10", ngImport: i0, type: MapAdvancedMarker, deps: [], target: i0.ɵɵFactoryTarget.Directive }); }
-    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "19.0.0-next.10", type: MapAdvancedMarker, isStandalone: true, selector: "map-advanced-marker", inputs: { title: "title", position: "position", content: "content", gmpDraggable: "gmpDraggable", options: "options", zIndex: "zIndex" }, outputs: { mapClick: "mapClick", mapDblclick: "mapDblclick", mapMouseout: "mapMouseout", mapMouseover: "mapMouseover", mapMouseup: "mapMouseup", mapRightclick: "mapRightclick", mapDrag: "mapDrag", mapDragend: "mapDragend", mapDragstart: "mapDragstart", markerInitialized: "markerInitialized" }, exportAs: ["mapAdvancedMarker"], usesOnChanges: true, ngImport: i0 }); }
+    static { this.ɵdir = i0.ɵɵngDeclareDirective({ minVersion: "14.0.0", version: "19.0.0-next.10", type: MapAdvancedMarker, isStandalone: true, selector: "map-advanced-marker", inputs: { title: "title", position: "position", content: "content", gmpDraggable: "gmpDraggable", options: "options", zIndex: "zIndex" }, outputs: { mapClick: "mapClick", mapDblclick: "mapDblclick", mapMouseout: "mapMouseout", mapMouseover: "mapMouseover", mapMouseup: "mapMouseup", mapRightclick: "mapRightclick", mapDrag: "mapDrag", mapDragend: "mapDragend", mapDragstart: "mapDragstart", markerInitialized: "markerInitialized" }, providers: [
+            {
+                provide: MAP_MARKER,
+                useExisting: MapAdvancedMarker,
+            },
+        ], exportAs: ["mapAdvancedMarker"], usesOnChanges: true, ngImport: i0 }); }
 }
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.0.0-next.10", ngImport: i0, type: MapAdvancedMarker, decorators: [{
             type: Directive,
             args: [{
                     selector: 'map-advanced-marker',
                     exportAs: 'mapAdvancedMarker',
+                    providers: [
+                        {
+                            provide: MAP_MARKER,
+                            useExisting: MapAdvancedMarker,
+                        },
+                    ],
                 }]
         }], ctorParameters: () => [], propDecorators: { title: [{
                 type: Input
@@ -3570,6 +3605,164 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.0.0-next.10",
                 type: Output
             }] } });
 
+// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
+/**
+ * Angular component for implementing a Google Maps Marker Clusterer.
+ *
+ * See https://developers.google.com/maps/documentation/javascript/marker-clustering
+ */
+class MapMarkerClusterer {
+    constructor() {
+        this._googleMap = inject(GoogleMap);
+        this._ngZone = inject(NgZone);
+        this._currentMarkers = new Set();
+        this._closestMapEventManager = new MapEventManager(this._ngZone);
+        this._markersSubscription = Subscription.EMPTY;
+        /** Whether the clusterer is allowed to be initialized. */
+        this._canInitialize = this._googleMap._isBrowser;
+        /** Emits when clustering has started. */
+        this.clusteringbegin = this._closestMapEventManager.getLazyEmitter('clusteringbegin');
+        /** Emits when clustering is done. */
+        this.clusteringend = this._closestMapEventManager.getLazyEmitter('clusteringend');
+        /** Emits when a cluster has been clicked. */
+        this.clusterClick = new EventEmitter();
+        /** Event emitted when the marker clusterer is initialized. */
+        this.markerClustererInitialized = new EventEmitter();
+    }
+    async ngOnInit() {
+        if (this._canInitialize) {
+            await this._createCluster();
+            // The `clusteringbegin` and `clusteringend` events are
+            // emitted on the map so that's why set it as the target.
+            this._closestMapEventManager.setTarget(this._googleMap.googleMap);
+        }
+    }
+    async ngOnChanges(changes) {
+        const change = changes['renderer'] || changes['algorithm'];
+        // Since the options are set in the constructor, we have to recreate the cluster if they change.
+        if (this.markerClusterer && change && !change.isFirstChange()) {
+            await this._createCluster();
+        }
+    }
+    ngOnDestroy() {
+        this._markersSubscription.unsubscribe();
+        this._closestMapEventManager.destroy();
+        this._destroyCluster();
+    }
+    async _createCluster() {
+        if (!markerClusterer?.MarkerClusterer && (typeof ngDevMode === 'undefined' || ngDevMode)) {
+            throw Error('MarkerClusterer class not found, cannot construct a marker cluster. ' +
+                'Please install the MarkerClusterer library: ' +
+                'https://github.com/googlemaps/js-markerclusterer');
+        }
+        const map = await this._googleMap._resolveMap();
+        this._destroyCluster();
+        // Create the object outside the zone so its events don't trigger change detection.
+        // We'll bring it back in inside the `MapEventManager` only for the events that the
+        // user has subscribed to.
+        this._ngZone.runOutsideAngular(() => {
+            this.markerClusterer = new markerClusterer.MarkerClusterer({
+                map,
+                renderer: this.renderer,
+                algorithm: this.algorithm,
+                onClusterClick: (event, cluster, map) => {
+                    if (this.clusterClick.observers.length) {
+                        this._ngZone.run(() => this.clusterClick.emit(cluster));
+                    }
+                    else {
+                        markerClusterer.defaultOnClusterClickHandler(event, cluster, map);
+                    }
+                },
+            });
+            this.markerClustererInitialized.emit(this.markerClusterer);
+        });
+        await this._watchForMarkerChanges();
+    }
+    async _watchForMarkerChanges() {
+        this._assertInitialized();
+        const initialMarkers = [];
+        const markers = await this._getInternalMarkers(this._markers.toArray());
+        for (const marker of markers) {
+            this._currentMarkers.add(marker);
+            initialMarkers.push(marker);
+        }
+        this.markerClusterer.addMarkers(initialMarkers);
+        this._markersSubscription.unsubscribe();
+        this._markersSubscription = this._markers.changes.subscribe(async (markerComponents) => {
+            this._assertInitialized();
+            const newMarkers = new Set(await this._getInternalMarkers(markerComponents));
+            const markersToAdd = [];
+            const markersToRemove = [];
+            for (const marker of Array.from(newMarkers)) {
+                if (!this._currentMarkers.has(marker)) {
+                    this._currentMarkers.add(marker);
+                    markersToAdd.push(marker);
+                }
+            }
+            for (const marker of Array.from(this._currentMarkers)) {
+                if (!newMarkers.has(marker)) {
+                    markersToRemove.push(marker);
+                }
+            }
+            this.markerClusterer.addMarkers(markersToAdd, true);
+            this.markerClusterer.removeMarkers(markersToRemove, true);
+            this.markerClusterer.render();
+            for (const marker of markersToRemove) {
+                this._currentMarkers.delete(marker);
+            }
+        });
+    }
+    _destroyCluster() {
+        // TODO(crisbeto): the naming here seems odd, but the `MarkerCluster` method isn't
+        // exposed. All this method seems to do at the time of writing is to call into `reset`.
+        // See: https://github.com/googlemaps/js-markerclusterer/blob/main/src/markerclusterer.ts#L205
+        this.markerClusterer?.onRemove();
+        this.markerClusterer = undefined;
+    }
+    _getInternalMarkers(markers) {
+        return Promise.all(markers.map(marker => marker._resolveMarker()));
+    }
+    _assertInitialized() {
+        if (typeof ngDevMode === 'undefined' || ngDevMode) {
+            if (!this._googleMap.googleMap) {
+                throw Error('Cannot access Google Map information before the API has been initialized. ' +
+                    'Please wait for the API to load before trying to interact with it.');
+            }
+            if (!this.markerClusterer) {
+                throw Error('Cannot interact with a MarkerClusterer before it has been initialized. ' +
+                    'Please wait for the MarkerClusterer to load before trying to interact with it.');
+            }
+        }
+    }
+    static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.0.0-next.10", ngImport: i0, type: MapMarkerClusterer, deps: [], target: i0.ɵɵFactoryTarget.Component }); }
+    static { this.ɵcmp = i0.ɵɵngDeclareComponent({ minVersion: "14.0.0", version: "19.0.0-next.10", type: MapMarkerClusterer, isStandalone: true, selector: "map-marker-clusterer", inputs: { renderer: "renderer", algorithm: "algorithm" }, outputs: { clusteringbegin: "clusteringbegin", clusteringend: "clusteringend", clusterClick: "clusterClick", markerClustererInitialized: "markerClustererInitialized" }, queries: [{ propertyName: "_markers", predicate: MAP_MARKER, descendants: true }], exportAs: ["mapMarkerClusterer"], usesOnChanges: true, ngImport: i0, template: '<ng-content/>', isInline: true, changeDetection: i0.ChangeDetectionStrategy.OnPush, encapsulation: i0.ViewEncapsulation.None }); }
+}
+i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.0.0-next.10", ngImport: i0, type: MapMarkerClusterer, decorators: [{
+            type: Component,
+            args: [{
+                    selector: 'map-marker-clusterer',
+                    exportAs: 'mapMarkerClusterer',
+                    changeDetection: ChangeDetectionStrategy.OnPush,
+                    template: '<ng-content/>',
+                    encapsulation: ViewEncapsulation.None,
+                }]
+        }], propDecorators: { renderer: [{
+                type: Input
+            }], algorithm: [{
+                type: Input
+            }], clusteringbegin: [{
+                type: Output
+            }], clusteringend: [{
+                type: Output
+            }], clusterClick: [{
+                type: Output
+            }], markerClustererInitialized: [{
+                type: Output
+            }], _markers: [{
+                type: ContentChildren,
+                args: [MAP_MARKER, { descendants: true }]
+            }] } });
+
 const COMPONENTS = [
     GoogleMap,
     MapBaseLayer,
@@ -3582,12 +3775,13 @@ const COMPONENTS = [
     MapKmlLayer,
     MapMarker,
     MapAdvancedMarker,
-    MapMarkerClusterer,
+    DeprecatedMapMarkerClusterer,
     MapPolygon,
     MapPolyline,
     MapRectangle,
     MapTrafficLayer,
     MapTransitLayer,
+    MapMarkerClusterer,
 ];
 class GoogleMapsModule {
     static { this.ɵfac = i0.ɵɵngDeclareFactory({ minVersion: "12.0.0", version: "19.0.0-next.10", ngImport: i0, type: GoogleMapsModule, deps: [], target: i0.ɵɵFactoryTarget.NgModule }); }
@@ -3602,12 +3796,13 @@ class GoogleMapsModule {
             MapKmlLayer,
             MapMarker,
             MapAdvancedMarker,
-            MapMarkerClusterer,
+            DeprecatedMapMarkerClusterer,
             MapPolygon,
             MapPolyline,
             MapRectangle,
             MapTrafficLayer,
-            MapTransitLayer], exports: [GoogleMap,
+            MapTransitLayer,
+            MapMarkerClusterer], exports: [GoogleMap,
             MapBaseLayer,
             MapBicyclingLayer,
             MapCircle,
@@ -3618,12 +3813,13 @@ class GoogleMapsModule {
             MapKmlLayer,
             MapMarker,
             MapAdvancedMarker,
-            MapMarkerClusterer,
+            DeprecatedMapMarkerClusterer,
             MapPolygon,
             MapPolyline,
             MapRectangle,
             MapTrafficLayer,
-            MapTransitLayer] }); }
+            MapTransitLayer,
+            MapMarkerClusterer] }); }
     static { this.ɵinj = i0.ɵɵngDeclareInjector({ minVersion: "12.0.0", version: "19.0.0-next.10", ngImport: i0, type: GoogleMapsModule }); }
 }
 i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.0.0-next.10", ngImport: i0, type: GoogleMapsModule, decorators: [{
@@ -3734,5 +3930,5 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.0.0-next.10",
  * Generated bundle index. Do not edit.
  */
 
-export { GoogleMap, GoogleMapsModule, MapAdvancedMarker, MapBaseLayer, MapBicyclingLayer, MapCircle, MapDirectionsRenderer, MapDirectionsService, MapEventManager, MapGeocoder, MapGroundOverlay, MapHeatmapLayer, MapInfoWindow, MapKmlLayer, MapMarker, MapMarkerClusterer, MapPolygon, MapPolyline, MapRectangle, MapTrafficLayer, MapTransitLayer };
+export { DeprecatedMapMarkerClusterer, GoogleMap, GoogleMapsModule, MapAdvancedMarker, MapBaseLayer, MapBicyclingLayer, MapCircle, MapDirectionsRenderer, MapDirectionsService, MapEventManager, MapGeocoder, MapGroundOverlay, MapHeatmapLayer, MapInfoWindow, MapKmlLayer, MapMarker, MapMarkerClusterer, MapPolygon, MapPolyline, MapRectangle, MapTrafficLayer, MapTransitLayer };
 //# sourceMappingURL=google-maps.mjs.map

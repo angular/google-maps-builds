@@ -11,6 +11,48 @@ import { OnInit } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 
+declare interface Algorithm_2 {
+    /**
+     * Calculates an array of {@link Cluster}.
+     */
+    calculate: ({ markers, map }: AlgorithmInput) => AlgorithmOutput;
+}
+
+declare interface AlgorithmInput {
+    /**
+     * The map containing the markers and clusters.
+     */
+    map: google.maps.Map;
+    /**
+     * An array of markers to be clustered.
+     *
+     * There are some specific edge cases to be aware of including the following:
+     * * Markers that are not visible.
+     */
+    markers: Marker[];
+    /**
+     * The `mapCanvasProjection` enables easy conversion from lat/lng to pixel.
+     *
+     * @see [MapCanvasProjection](https://developers.google.com/maps/documentation/javascript/reference/overlay-view#MapCanvasProjection)
+     */
+    mapCanvasProjection: google.maps.MapCanvasProjection;
+}
+
+declare interface AlgorithmOptions {
+    maxZoom?: number;
+}
+
+declare interface AlgorithmOutput {
+    /**
+     * The clusters returned based upon the {@link AlgorithmInput}.
+     */
+    clusters: Cluster_2[];
+    /**
+     * A boolean flag indicating that the clusters have not changed.
+     */
+    changed?: boolean;
+}
+
 /**
  * Function type alias for determining the aria label on a Google Maps marker cluster.
  *
@@ -36,6 +78,27 @@ declare class Cluster {
     getMarkers(): google.maps.Marker[];
     getSize(): number;
     updateIcon(): void;
+}
+
+declare class Cluster_2 {
+    marker?: Marker;
+    readonly markers?: Marker[];
+    protected _position: google.maps.LatLng;
+    constructor({ markers, position }: ClusterOptions);
+    get bounds(): google.maps.LatLngBounds | undefined;
+    get position(): google.maps.LatLng;
+    /**
+     * Get the count of **visible** markers.
+     */
+    get count(): number;
+    /**
+     * Add a marker to the cluster.
+     */
+    push(marker: Marker): void;
+    /**
+     * Cleanup references and remove marker from map.
+     */
+    delete(): void;
 }
 
 /**
@@ -75,6 +138,27 @@ export declare interface ClusterIconStyle {
     width: number;
 }
 
+declare interface ClusterOptions {
+    position?: google.maps.LatLng | google.maps.LatLngLiteral;
+    markers?: Marker[];
+}
+
+declare class ClusterStats {
+    readonly markers: {
+        sum: number;
+    };
+    readonly clusters: {
+        count: number;
+        markers: {
+            mean: number;
+            sum: number;
+            min: number;
+            max: number;
+        };
+    };
+    constructor(markers: Marker[], clusters: Cluster_2[]);
+}
+
 /** Arbitrary default height for the map element */
 declare const DEFAULT_HEIGHT = "500px";
 
@@ -105,6 +189,116 @@ declare const DEFAULT_OPTIONS: google.maps.MapOptions;
 
 /** Arbitrary default width for the map element */
 declare const DEFAULT_WIDTH = "500px";
+
+/**
+ * Angular component for implementing a Google Maps Marker Clusterer.
+ * See https://developers.google.com/maps/documentation/javascript/marker-clustering
+ *
+ * @deprecated This component is using a deprecated clustering implementation. Use the
+ *   `map-marker-clusterer` component instead.
+ * @breaking-change 21.0.0
+ *
+ */
+export declare class DeprecatedMapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, OnDestroy {
+    private readonly _googleMap;
+    private readonly _ngZone;
+    private readonly _currentMarkers;
+    private readonly _eventManager;
+    private readonly _destroy;
+    /** Whether the clusterer is allowed to be initialized. */
+    private readonly _canInitialize;
+    ariaLabelFn: AriaLabelFn;
+    set averageCenter(averageCenter: boolean);
+    private _averageCenter;
+    batchSize?: number;
+    set batchSizeIE(batchSizeIE: number);
+    private _batchSizeIE;
+    set calculator(calculator: Calculator);
+    private _calculator;
+    set clusterClass(clusterClass: string);
+    private _clusterClass;
+    set enableRetinaIcons(enableRetinaIcons: boolean);
+    private _enableRetinaIcons;
+    set gridSize(gridSize: number);
+    private _gridSize;
+    set ignoreHidden(ignoreHidden: boolean);
+    private _ignoreHidden;
+    set imageExtension(imageExtension: string);
+    private _imageExtension;
+    set imagePath(imagePath: string);
+    private _imagePath;
+    set imageSizes(imageSizes: number[]);
+    private _imageSizes;
+    set maxZoom(maxZoom: number);
+    private _maxZoom;
+    set minimumClusterSize(minimumClusterSize: number);
+    private _minimumClusterSize;
+    set styles(styles: ClusterIconStyle[]);
+    private _styles;
+    set title(title: string);
+    private _title;
+    set zIndex(zIndex: number);
+    private _zIndex;
+    set zoomOnClick(zoomOnClick: boolean);
+    private _zoomOnClick;
+    set options(options: MarkerClustererOptions);
+    private _options;
+    /**
+     * See
+     * googlemaps.github.io/v3-utility-library/modules/
+     * _google_markerclustererplus.html#clusteringbegin
+     */
+    readonly clusteringbegin: Observable<void>;
+    /**
+     * See
+     * googlemaps.github.io/v3-utility-library/modules/_google_markerclustererplus.html#clusteringend
+     */
+    readonly clusteringend: Observable<void>;
+    /** Emits when a cluster has been clicked. */
+    readonly clusterClick: Observable<Cluster>;
+    _markers: QueryList<MapMarker>;
+    /**
+     * The underlying MarkerClusterer object.
+     *
+     * See
+     * googlemaps.github.io/v3-utility-library/classes/
+     * _google_markerclustererplus.markerclusterer.html
+     */
+    markerClusterer?: MarkerClusterer;
+    /** Event emitted when the clusterer is initialized. */
+    readonly markerClustererInitialized: EventEmitter<MarkerClusterer>;
+    constructor(...args: unknown[]);
+    ngOnInit(): void;
+    ngAfterContentInit(): void;
+    ngOnChanges(changes: SimpleChanges): void;
+    ngOnDestroy(): void;
+    fitMapToMarkers(padding: number | google.maps.Padding): void;
+    getAverageCenter(): boolean;
+    getBatchSizeIE(): number;
+    getCalculator(): Calculator;
+    getClusterClass(): string;
+    getClusters(): Cluster[];
+    getEnableRetinaIcons(): boolean;
+    getGridSize(): number;
+    getIgnoreHidden(): boolean;
+    getImageExtension(): string;
+    getImagePath(): string;
+    getImageSizes(): number[];
+    getMaxZoom(): number;
+    getMinimumClusterSize(): number;
+    getStyles(): ClusterIconStyle[];
+    getTitle(): string;
+    getTotalClusters(): number;
+    getTotalMarkers(): number;
+    getZIndex(): number;
+    getZoomOnClick(): boolean;
+    private _combineOptions;
+    private _watchForMarkerChanges;
+    private _getInternalMarkers;
+    private _assertInitialized;
+    static ɵfac: i0.ɵɵFactoryDeclaration<DeprecatedMapMarkerClusterer, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<DeprecatedMapMarkerClusterer, "deprecated-map-marker-clusterer", ["mapMarkerClusterer"], { "ariaLabelFn": { "alias": "ariaLabelFn"; "required": false; }; "averageCenter": { "alias": "averageCenter"; "required": false; }; "batchSize": { "alias": "batchSize"; "required": false; }; "batchSizeIE": { "alias": "batchSizeIE"; "required": false; }; "calculator": { "alias": "calculator"; "required": false; }; "clusterClass": { "alias": "clusterClass"; "required": false; }; "enableRetinaIcons": { "alias": "enableRetinaIcons"; "required": false; }; "gridSize": { "alias": "gridSize"; "required": false; }; "ignoreHidden": { "alias": "ignoreHidden"; "required": false; }; "imageExtension": { "alias": "imageExtension"; "required": false; }; "imagePath": { "alias": "imagePath"; "required": false; }; "imageSizes": { "alias": "imageSizes"; "required": false; }; "maxZoom": { "alias": "maxZoom"; "required": false; }; "minimumClusterSize": { "alias": "minimumClusterSize"; "required": false; }; "styles": { "alias": "styles"; "required": false; }; "title": { "alias": "title"; "required": false; }; "zIndex": { "alias": "zIndex"; "required": false; }; "zoomOnClick": { "alias": "zoomOnClick"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "clusteringbegin": "clusteringbegin"; "clusteringend": "clusteringend"; "clusterClick": "clusterClick"; "markerClustererInitialized": "markerClustererInitialized"; }, ["_markers"], ["*"], true, never>;
+}
 
 /**
  * Angular component that renders a Google Map via the Google Maps JavaScript
@@ -345,7 +539,7 @@ export declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
 
 export declare class GoogleMapsModule {
     static ɵfac: i0.ɵɵFactoryDeclaration<GoogleMapsModule, never>;
-    static ɵmod: i0.ɵɵNgModuleDeclaration<GoogleMapsModule, never, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.MapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer], [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.MapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<GoogleMapsModule, never, [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.DeprecatedMapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer, typeof i18.MapMarkerClusterer], [typeof i1.GoogleMap, typeof i2.MapBaseLayer, typeof i3.MapBicyclingLayer, typeof i4.MapCircle, typeof i5.MapDirectionsRenderer, typeof i6.MapGroundOverlay, typeof i7.MapHeatmapLayer, typeof i8.MapInfoWindow, typeof i9.MapKmlLayer, typeof i10.MapMarker, typeof i11.MapAdvancedMarker, typeof i12.DeprecatedMapMarkerClusterer, typeof i13.MapPolygon, typeof i14.MapPolyline, typeof i15.MapRectangle, typeof i16.MapTrafficLayer, typeof i17.MapTransitLayer, typeof i18.MapMarkerClusterer]>;
     static ɵinj: i0.ɵɵInjectorDeclaration<GoogleMapsModule>;
 }
 
@@ -377,7 +571,7 @@ declare namespace i11 {
 
 declare namespace i12 {
     export {
-        MapMarkerClusterer
+        DeprecatedMapMarkerClusterer
     }
 }
 
@@ -408,6 +602,12 @@ declare namespace i16 {
 declare namespace i17 {
     export {
         MapTransitLayer
+    }
+}
+
+declare namespace i18 {
+    export {
+        MapMarkerClusterer
     }
 }
 
@@ -465,7 +665,7 @@ declare namespace i9 {
  *
  * See developers.google.com/maps/documentation/javascript/reference/marker
  */
-export declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
+export declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, MarkerDirective {
     private readonly _googleMap;
     private _ngZone;
     private _eventManager;
@@ -562,6 +762,8 @@ export declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, 
     ngOnChanges(changes: SimpleChanges): void;
     ngOnDestroy(): void;
     getAnchor(): google.maps.marker.AdvancedMarkerElement;
+    /** Returns a promise that resolves when the marker has been initialized. */
+    _resolveMarker(): Promise<google.maps.marker.AdvancedMarkerElement>;
     /** Creates a combined options object using the passed-in options and the individual inputs. */
     private _combineOptions;
     /** Asserts that the map has been initialized. */
@@ -1166,7 +1368,7 @@ export declare class MapKmlLayer implements OnInit, OnDestroy {
  *
  * See developers.google.com/maps/documentation/javascript/reference/marker
  */
-export declare class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint {
+export declare class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint, MarkerDirective {
     private readonly _googleMap;
     private _ngZone;
     private _eventManager;
@@ -1406,105 +1608,45 @@ export declare class MapMarker implements OnInit, OnChanges, OnDestroy, MapAncho
  *
  * See https://developers.google.com/maps/documentation/javascript/marker-clustering
  */
-export declare class MapMarkerClusterer implements OnInit, AfterContentInit, OnChanges, OnDestroy {
+export declare class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
     private readonly _googleMap;
     private readonly _ngZone;
     private readonly _currentMarkers;
-    private readonly _eventManager;
-    private readonly _destroy;
+    private readonly _closestMapEventManager;
+    private _markersSubscription;
     /** Whether the clusterer is allowed to be initialized. */
     private readonly _canInitialize;
-    ariaLabelFn: AriaLabelFn;
-    set averageCenter(averageCenter: boolean);
-    private _averageCenter;
-    batchSize?: number;
-    set batchSizeIE(batchSizeIE: number);
-    private _batchSizeIE;
-    set calculator(calculator: Calculator);
-    private _calculator;
-    set clusterClass(clusterClass: string);
-    private _clusterClass;
-    set enableRetinaIcons(enableRetinaIcons: boolean);
-    private _enableRetinaIcons;
-    set gridSize(gridSize: number);
-    private _gridSize;
-    set ignoreHidden(ignoreHidden: boolean);
-    private _ignoreHidden;
-    set imageExtension(imageExtension: string);
-    private _imageExtension;
-    set imagePath(imagePath: string);
-    private _imagePath;
-    set imageSizes(imageSizes: number[]);
-    private _imageSizes;
-    set maxZoom(maxZoom: number);
-    private _maxZoom;
-    set minimumClusterSize(minimumClusterSize: number);
-    private _minimumClusterSize;
-    set styles(styles: ClusterIconStyle[]);
-    private _styles;
-    set title(title: string);
-    private _title;
-    set zIndex(zIndex: number);
-    private _zIndex;
-    set zoomOnClick(zoomOnClick: boolean);
-    private _zoomOnClick;
-    set options(options: MarkerClustererOptions);
-    private _options;
     /**
-     * See
-     * googlemaps.github.io/v3-utility-library/modules/
-     * _google_markerclustererplus.html#clusteringbegin
+     * Used to customize how the marker cluster is rendered.
+     * See https://googlemaps.github.io/js-markerclusterer/interfaces/Renderer.html.
      */
+    renderer: Renderer;
+    /**
+     * Algorithm used to cluster the markers.
+     * See https://googlemaps.github.io/js-markerclusterer/interfaces/Algorithm.html.
+     */
+    algorithm: Algorithm_2;
+    /** Emits when clustering has started. */
     readonly clusteringbegin: Observable<void>;
-    /**
-     * See
-     * googlemaps.github.io/v3-utility-library/modules/_google_markerclustererplus.html#clusteringend
-     */
+    /** Emits when clustering is done. */
     readonly clusteringend: Observable<void>;
     /** Emits when a cluster has been clicked. */
-    readonly clusterClick: Observable<Cluster>;
-    _markers: QueryList<MapMarker>;
-    /**
-     * The underlying MarkerClusterer object.
-     *
-     * See
-     * googlemaps.github.io/v3-utility-library/classes/
-     * _google_markerclustererplus.markerclusterer.html
-     */
-    markerClusterer?: MarkerClusterer;
-    /** Event emitted when the clusterer is initialized. */
-    readonly markerClustererInitialized: EventEmitter<MarkerClusterer>;
-    constructor(...args: unknown[]);
-    ngOnInit(): void;
-    ngAfterContentInit(): void;
-    ngOnChanges(changes: SimpleChanges): void;
+    readonly clusterClick: EventEmitter<Cluster_2>;
+    /** Event emitted when the marker clusterer is initialized. */
+    readonly markerClustererInitialized: EventEmitter<MarkerClusterer_2>;
+    _markers: QueryList<MarkerDirective>;
+    /** Underlying MarkerClusterer object used to interact with Google Maps. */
+    markerClusterer?: MarkerClusterer_2;
+    ngOnInit(): Promise<void>;
+    ngOnChanges(changes: SimpleChanges): Promise<void>;
     ngOnDestroy(): void;
-    fitMapToMarkers(padding: number | google.maps.Padding): void;
-    getAverageCenter(): boolean;
-    getBatchSizeIE(): number;
-    getCalculator(): Calculator;
-    getClusterClass(): string;
-    getClusters(): Cluster[];
-    getEnableRetinaIcons(): boolean;
-    getGridSize(): number;
-    getIgnoreHidden(): boolean;
-    getImageExtension(): string;
-    getImagePath(): string;
-    getImageSizes(): number[];
-    getMaxZoom(): number;
-    getMinimumClusterSize(): number;
-    getStyles(): ClusterIconStyle[];
-    getTitle(): string;
-    getTotalClusters(): number;
-    getTotalMarkers(): number;
-    getZIndex(): number;
-    getZoomOnClick(): boolean;
-    private _combineOptions;
+    private _createCluster;
     private _watchForMarkerChanges;
+    private _destroyCluster;
     private _getInternalMarkers;
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapMarkerClusterer, never>;
-    static ɵcmp: i0.ɵɵComponentDeclaration<MapMarkerClusterer, "map-marker-clusterer", ["mapMarkerClusterer"], { "ariaLabelFn": { "alias": "ariaLabelFn"; "required": false; }; "averageCenter": { "alias": "averageCenter"; "required": false; }; "batchSize": { "alias": "batchSize"; "required": false; }; "batchSizeIE": { "alias": "batchSizeIE"; "required": false; }; "calculator": { "alias": "calculator"; "required": false; }; "clusterClass": { "alias": "clusterClass"; "required": false; }; "enableRetinaIcons": { "alias": "enableRetinaIcons"; "required": false; }; "gridSize": { "alias": "gridSize"; "required": false; }; "ignoreHidden": { "alias": "ignoreHidden"; "required": false; }; "imageExtension": { "alias": "imageExtension"; "required": false; }; "imagePath": { "alias": "imagePath"; "required": false; }; "imageSizes": { "alias": "imageSizes"; "required": false; }; "maxZoom": { "alias": "maxZoom"; "required": false; }; "minimumClusterSize": { "alias": "minimumClusterSize"; "required": false; }; "styles": { "alias": "styles"; "required": false; }; "title": { "alias": "title"; "required": false; }; "zIndex": { "alias": "zIndex"; "required": false; }; "zoomOnClick": { "alias": "zoomOnClick"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "clusteringbegin": "clusteringbegin"; "clusteringend": "clusteringend"; "clusterClick": "clusterClick"; "markerClustererInitialized": "markerClustererInitialized"; }, ["_markers"], ["*"], true, never>;
+    static ɵcmp: i0.ɵɵComponentDeclaration<MapMarkerClusterer, "map-marker-clusterer", ["mapMarkerClusterer"], { "renderer": { "alias": "renderer"; "required": false; }; "algorithm": { "alias": "algorithm"; "required": false; }; }, { "clusteringbegin": "clusteringbegin"; "clusteringend": "clusteringend"; "clusterClick": "clusterClick"; "markerClustererInitialized": "markerClustererInitialized"; }, ["_markers"], ["*"], true, never>;
 }
 
 /**
@@ -1871,6 +2013,9 @@ export declare class MapTransitLayer implements OnInit, OnDestroy {
     static ɵdir: i0.ɵɵDirectiveDeclaration<MapTransitLayer, "map-transit-layer", ["mapTransitLayer"], {}, { "transitLayerInitialized": "transitLayerInitialized"; }, never, never, true, never>;
 }
 
+/** Marker types from the Google Maps API. */
+declare type Marker = google.maps.Marker | google.maps.marker.AdvancedMarkerElement;
+
 
 /// <reference types="google.maps" preserve="true" />
 /**
@@ -1948,6 +2093,27 @@ declare class MarkerClusterer {
     static withDefaultStyle(overrides: ClusterIconStyle): ClusterIconStyle;
 }
 
+declare class MarkerClusterer_2 extends google.maps.OverlayView {
+    onClusterClick: onClusterClickHandler;
+    protected algorithm: Algorithm_2;
+    protected clusters: Cluster_2[];
+    protected markers: Marker[];
+    protected renderer: Renderer;
+    protected map: google.maps.Map | null;
+    protected idleListener: google.maps.MapsEventListener;
+    constructor({ map, markers, algorithmOptions, algorithm, renderer, onClusterClick, }: MarkerClustererOptions_2);
+    addMarker(marker: Marker, noDraw?: boolean): void;
+    addMarkers(markers: Marker[], noDraw?: boolean): void;
+    removeMarker(marker: Marker, noDraw?: boolean): boolean;
+    removeMarkers(markers: Marker[], noDraw?: boolean): boolean;
+    clearMarkers(noDraw?: boolean): void;
+    render(): void;
+    onAdd(): void;
+    onRemove(): void;
+    protected reset(): void;
+    protected renderClusters(): void;
+}
+
 /**
  * Options for constructing a MarkerClusterer from the @google/markerclustererplus library.
  *
@@ -1974,6 +2140,47 @@ export declare interface MarkerClustererOptions {
     title?: string;
     zIndex?: number;
     zoomOnClick?: boolean;
+}
+
+declare interface MarkerClustererOptions_2 {
+    markers?: Marker[];
+    /**
+     * An algorithm to cluster markers. Default is {@link SuperClusterAlgorithm}. Must
+     * provide a `calculate` method accepting {@link AlgorithmInput} and returning
+     * an array of {@link Cluster}.
+     */
+    algorithm?: Algorithm_2;
+    algorithmOptions?: AlgorithmOptions;
+    map?: google.maps.Map | null;
+    /**
+     * An object that converts a {@link Cluster} into a `google.maps.Marker`.
+     * Default is {@link DefaultRenderer}.
+     */
+    renderer?: Renderer;
+    onClusterClick?: onClusterClickHandler;
+}
+
+/** Interface that should be implemented by directives that wrap marker APIs. */
+declare interface MarkerDirective {
+    _resolveMarker(): Promise<Marker>;
+}
+
+declare type onClusterClickHandler = (event: google.maps.MapMouseEvent, cluster: Cluster_2, map: google.maps.Map) => void;
+
+declare interface Renderer {
+    /**
+     * Turn a {@link Cluster} into a `Marker`.
+     *
+     * Below is a simple example to create a marker with the number of markers in the cluster as a label.
+     *
+     * ```typescript
+     * return new google.maps.Marker({
+     *   position,
+     *   label: String(markers.length),
+     * });
+     * ```
+     */
+    render(cluster: Cluster_2, stats: ClusterStats, map: google.maps.Map): Marker;
 }
 
 export { }

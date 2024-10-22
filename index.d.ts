@@ -17,8 +17,9 @@ declare interface Algorithm_2 {
      */
     calculate: ({ markers, map }: AlgorithmInput) => AlgorithmOutput;
 }
+export { Algorithm_2 as Algorithm }
 
-declare interface AlgorithmInput {
+export declare interface AlgorithmInput {
     /**
      * The map containing the markers and clusters.
      */
@@ -38,15 +39,15 @@ declare interface AlgorithmInput {
     mapCanvasProjection: google.maps.MapCanvasProjection;
 }
 
-declare interface AlgorithmOptions {
+export declare interface AlgorithmOptions {
     maxZoom?: number;
 }
 
-declare interface AlgorithmOutput {
+export declare interface AlgorithmOutput {
     /**
      * The clusters returned based upon the {@link AlgorithmInput}.
      */
-    clusters: Cluster_2[];
+    clusters: Cluster[];
     /**
      * A boolean flag indicating that the clusters have not changed.
      */
@@ -67,20 +68,7 @@ export declare type AriaLabelFn = (text: string) => string;
  */
 export declare type Calculator = (markers: google.maps.Marker[], clusterIconStylesCount: number) => ClusterIconInfo;
 
-/**
- * Cluster class from the @google/markerclustererplus library.
- *
- * See googlemaps.github.io/v3-utility-library/classes/_google_markerclustererplus.cluster.html
- */
-declare class Cluster {
-    constructor(markerClusterer: MarkerClusterer);
-    getCenter(): google.maps.LatLng;
-    getMarkers(): google.maps.Marker[];
-    getSize(): number;
-    updateIcon(): void;
-}
-
-declare class Cluster_2 {
+export declare class Cluster {
     marker?: Marker;
     readonly markers?: Marker[];
     protected _position: google.maps.LatLng;
@@ -99,6 +87,19 @@ declare class Cluster_2 {
      * Cleanup references and remove marker from map.
      */
     delete(): void;
+}
+
+/**
+ * Cluster class from the @google/markerclustererplus library.
+ *
+ * See googlemaps.github.io/v3-utility-library/classes/_google_markerclustererplus.cluster.html
+ */
+declare class Cluster_2 {
+    constructor(markerClusterer: MarkerClusterer_2);
+    getCenter(): google.maps.LatLng;
+    getMarkers(): google.maps.Marker[];
+    getSize(): number;
+    updateIcon(): void;
 }
 
 /**
@@ -138,12 +139,12 @@ export declare interface ClusterIconStyle {
     width: number;
 }
 
-declare interface ClusterOptions {
+export declare interface ClusterOptions {
     position?: google.maps.LatLng | google.maps.LatLngLiteral;
     markers?: Marker[];
 }
 
-declare class ClusterStats {
+export declare class ClusterStats {
     readonly markers: {
         sum: number;
     };
@@ -156,7 +157,7 @@ declare class ClusterStats {
             max: number;
         };
     };
-    constructor(markers: Marker[], clusters: Cluster_2[]);
+    constructor(markers: Marker[], clusters: Cluster[]);
 }
 
 /** Arbitrary default height for the map element */
@@ -189,6 +190,8 @@ declare const DEFAULT_OPTIONS: google.maps.MapOptions;
 
 /** Arbitrary default width for the map element */
 declare const DEFAULT_WIDTH = "500px";
+
+export declare const defaultOnClusterClickHandler: onClusterClickHandler;
 
 /**
  * Angular component for implementing a Google Maps Marker Clusterer.
@@ -255,7 +258,7 @@ export declare class DeprecatedMapMarkerClusterer implements OnInit, AfterConten
      */
     readonly clusteringend: Observable<void>;
     /** Emits when a cluster has been clicked. */
-    readonly clusterClick: Observable<Cluster>;
+    readonly clusterClick: Observable<Cluster_2>;
     _markers: QueryList<MapMarker>;
     /**
      * The underlying MarkerClusterer object.
@@ -264,9 +267,9 @@ export declare class DeprecatedMapMarkerClusterer implements OnInit, AfterConten
      * googlemaps.github.io/v3-utility-library/classes/
      * _google_markerclustererplus.markerclusterer.html
      */
-    markerClusterer?: MarkerClusterer;
+    markerClusterer?: MarkerClusterer_2;
     /** Event emitted when the clusterer is initialized. */
-    readonly markerClustererInitialized: EventEmitter<MarkerClusterer>;
+    readonly markerClustererInitialized: EventEmitter<MarkerClusterer_2>;
     constructor(...args: unknown[]);
     ngOnInit(): void;
     ngAfterContentInit(): void;
@@ -277,7 +280,7 @@ export declare class DeprecatedMapMarkerClusterer implements OnInit, AfterConten
     getBatchSizeIE(): number;
     getCalculator(): Calculator;
     getClusterClass(): string;
-    getClusters(): Cluster[];
+    getClusters(): Cluster_2[];
     getEnableRetinaIcons(): boolean;
     getGridSize(): number;
     getIgnoreHidden(): boolean;
@@ -1631,12 +1634,12 @@ export declare class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy 
     /** Emits when clustering is done. */
     readonly clusteringend: Observable<void>;
     /** Emits when a cluster has been clicked. */
-    readonly clusterClick: EventEmitter<Cluster_2>;
+    readonly clusterClick: EventEmitter<Cluster>;
     /** Event emitted when the marker clusterer is initialized. */
-    readonly markerClustererInitialized: EventEmitter<MarkerClusterer_2>;
+    readonly markerClustererInitialized: EventEmitter<MarkerClusterer>;
     _markers: QueryList<MarkerDirective>;
     /** Underlying MarkerClusterer object used to interact with Google Maps. */
-    markerClusterer?: MarkerClusterer_2;
+    markerClusterer?: MarkerClusterer;
     ngOnInit(): Promise<void>;
     ngOnChanges(changes: SimpleChanges): Promise<void>;
     ngOnDestroy(): void;
@@ -2016,6 +2019,27 @@ export declare class MapTransitLayer implements OnInit, OnDestroy {
 /** Marker types from the Google Maps API. */
 declare type Marker = google.maps.Marker | google.maps.marker.AdvancedMarkerElement;
 
+export declare class MarkerClusterer extends google.maps.OverlayView {
+    onClusterClick: onClusterClickHandler;
+    protected algorithm: Algorithm_2;
+    protected clusters: Cluster[];
+    protected markers: Marker[];
+    protected renderer: Renderer;
+    protected map: google.maps.Map | null;
+    protected idleListener: google.maps.MapsEventListener;
+    constructor({ map, markers, algorithmOptions, algorithm, renderer, onClusterClick, }: MarkerClustererOptions_2);
+    addMarker(marker: Marker, noDraw?: boolean): void;
+    addMarkers(markers: Marker[], noDraw?: boolean): void;
+    removeMarker(marker: Marker, noDraw?: boolean): boolean;
+    removeMarkers(markers: Marker[], noDraw?: boolean): boolean;
+    clearMarkers(noDraw?: boolean): void;
+    render(): void;
+    onAdd(): void;
+    onRemove(): void;
+    protected reset(): void;
+    protected renderClusters(): void;
+}
+
 
 /// <reference types="google.maps" preserve="true" />
 /**
@@ -2024,7 +2048,7 @@ declare type Marker = google.maps.Marker | google.maps.marker.AdvancedMarkerElem
  * See
  * googlemaps.github.io/v3-utility-library/classes/_google_markerclustererplus.markerclusterer.html
  */
-declare class MarkerClusterer {
+declare class MarkerClusterer_2 {
     constructor(map: google.maps.Map, markers?: google.maps.Marker[], options?: MarkerClustererOptions);
     ariaLabelFn: AriaLabelFn;
     static BATCH_SIZE: number;
@@ -2033,7 +2057,7 @@ declare class MarkerClusterer {
     static IMAGE_PATH: string;
     static IMAGE_SIZES: number[];
     addListener(eventName: string, handler: Function): google.maps.MapsEventListener;
-    addMarker(marker: MarkerClusterer, nodraw: boolean): void;
+    addMarker(marker: MarkerClusterer_2, nodraw: boolean): void;
     addMarkers(markers: google.maps.Marker[], nodraw?: boolean): void;
     bindTo(key: string, target: google.maps.MVCObject, targetKey: string, noNotify: boolean): void;
     changed(key: string): void;
@@ -2044,7 +2068,7 @@ declare class MarkerClusterer {
     getBatchSizeIE(): number;
     getCalculator(): Calculator;
     getClusterClass(): string;
-    getClusters(): Cluster[];
+    getClusters(): Cluster_2[];
     getEnableRetinaIcons(): boolean;
     getGridSize(): number;
     getIgnoreHidden(): boolean;
@@ -2093,25 +2117,10 @@ declare class MarkerClusterer {
     static withDefaultStyle(overrides: ClusterIconStyle): ClusterIconStyle;
 }
 
-declare class MarkerClusterer_2 extends google.maps.OverlayView {
-    onClusterClick: onClusterClickHandler;
-    protected algorithm: Algorithm_2;
-    protected clusters: Cluster_2[];
-    protected markers: Marker[];
-    protected renderer: Renderer;
-    protected map: google.maps.Map | null;
-    protected idleListener: google.maps.MapsEventListener;
-    constructor({ map, markers, algorithmOptions, algorithm, renderer, onClusterClick, }: MarkerClustererOptions_2);
-    addMarker(marker: Marker, noDraw?: boolean): void;
-    addMarkers(markers: Marker[], noDraw?: boolean): void;
-    removeMarker(marker: Marker, noDraw?: boolean): boolean;
-    removeMarkers(markers: Marker[], noDraw?: boolean): boolean;
-    clearMarkers(noDraw?: boolean): void;
-    render(): void;
-    onAdd(): void;
-    onRemove(): void;
-    protected reset(): void;
-    protected renderClusters(): void;
+export declare enum MarkerClustererEvents {
+    CLUSTERING_BEGIN = "clusteringbegin",
+    CLUSTERING_END = "clusteringend",
+    CLUSTER_CLICK = "click"
 }
 
 /**
@@ -2165,9 +2174,9 @@ declare interface MarkerDirective {
     _resolveMarker(): Promise<Marker>;
 }
 
-declare type onClusterClickHandler = (event: google.maps.MapMouseEvent, cluster: Cluster_2, map: google.maps.Map) => void;
+export declare type onClusterClickHandler = (event: google.maps.MapMouseEvent, cluster: Cluster, map: google.maps.Map) => void;
 
-declare interface Renderer {
+export declare interface Renderer {
     /**
      * Turn a {@link Cluster} into a `Marker`.
      *
@@ -2180,7 +2189,7 @@ declare interface Renderer {
      * });
      * ```
      */
-    render(cluster: Cluster_2, stats: ClusterStats, map: google.maps.Map): Marker;
+    render(cluster: Cluster, stats: ClusterStats, map: google.maps.Map): Marker;
 }
 
 export { }

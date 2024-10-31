@@ -36,9 +36,13 @@ var DEPRECATED_CLASS_NAME = "DeprecatedMapMarkerClusterer";
 function updateToV19() {
   return (tree) => {
     tree.visit((path) => {
+      var _a;
+      if (path.includes("node_modules")) {
+        return;
+      }
       if (path.endsWith(".html")) {
-        const content = tree.readText(path);
-        if (content.includes("<" + TAG_NAME)) {
+        const content = (_a = tree.read(path)) == null ? void 0 : _a.toString();
+        if (content && content.includes("<" + TAG_NAME)) {
           tree.overwrite(path, migrateHtml(content));
         }
       } else if (path.endsWith(".ts") && !path.endsWith(".d.ts")) {
@@ -51,8 +55,9 @@ function migrateHtml(content) {
   return content.replace(/<map-marker-clusterer/g, "<deprecated-map-marker-clusterer").replace(/<\/map-marker-clusterer/g, "</deprecated-map-marker-clusterer");
 }
 function migrateTypeScript(path, tree) {
-  const content = tree.readText(path);
-  if (!content.includes("<" + TAG_NAME) && !content.includes(MODULE_NAME) && !content.includes(CLASS_NAME)) {
+  var _a;
+  const content = (_a = tree.read(path)) == null ? void 0 : _a.toString();
+  if (!content || !content.includes("<" + TAG_NAME) && !content.includes(MODULE_NAME) && !content.includes(CLASS_NAME)) {
     return;
   }
   const sourceFile = import_typescript.default.createSourceFile(path, content, import_typescript.default.ScriptTarget.Latest, true);

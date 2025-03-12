@@ -4069,9 +4069,5 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.0", ngImpor
             args: [{ providedIn: 'root' }]
         }], ctorParameters: () => [] });
 
-/**
- * Generated bundle index. Do not edit.
- */
-
 export { DeprecatedMapMarkerClusterer, GoogleMap, GoogleMapsModule, MapAdvancedMarker, MapBaseLayer, MapBicyclingLayer, MapCircle, MapDirectionsRenderer, MapDirectionsService, MapEventManager, MapGeocoder, MapGroundOverlay, MapHeatmapLayer, MapInfoWindow, MapKmlLayer, MapMarker, MapMarkerClusterer, MapPolygon, MapPolyline, MapRectangle, MapTrafficLayer, MapTransitLayer };
 //# sourceMappingURL=google-maps.mjs.map

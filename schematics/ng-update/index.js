@@ -7,10 +7,7 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = default_1;
-function default_1() {
-    // Noop schematic so the CLI doesn't throw if users try to `ng add` this package.
-    // Also allows us to add more functionality in the future.
-    return function () { };
-}
+exports.updateToV20 = updateToV20;
+/** Entry point for the migration schematics with target of Angular Material v20 */
+function updateToV20() { }
 //# sourceMappingURL=index.js.map

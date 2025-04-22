@@ -1,0 +1,48 @@
+{
+  "name": "@angular/google-maps",
+  "version": "19.2.10",
+  "description": "Angular Google Maps",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/angular/components.git"
+  },
+  "keywords": [
+    "angular",
+    "components",
+    "google-maps"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/angular/components/issues"
+  },
+  "homepage": "https://github.com/angular/components/tree/main/src/google-maps#readme",
+  "dependencies": {
+    "@types/google.maps": "^3.54.10",
+    "tslib": "^2.3.0"
+  },
+  "peerDependencies": {
+    "@angular/core": "^19.0.0 || ^20.0.0",
+    "@angular/common": "^19.0.0 || ^20.0.0",
+    "rxjs": "^6.5.3 || ^7.4.0"
+  },
+  "sideEffects": false,
+  "schematics": "./schematics/collection.json",
+  "ng-update": {
+    "migrations": "./schematics/migration.json",
+    "packageGroup": [
+      "@angular/google-maps"
+    ]
+  },
+  "module": "./fesm2022/google-maps.mjs",
+  "typings": "./index.d.ts",
+  "type": "module",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./fesm2022/google-maps.mjs"
+    }
+  }
+}

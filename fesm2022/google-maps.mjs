@@ -1,5 +1,5 @@
 import * as i0 from '@angular/core';
-import { inject, ElementRef, NgZone, EventEmitter, PLATFORM_ID, Component, ChangeDetectionStrategy, ViewEncapsulation, Input, Output, Directive, InjectionToken, ContentChildren, NgModule, Injectable } from '@angular/core';
+import { inject, ElementRef, NgZone, EventEmitter, PLATFORM_ID, Output, Input, ViewEncapsulation, ChangeDetectionStrategy, Component, Directive, InjectionToken, ContentChildren, NgModule, Injectable } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, Subject, combineLatest, Subscription } from 'rxjs';
 import { switchMap, take, map, takeUntil } from 'rxjs/operators';

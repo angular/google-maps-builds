@@ -69,8 +69,6 @@ class MapEventManager {
     }
 }
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /** default options set to the Googleplex */
 const DEFAULT_OPTIONS = {
     center: { lat: 37.421995, lng: -122.084092 },
@@ -548,8 +546,6 @@ function coerceCssPixelValue(value) {
     return cssUnitsPattern.test(value) ? value : `${value}px`;
 }
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 class MapBaseLayer {
     _map = inject(GoogleMap);
     _ngZone = inject(NgZone);
@@ -586,8 +582,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 }]
         }], ctorParameters: () => [] });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular component that renders a Google Maps Bicycling Layer via the Google Maps JavaScript API.
  *
@@ -648,8 +642,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 type: Output
             }] } });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular component that renders a Google Maps Circle via the Google Maps JavaScript API.
  * @see developers.google.com/maps/documentation/javascript/reference/polygon#Circle
@@ -918,8 +910,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 type: Output
             }] } });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular component that renders a Google Maps Directions Renderer via the Google Maps
  * JavaScript API.
@@ -1056,8 +1046,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 type: Output
             }] } });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular component that renders a Google Maps Ground Overlay via the Google Maps JavaScript API.
  *
@@ -1240,8 +1228,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 type: Output
             }] } });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular component that renders a Google Maps info window via the Google Maps JavaScript API.
  *
@@ -1470,8 +1456,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 type: Output
             }] } });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular component that renders a Google Maps KML Layer via the Google Maps JavaScript API.
  *
@@ -1646,8 +1630,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
 /** Token that marker directives can use to expose themselves to the clusterer. */
 const MAP_MARKER = new InjectionToken('MAP_MARKER');
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Default options for the Google Maps marker component. Displays a marker
  * at the Googleplex.
@@ -2101,8 +2083,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 type: Output
             }] } });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /** Default options for a clusterer. */
 const DEFAULT_CLUSTERER_OPTIONS = {};
 /**
@@ -2537,8 +2517,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 type: Output
             }] } });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular component that renders a Google Maps Polygon via the Google Maps JavaScript API.
  *
@@ -2754,8 +2732,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 type: Output
             }] } });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular component that renders a Google Maps Polyline via the Google Maps JavaScript API.
  *
@@ -2964,8 +2940,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 type: Output
             }] } });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular component that renders a Google Maps Rectangle via the Google Maps JavaScript API.
  *
@@ -3194,8 +3168,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 type: Output
             }] } });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular component that renders a Google Maps Traffic Layer via the Google Maps JavaScript API.
  *
@@ -3288,8 +3260,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 type: Output
             }] } });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular component that renders a Google Maps Transit Layer via the Google Maps JavaScript API.
  *
@@ -3350,8 +3320,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 type: Output
             }] } });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular directive that renders a Google Maps heatmap via the Google Maps JavaScript API.
  *
@@ -3496,8 +3464,6 @@ function isLatLngLiteral(value) {
     return value && typeof value.lat === 'number' && typeof value.lng === 'number';
 }
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Default options for the Google Maps marker component. Displays a marker
  * at the Googleplex.
@@ -3754,8 +3720,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 type: Output
             }] } });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular component for implementing a Google Maps Marker Clusterer.
  *
@@ -3991,8 +3955,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
                 }]
         }] });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular service that wraps the Google Maps DirectionsService from the Google Maps JavaScript
  * API.
@@ -4042,8 +4004,6 @@ i0.ɵɵngDeclareClassMetadata({ minVersion: "12.0.0", version: "19.2.6", ngImpor
             args: [{ providedIn: 'root' }]
         }], ctorParameters: () => [] });
 
-// Workaround for: https://github.com/bazelbuild/rules_nodejs/issues/1265
-/// <reference types="google.maps" preserve="true" />
 /**
  * Angular service that wraps the Google Maps Geocoder from the Google Maps JavaScript API.
  * See developers.google.com/maps/documentation/javascript/reference/geocoder#Geocoder

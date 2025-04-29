@@ -1981,7 +1981,7 @@ declare class MapGeocoder {
 }
 
 type MapEventManagerTarget = {
-    addListener: (name: string, callback: (...args: any[]) => void) => google.maps.MapsEventListener | undefined;
+    addListener<T extends unknown[]>(name: string, callback: (...args: T) => void): google.maps.MapsEventListener | undefined;
 } | undefined;
 /** Manages event on a Google Maps object, ensuring that events are added only when necessary. */
 declare class MapEventManager {

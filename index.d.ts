@@ -1793,16 +1793,16 @@ type onClusterClickHandler = (event: google.maps.MapMouseEvent, cluster: Cluster
 interface MarkerClustererOptions {
     markers?: Marker[];
     /**
-     * An algorithm to cluster markers. Default is {@link SuperClusterAlgorithm}. Must
-     * provide a `calculate` method accepting {@link AlgorithmInput} and returning
-     * an array of {@link Cluster}.
+     * An algorithm to cluster markers. Default is `SuperClusterAlgorithm`. Must
+     * provide a `calculate` method accepting `AlgorithmInput` and returning
+     * an array of `Cluster`.
      */
     algorithm?: Algorithm;
     algorithmOptions?: AlgorithmOptions;
     map?: google.maps.Map | null;
     /**
-     * An object that converts a {@link Cluster} into a `google.maps.Marker`.
-     * Default is {@link DefaultRenderer}.
+     * An object that converts a `Cluster` into a `google.maps.Marker`.
+     * Default is `DefaultRenderer`.
      */
     renderer?: Renderer;
     onClusterClick?: onClusterClickHandler;
@@ -1815,7 +1815,7 @@ declare enum MarkerClustererEvents {
 declare const defaultOnClusterClickHandler: onClusterClickHandler;
 interface Renderer {
     /**
-     * Turn a {@link Cluster} into a `Marker`.
+     * Turn a `Cluster` into a `Marker`.
      *
      * Below is a simple example to create a marker with the number of markers in the cluster as a label.
      *
@@ -1845,7 +1845,7 @@ interface ClusterStats {
 }
 interface Algorithm {
     /**
-     * Calculates an array of {@link Cluster}.
+     * Calculates an array of `Cluster`.
      */
     calculate: ({ markers, map }: AlgorithmInput) => AlgorithmOutput;
 }
@@ -1873,7 +1873,7 @@ interface AlgorithmInput {
 }
 interface AlgorithmOutput {
     /**
-     * The clusters returned based upon the {@link AlgorithmInput}.
+     * The clusters returned based upon the `AlgorithmInput`.
      */
     clusters: Cluster[];
     /**

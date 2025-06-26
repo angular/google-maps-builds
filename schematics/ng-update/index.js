@@ -9,5 +9,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateToV20 = updateToV20;
 /** Entry point for the migration schematics with target of Angular Material v20 */
-function updateToV20() { }
+function updateToV20() {
+    return function () { };
+}
 //# sourceMappingURL=index.js.map

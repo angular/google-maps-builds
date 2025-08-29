@@ -1064,11 +1064,11 @@ declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnch
     /**
      * This event is fired when the AdvancedMarkerElement is double-clicked.
      */
-    readonly mapDblclick: Observable<google.maps.MapMouseEvent>;
+    readonly mapDblclick: Observable<MouseEvent>;
     /**
      * This event is fired when the mouse moves out of the AdvancedMarkerElement.
      */
-    readonly mapMouseout: Observable<google.maps.MapMouseEvent>;
+    readonly mapMouseout: Observable<MouseEvent>;
     /**
      * This event is fired when the mouse moves over the AdvancedMarkerElement.
      */
@@ -1076,11 +1076,11 @@ declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnch
     /**
      * This event is fired when the mouse button is released over the AdvancedMarkerElement.
      */
-    readonly mapMouseup: Observable<google.maps.MapMouseEvent>;
+    readonly mapMouseup: Observable<MouseEvent>;
     /**
      * This event is fired when the AdvancedMarkerElement is right-clicked.
      */
-    readonly mapRightclick: Observable<google.maps.MapMouseEvent>;
+    readonly mapRightclick: Observable<MouseEvent>;
     /**
      * This event is repeatedly fired while the user drags the AdvancedMarkerElement.
      * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.drag
@@ -1982,6 +1982,8 @@ declare class MapGeocoder {
 
 type MapEventManagerTarget = {
     addListener<T extends unknown[]>(name: string, callback: (...args: T) => void): google.maps.MapsEventListener | undefined;
+    addEventListener?<T extends unknown[]>(name: string, callback: (...args: T) => void): void;
+    removeEventListener?<T extends unknown[]>(name: string, callback: (...args: T) => void): void;
 } | undefined;
 /** Manages event on a Google Maps object, ensuring that events are added only when necessary. */
 declare class MapEventManager {
@@ -1993,8 +1995,12 @@ declare class MapEventManager {
     /** Clears all currently-registered event listeners. */
     private _clearListeners;
     constructor(_ngZone: NgZone);
-    /** Gets an observable that adds an event listener to the map when a consumer subscribes to it. */
-    getLazyEmitter<T>(name: string): Observable<T>;
+    /**
+     * Gets an observable that adds an event listener to the map when a consumer subscribes to it.
+     * @param name Name of the event for which the observable is being set up.
+     * @param type Type of the event (e.g. one going to a DOM node or a custom Maps one).
+     */
+    getLazyEmitter<T>(name: string, type?: 'custom' | 'native'): Observable<T>;
     /** Sets the current target that the manager should bind events to. */
     setTarget(target: MapEventManagerTarget): void;
     /** Destroys the manager and clears the event listeners. */

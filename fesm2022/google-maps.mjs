@@ -21,8 +21,12 @@ class MapEventManager {
     constructor(_ngZone) {
         this._ngZone = _ngZone;
     }
-    /** Gets an observable that adds an event listener to the map when a consumer subscribes to it. */
-    getLazyEmitter(name) {
+    /**
+     * Gets an observable that adds an event listener to the map when a consumer subscribes to it.
+     * @param name Name of the event for which the observable is being set up.
+     * @param type Type of the event (e.g. one going to a DOM node or a custom Maps one).
+     */
+    getLazyEmitter(name, type) {
         return this._targetStream.pipe(switchMap(target => {
             const observable = new Observable(observer => {
                 // If the target hasn't been initialized yet, cache the observer so it can be added later.
@@ -30,17 +34,29 @@ class MapEventManager {
                     this._pending.push({ observable, observer });
                     return undefined;
                 }
-                const listener = target.addListener(name, (event) => {
+                let handle;
+                const listener = (event) => {
                     this._ngZone.run(() => observer.next(event));
-                });
+                };
+                if (type === 'native') {
+                    if ((typeof ngDevMode === 'undefined' || ngDevMode) &&
+                        (!target.addEventListener || !target.removeEventListener)) {
+                        throw new Error('Maps event target that uses native events must have `addEventListener` and `removeEventListener` methods.');
+                    }
+                    target.addEventListener(name, listener);
+                    handle = { remove: () => target.removeEventListener(name, listener) };
+                }
+                else {
+                    handle = target.addListener(name, listener);
+                }
                 // If there's an error when initializing the Maps API (e.g. a wrong API key), it will
                 // return a dummy object that returns `undefined` from `addListener` (see #26514).
-                if (!listener) {
+                if (!handle) {
                     observer.complete();
                     return undefined;
                 }
-                this._listeners.push(listener);
-                return () => listener.remove();
+                this._listeners.push(handle);
+                return () => handle.remove();
             });
             return observable;
         }));
@@ -3539,23 +3555,23 @@ class MapAdvancedMarker {
     /**
      * This event is fired when the AdvancedMarkerElement is double-clicked.
      */
-    mapDblclick = this._eventManager.getLazyEmitter('dblclick');
+    mapDblclick = this._eventManager.getLazyEmitter('dblclick', 'native');
     /**
      * This event is fired when the mouse moves out of the AdvancedMarkerElement.
      */
-    mapMouseout = this._eventManager.getLazyEmitter('mouseout');
+    mapMouseout = this._eventManager.getLazyEmitter('mouseout', 'native');
     /**
      * This event is fired when the mouse moves over the AdvancedMarkerElement.
      */
-    mapMouseover = this._eventManager.getLazyEmitter('mouseover');
+    mapMouseover = this._eventManager.getLazyEmitter('mouseover', 'native');
     /**
      * This event is fired when the mouse button is released over the AdvancedMarkerElement.
      */
-    mapMouseup = this._eventManager.getLazyEmitter('mouseup');
+    mapMouseup = this._eventManager.getLazyEmitter('mouseup', 'native');
     /**
      * This event is fired when the AdvancedMarkerElement is right-clicked.
      */
-    mapRightclick = this._eventManager.getLazyEmitter('rightclick');
+    mapRightclick = this._eventManager.getLazyEmitter('auxclick', 'native');
     /**
      * This event is repeatedly fired while the user drags the AdvancedMarkerElement.
      * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.drag

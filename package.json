@@ -34,14 +34,14 @@
     ]
   },
   "module": "./fesm2022/google-maps.mjs",
-  "typings": "./index.d.ts",
+  "typings": "./types/google-maps.d.ts",
   "type": "module",
   "exports": {
     "./package.json": {
       "default": "./package.json"
     },
     ".": {
-      "types": "./index.d.ts",
+      "types": "./types/google-maps.d.ts",
       "default": "./fesm2022/google-maps.mjs"
     }
   }

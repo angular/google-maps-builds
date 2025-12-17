@@ -958,7 +958,7 @@ class MapGroundOverlay {
   _url = new BehaviorSubject('');
   _bounds = new BehaviorSubject(undefined);
   _destroyed = new Subject();
-  _hasWatchers;
+  _hasWatchers = false;
   groundOverlay;
   set url(url) {
     this._url.next(url);
@@ -3302,7 +3302,7 @@ class MapAdvancedMarker {
   set content(content) {
     this._content = content;
   }
-  _content;
+  _content = null;
   set gmpDraggable(draggable) {
     this._draggable = draggable;
   }

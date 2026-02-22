@@ -8,8 +8,13 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateToV21 = updateToV21;
-/** Entry point for the migration schematics with target of Angular Material v21 */
+exports.updateToV22 = updateToV22;
+/** Entry point for the migration schematics with target of Google Maps v21 */
 function updateToV21() {
+    return function () { };
+}
+/** Entry point for the migration schematics with target of Google Maps v22 */
+function updateToV22() {
     return function () { };
 }
 //# sourceMappingURL=index.js.map

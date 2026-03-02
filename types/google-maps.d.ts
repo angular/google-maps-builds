@@ -140,7 +140,7 @@ declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
      */
     readonly zoomChanged: Observable<void>;
     constructor(...args: unknown[]);
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     ngOnInit(): void;
     private _initialize;
     ngOnDestroy(): void;
@@ -443,7 +443,7 @@ declare class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
     constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     ngOnDestroy(): void;
     /**
      * See developers.google.com/maps/documentation/javascript/reference/directions
@@ -570,7 +570,7 @@ declare class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
     constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     ngOnDestroy(): void;
     /**
      * Gets the data that is currently shown on the heatmap.
@@ -935,7 +935,7 @@ declare class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint,
     constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     ngOnDestroy(): void;
     /**
      * See
@@ -1107,7 +1107,7 @@ declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnch
     constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     ngOnDestroy(): void;
     getAnchor(): google.maps.marker.AdvancedMarkerElement;
     /** Returns a promise that resolves when the marker has been initialized. */
@@ -1361,7 +1361,7 @@ declare class DeprecatedMapMarkerClusterer implements OnInit, AfterContentInit, 
     constructor(...args: unknown[]);
     ngOnInit(): void;
     ngAfterContentInit(): void;
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     ngOnDestroy(): void;
     fitMapToMarkers(padding: number | google.maps.Padding): void;
     getAverageCenter(): boolean;
@@ -1916,7 +1916,7 @@ declare class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
     /** Underlying MarkerClusterer object used to interact with Google Maps. */
     markerClusterer?: MarkerClusterer;
     ngOnInit(): Promise<void>;
-    ngOnChanges(changes: SimpleChanges): Promise<void>;
+    ngOnChanges(changes: SimpleChanges<this>): Promise<void>;
     ngOnDestroy(): void;
     private _createCluster;
     private _watchForMarkerChanges;

@@ -6,7 +6,5 @@
  * found in the LICENSE file at https://angular.dev/license
  */
 import { Rule } from '@angular-devkit/schematics';
-/** Entry point for the migration schematics with target of Google Maps v21 */
-export declare function updateToV21(): Rule;
 /** Entry point for the migration schematics with target of Google Maps v22 */
 export declare function updateToV22(): Rule;

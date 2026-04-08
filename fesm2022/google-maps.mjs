@@ -450,7 +450,6 @@ function coerceCssPixelValue(value) {
 class MapBaseLayer {
   _map = inject(GoogleMap);
   _ngZone = inject(NgZone);
-  constructor() {}
   ngOnInit() {
     if (this._map._isBrowser) {
       this._ngZone.runOutsideAngular(() => {
@@ -500,8 +499,7 @@ i0.ɵɵngDeclareClassMetadata({
       selector: 'map-base-layer',
       exportAs: 'mapBaseLayer'
     }]
-  }],
-  ctorParameters: () => []
+  }]
 });
 
 class MapBicyclingLayer {
@@ -610,7 +608,6 @@ class MapCircle {
   radiusChanged = this._eventManager.getLazyEmitter('radius_changed');
   circleRightclick = this._eventManager.getLazyEmitter('rightclick');
   circleInitialized = new EventEmitter();
-  constructor() {}
   ngOnInit() {
     if (!this._map._isBrowser) {
       return;
@@ -759,7 +756,6 @@ i0.ɵɵngDeclareClassMetadata({
       exportAs: 'mapCircle'
     }]
   }],
-  ctorParameters: () => [],
   propDecorators: {
     options: [{
       type: Input
@@ -830,7 +826,6 @@ class MapDirectionsRenderer {
   directionsChanged = this._eventManager.getLazyEmitter('directions_changed');
   directionsRendererInitialized = new EventEmitter();
   directionsRenderer;
-  constructor() {}
   ngOnInit() {
     if (this._googleMap._isBrowser) {
       if (google.maps.DirectionsRenderer && this._googleMap.googleMap) {
@@ -933,7 +928,6 @@ i0.ɵɵngDeclareClassMetadata({
       exportAs: 'mapDirectionsRenderer'
     }]
   }],
-  ctorParameters: () => [],
   propDecorators: {
     directions: [{
       type: Input
@@ -976,7 +970,6 @@ class MapGroundOverlay {
   mapClick = this._eventManager.getLazyEmitter('click');
   mapDblclick = this._eventManager.getLazyEmitter('dblclick');
   groundOverlayInitialized = new EventEmitter();
-  constructor() {}
   ngOnInit() {
     if (this._map._isBrowser) {
       this._bounds.pipe(takeUntil(this._destroyed)).subscribe(bounds => {
@@ -1099,7 +1092,6 @@ i0.ɵɵngDeclareClassMetadata({
       exportAs: 'mapGroundOverlay'
     }]
   }],
-  ctorParameters: () => [],
   propDecorators: {
     url: [{
       type: Input
@@ -1146,7 +1138,6 @@ class MapInfoWindow {
   positionChanged = this._eventManager.getLazyEmitter('position_changed');
   zindexChanged = this._eventManager.getLazyEmitter('zindex_changed');
   infoWindowInitialized = new EventEmitter();
-  constructor() {}
   ngOnInit() {
     if (this._googleMap._isBrowser) {
       this._combineOptions().pipe(take(1)).subscribe(options => {
@@ -1297,7 +1288,6 @@ i0.ɵɵngDeclareClassMetadata({
       }
     }]
   }],
-  ctorParameters: () => [],
   propDecorators: {
     options: [{
       type: Input
@@ -1344,7 +1334,6 @@ class MapKmlLayer {
   defaultviewportChanged = this._eventManager.getLazyEmitter('defaultviewport_changed');
   statusChanged = this._eventManager.getLazyEmitter('status_changed');
   kmlLayerInitialized = new EventEmitter();
-  constructor() {}
   ngOnInit() {
     if (this._map._isBrowser) {
       this._combineOptions().pipe(take(1)).subscribe(options => {
@@ -1469,7 +1458,6 @@ i0.ɵɵngDeclareClassMetadata({
       exportAs: 'mapKmlLayer'
     }]
   }],
-  ctorParameters: () => [],
   propDecorators: {
     options: [{
       type: Input
@@ -1555,7 +1543,6 @@ class MapMarker {
   zindexChanged = this._eventManager.getLazyEmitter('zindex_changed');
   markerInitialized = new EventEmitter();
   marker;
-  constructor() {}
   ngOnInit() {
     if (!this._googleMap._isBrowser) {
       return;
@@ -1765,7 +1752,6 @@ i0.ɵɵngDeclareClassMetadata({
       }]
     }]
   }],
-  ctorParameters: () => [],
   propDecorators: {
     title: [{
       type: Input
@@ -1941,7 +1927,6 @@ class DeprecatedMapMarkerClusterer {
   _markers;
   markerClusterer;
   markerClustererInitialized = new EventEmitter();
-  constructor() {}
   ngOnInit() {
     if (this._canInitialize) {
       this._ngZone.runOutsideAngular(() => {
@@ -2276,7 +2261,6 @@ i0.ɵɵngDeclareClassMetadata({
       encapsulation: ViewEncapsulation.None
     }]
   }],
-  ctorParameters: () => [],
   propDecorators: {
     ariaLabelFn: [{
       type: Input
@@ -2382,7 +2366,6 @@ class MapPolygon {
   polygonMouseup = this._eventManager.getLazyEmitter('mouseup');
   polygonRightclick = this._eventManager.getLazyEmitter('rightclick');
   polygonInitialized = new EventEmitter();
-  constructor() {}
   ngOnInit() {
     if (this._map._isBrowser) {
       this._combineOptions().pipe(take(1)).subscribe(options => {
@@ -2513,7 +2496,6 @@ i0.ɵɵngDeclareClassMetadata({
       exportAs: 'mapPolygon'
     }]
   }],
-  ctorParameters: () => [],
   propDecorators: {
     options: [{
       type: Input
@@ -2586,7 +2568,6 @@ class MapPolyline {
   polylineMouseup = this._eventManager.getLazyEmitter('mouseup');
   polylineRightclick = this._eventManager.getLazyEmitter('rightclick');
   polylineInitialized = new EventEmitter();
-  constructor() {}
   ngOnInit() {
     if (this._map._isBrowser) {
       this._combineOptions().pipe(take(1)).subscribe(options => {
@@ -2713,7 +2694,6 @@ i0.ɵɵngDeclareClassMetadata({
       exportAs: 'mapPolyline'
     }]
   }],
-  ctorParameters: () => [],
   propDecorators: {
     options: [{
       type: Input
@@ -2787,7 +2767,6 @@ class MapRectangle {
   rectangleMouseup = this._eventManager.getLazyEmitter('mouseup');
   rectangleRightclick = this._eventManager.getLazyEmitter('rightclick');
   rectangleInitialized = new EventEmitter();
-  constructor() {}
   ngOnInit() {
     if (this._map._isBrowser) {
       this._combineOptions().pipe(take(1)).subscribe(options => {
@@ -2915,7 +2894,6 @@ i0.ɵɵngDeclareClassMetadata({
       exportAs: 'mapRectangle'
     }]
   }],
-  ctorParameters: () => [],
   propDecorators: {
     options: [{
       type: Input
@@ -2975,7 +2953,6 @@ class MapTrafficLayer {
     this._autoRefresh.next(autoRefresh);
   }
   trafficLayerInitialized = new EventEmitter();
-  constructor() {}
   ngOnInit() {
     if (this._map._isBrowser) {
       this._combineOptions().pipe(take(1)).subscribe(options => {
@@ -3060,7 +3037,6 @@ i0.ɵɵngDeclareClassMetadata({
       exportAs: 'mapTrafficLayer'
     }]
   }],
-  ctorParameters: () => [],
   propDecorators: {
     autoRefresh: [{
       type: Input
@@ -3158,7 +3134,6 @@ class MapHeatmapLayer {
   _options;
   heatmap;
   heatmapInitialized = new EventEmitter();
-  constructor() {}
   ngOnInit() {
     if (this._googleMap._isBrowser) {
       if (!window.google?.maps?.visualization && !window.google?.maps.importLibrary && (typeof ngDevMode === 'undefined' || ngDevMode)) {
@@ -3264,7 +3239,6 @@ i0.ɵɵngDeclareClassMetadata({
       exportAs: 'mapHeatmapLayer'
     }]
   }],
-  ctorParameters: () => [],
   propDecorators: {
     data: [{
       type: Input
@@ -3326,7 +3300,6 @@ class MapAdvancedMarker {
   mapDragstart = this._eventManager.getLazyEmitter('dragstart');
   markerInitialized = new EventEmitter();
   advancedMarker;
-  constructor() {}
   ngOnInit() {
     if (!this._googleMap._isBrowser) {
       return;
@@ -3469,7 +3442,6 @@ i0.ɵɵngDeclareClassMetadata({
       }]
     }]
   }],
-  ctorParameters: () => [],
   propDecorators: {
     title: [{
       type: Input
@@ -3751,7 +3723,6 @@ i0.ɵɵngDeclareClassMetadata({
 class MapDirectionsService {
   _ngZone = inject(NgZone);
   _directionsService;
-  constructor() {}
   route(request) {
     return new Observable(observer => {
       this._getService().then(service => {
@@ -3806,14 +3777,12 @@ i0.ɵɵngDeclareClassMetadata({
     args: [{
       providedIn: 'root'
     }]
-  }],
-  ctorParameters: () => []
+  }]
 });
 
 class MapGeocoder {
   _ngZone = inject(NgZone);
   _geocoder;
-  constructor() {}
   geocode(request) {
     return new Observable(observer => {
       this._getGeocoder().then(geocoder => {
@@ -3868,8 +3837,7 @@ i0.ɵɵngDeclareClassMetadata({
     args: [{
       providedIn: 'root'
     }]
-  }],
-  ctorParameters: () => []
+  }]
 });
 
 export { DeprecatedMapMarkerClusterer, GoogleMap, GoogleMapsModule, MapAdvancedMarker, MapBaseLayer, MapBicyclingLayer, MapCircle, MapDirectionsRenderer, MapDirectionsService, MapEventManager, MapGeocoder, MapGroundOverlay, MapHeatmapLayer, MapInfoWindow, MapKmlLayer, MapMarker, MapMarkerClusterer, MapPolygon, MapPolyline, MapRectangle, MapTrafficLayer, MapTransitLayer };

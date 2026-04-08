@@ -139,7 +139,7 @@ declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
      * https://developers.google.com/maps/documentation/javascript/reference/map#Map.zoom_changed
      */
     readonly zoomChanged: Observable<void>;
-    constructor(...args: unknown[]);
+    constructor();
     ngOnChanges(changes: SimpleChanges<this>): void;
     ngOnInit(): void;
     private _initialize;
@@ -243,7 +243,6 @@ declare class GoogleMap implements OnChanges, OnInit, OnDestroy {
 declare class MapBaseLayer implements OnInit, OnDestroy {
     protected readonly _map: GoogleMap;
     protected readonly _ngZone: NgZone;
-    constructor(...args: unknown[]);
     ngOnInit(): void;
     ngOnDestroy(): void;
     private _assertInitialized;
@@ -366,7 +365,6 @@ declare class MapCircle implements OnInit, OnDestroy {
     readonly circleRightclick: Observable<google.maps.MapMouseEvent>;
     /** Event emitted when the circle is initialized. */
     readonly circleInitialized: EventEmitter<google.maps.Circle>;
-    constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
     ngOnDestroy(): void;
@@ -440,7 +438,6 @@ declare class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
     readonly directionsRendererInitialized: EventEmitter<google.maps.DirectionsRenderer>;
     /** The underlying google.maps.DirectionsRenderer object. */
     directionsRenderer?: google.maps.DirectionsRenderer;
-    constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
     ngOnChanges(changes: SimpleChanges<this>): void;
@@ -508,7 +505,6 @@ declare class MapGroundOverlay implements OnInit, OnDestroy {
     readonly mapDblclick: Observable<google.maps.MapMouseEvent>;
     /** Event emitted when the ground overlay is initialized. */
     readonly groundOverlayInitialized: EventEmitter<google.maps.GroundOverlay>;
-    constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
     ngOnDestroy(): void;
@@ -567,7 +563,6 @@ declare class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
     heatmap?: google.maps.visualization.HeatmapLayer;
     /** Event emitted when the heatmap is initialized. */
     readonly heatmapInitialized: EventEmitter<google.maps.visualization.HeatmapLayer>;
-    constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
     ngOnChanges(changes: SimpleChanges<this>): void;
@@ -649,7 +644,6 @@ declare class MapInfoWindow implements OnInit, OnDestroy {
     readonly zindexChanged: Observable<void>;
     /** Event emitted when the info window is initialized. */
     readonly infoWindowInitialized: EventEmitter<google.maps.InfoWindow>;
-    constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
     ngOnDestroy(): void;
@@ -728,7 +722,6 @@ declare class MapKmlLayer implements OnInit, OnDestroy {
     readonly statusChanged: Observable<void>;
     /** Event emitted when the KML layer is initialized. */
     readonly kmlLayerInitialized: EventEmitter<google.maps.KmlLayer>;
-    constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
     ngOnDestroy(): void;
@@ -932,7 +925,6 @@ declare class MapMarker implements OnInit, OnChanges, OnDestroy, MapAnchorPoint,
      * See developers.google.com/maps/documentation/javascript/reference/marker#Marker
      */
     marker?: google.maps.Marker;
-    constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
     ngOnChanges(changes: SimpleChanges<this>): void;
@@ -1104,7 +1096,6 @@ declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnch
      * See developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement
      */
     advancedMarker: google.maps.marker.AdvancedMarkerElement;
-    constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
     ngOnChanges(changes: SimpleChanges<this>): void;
@@ -1358,7 +1349,6 @@ declare class DeprecatedMapMarkerClusterer implements OnInit, AfterContentInit, 
     markerClusterer?: MarkerClusterer$1;
     /** Event emitted when the clusterer is initialized. */
     readonly markerClustererInitialized: EventEmitter<MarkerClusterer$1>;
-    constructor(...args: unknown[]);
     ngOnInit(): void;
     ngAfterContentInit(): void;
     ngOnChanges(changes: SimpleChanges<this>): void;
@@ -1457,7 +1447,6 @@ declare class MapPolygon implements OnInit, OnDestroy {
     readonly polygonRightclick: Observable<google.maps.PolyMouseEvent>;
     /** Event emitted when the polygon is initialized. */
     readonly polygonInitialized: EventEmitter<google.maps.Polygon>;
-    constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
     ngOnDestroy(): void;
@@ -1556,7 +1545,6 @@ declare class MapPolyline implements OnInit, OnDestroy {
     readonly polylineRightclick: Observable<google.maps.PolyMouseEvent>;
     /** Event emitted when the polyline is initialized. */
     readonly polylineInitialized: EventEmitter<google.maps.Polyline>;
-    constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
     ngOnDestroy(): void;
@@ -1666,7 +1654,6 @@ declare class MapRectangle implements OnInit, OnDestroy {
     readonly rectangleRightclick: Observable<google.maps.MapMouseEvent>;
     /** Event emitted when the rectangle is initialized. */
     readonly rectangleInitialized: EventEmitter<google.maps.Rectangle>;
-    constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
     ngOnDestroy(): void;
@@ -1720,7 +1707,6 @@ declare class MapTrafficLayer implements OnInit, OnDestroy {
     set autoRefresh(autoRefresh: boolean);
     /** Event emitted when the traffic layer is initialized. */
     readonly trafficLayerInitialized: EventEmitter<google.maps.TrafficLayer>;
-    constructor(...args: unknown[]);
     ngOnInit(): void;
     private _initialize;
     ngOnDestroy(): void;
@@ -1946,7 +1932,6 @@ interface MapDirectionsResponse {
 declare class MapDirectionsService {
     private readonly _ngZone;
     private _directionsService;
-    constructor(...args: unknown[]);
     /**
      * See
      * developers.google.com/maps/documentation/javascript/reference/directions
@@ -1969,7 +1954,6 @@ interface MapGeocoderResponse {
 declare class MapGeocoder {
     private readonly _ngZone;
     private _geocoder;
-    constructor(...args: unknown[]);
     /**
      * See developers.google.com/maps/documentation/javascript/reference/geocoder#Geocoder.geocode
      */

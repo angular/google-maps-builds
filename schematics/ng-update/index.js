@@ -10,6 +10,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateToV22 = updateToV22;
 /** Entry point for the migration schematics with target of Google Maps v22 */
 function updateToV22() {
-    return function () { };
+    return () => { };
 }
 //# sourceMappingURL=index.js.map

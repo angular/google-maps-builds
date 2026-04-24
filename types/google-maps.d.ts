@@ -1037,6 +1037,14 @@ declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnch
     set gmpDraggable(draggable: boolean);
     private _draggable;
     /**
+     * If `true`, the `AdvancedMarkerElement` will be clickable and trigger the
+     * gmp-click event, and will be interactive for accessibility purposes (e.g.
+     * allowing keyboard navigation via arrow keys).
+     * @see https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions.gmpClickable
+     */
+    set gmpClickable(clickable: boolean);
+    private _clickable;
+    /**
      * Options for constructing an AdvancedMarkerElement.
      * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElementOptions
      */
@@ -1088,6 +1096,11 @@ declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnch
      * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.dragstart
      */
     readonly mapDragstart: Observable<google.maps.MapMouseEvent>;
+    /**
+     * This event is fired when the user starts dragging the AdvancedMarkerElement.
+     * https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#AdvancedMarkerElement.gmp-click
+     */
+    readonly gmpClick: Observable<google.maps.marker.AdvancedMarkerClickEvent>;
     /** Event emitted when the marker is initialized. */
     readonly markerInitialized: EventEmitter<google.maps.marker.AdvancedMarkerElement>;
     /**
@@ -1108,7 +1121,7 @@ declare class MapAdvancedMarker implements OnInit, OnChanges, OnDestroy, MapAnch
     /** Asserts that the map has been initialized. */
     private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapAdvancedMarker, never>;
-    static ɵdir: i0.ɵɵDirectiveDeclaration<MapAdvancedMarker, "map-advanced-marker", ["mapAdvancedMarker"], { "title": { "alias": "title"; "required": false; }; "position": { "alias": "position"; "required": false; }; "content": { "alias": "content"; "required": false; }; "gmpDraggable": { "alias": "gmpDraggable"; "required": false; }; "options": { "alias": "options"; "required": false; }; "zIndex": { "alias": "zIndex"; "required": false; }; }, { "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "mapMouseup": "mapMouseup"; "mapRightclick": "mapRightclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "markerInitialized": "markerInitialized"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<MapAdvancedMarker, "map-advanced-marker", ["mapAdvancedMarker"], { "title": { "alias": "title"; "required": false; }; "position": { "alias": "position"; "required": false; }; "content": { "alias": "content"; "required": false; }; "gmpDraggable": { "alias": "gmpDraggable"; "required": false; }; "gmpClickable": { "alias": "gmpClickable"; "required": false; }; "options": { "alias": "options"; "required": false; }; "zIndex": { "alias": "zIndex"; "required": false; }; }, { "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "mapMouseout": "mapMouseout"; "mapMouseover": "mapMouseover"; "mapMouseup": "mapMouseup"; "mapRightclick": "mapRightclick"; "mapDrag": "mapDrag"; "mapDragend": "mapDragend"; "mapDragstart": "mapDragstart"; "gmpClick": "gmpClick"; "markerInitialized": "markerInitialized"; }, never, never, true, never>;
 }
 
 /**

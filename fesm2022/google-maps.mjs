@@ -3281,6 +3281,10 @@ class MapAdvancedMarker {
     this._draggable = draggable;
   }
   _draggable;
+  set gmpClickable(clickable) {
+    this._clickable = clickable;
+  }
+  _clickable;
   set options(options) {
     this._options = options;
   }
@@ -3298,6 +3302,7 @@ class MapAdvancedMarker {
   mapDrag = this._eventManager.getLazyEmitter('drag');
   mapDragend = this._eventManager.getLazyEmitter('dragend');
   mapDragstart = this._eventManager.getLazyEmitter('dragstart');
+  gmpClick = this._eventManager.getLazyEmitter('gmp-click');
   markerInitialized = new EventEmitter();
   advancedMarker;
   ngOnInit() {
@@ -3330,6 +3335,7 @@ class MapAdvancedMarker {
       _position,
       _title,
       _draggable,
+      _clickable,
       _zIndex
     } = this;
     if (advancedMarker) {
@@ -3338,6 +3344,9 @@ class MapAdvancedMarker {
       }
       if (changes['gmpDraggable']) {
         advancedMarker.gmpDraggable = _draggable;
+      }
+      if (changes['gmpClickable']) {
+        advancedMarker.gmpClickable = _clickable;
       }
       if (changes['content']) {
         advancedMarker.content = _content;
@@ -3373,6 +3382,7 @@ class MapAdvancedMarker {
       content: this._content || options.content,
       zIndex: this._zIndex ?? options.zIndex,
       gmpDraggable: this._draggable ?? options.gmpDraggable,
+      gmpClickable: this._clickable ?? options.gmpClickable,
       map: this._googleMap.googleMap
     };
   }
@@ -3402,6 +3412,7 @@ class MapAdvancedMarker {
       position: "position",
       content: "content",
       gmpDraggable: "gmpDraggable",
+      gmpClickable: "gmpClickable",
       options: "options",
       zIndex: "zIndex"
     },
@@ -3415,6 +3426,7 @@ class MapAdvancedMarker {
       mapDrag: "mapDrag",
       mapDragend: "mapDragend",
       mapDragstart: "mapDragstart",
+      gmpClick: "gmpClick",
       markerInitialized: "markerInitialized"
     },
     providers: [{
@@ -3455,6 +3467,9 @@ i0.ɵɵngDeclareClassMetadata({
     gmpDraggable: [{
       type: Input
     }],
+    gmpClickable: [{
+      type: Input
+    }],
     options: [{
       type: Input
     }],
@@ -3486,6 +3501,9 @@ i0.ɵɵngDeclareClassMetadata({
       type: Output
     }],
     mapDragstart: [{
+      type: Output
+    }],
+    gmpClick: [{
       type: Output
     }],
     markerInitialized: [{

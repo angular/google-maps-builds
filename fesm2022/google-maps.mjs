@@ -3730,7 +3730,7 @@ class MapDirectionsService {
           this._ngZone.run(() => {
             observer.next({
               result: result || undefined,
-              status
+              status: status
             });
             observer.complete();
           });
@@ -3790,7 +3790,7 @@ class MapGeocoder {
           this._ngZone.run(() => {
             observer.next({
               results: results || [],
-              status
+              status: status
             });
             observer.complete();
           });

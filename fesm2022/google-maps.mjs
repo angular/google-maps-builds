@@ -3122,84 +3122,15 @@ i0.ɵɵngDeclareClassMetadata({
 });
 
 class MapHeatmapLayer {
-  _googleMap = inject(GoogleMap);
-  _ngZone = inject(NgZone);
-  set data(data) {
-    this._data = data;
-  }
-  _data;
-  set options(options) {
-    this._options = options;
-  }
-  _options;
+  set data(data) {}
+  set options(options) {}
   heatmap;
   heatmapInitialized = new EventEmitter();
-  ngOnInit() {
-    if (this._googleMap._isBrowser) {
-      if (!window.google?.maps?.visualization && !window.google?.maps.importLibrary && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-        throw Error('Namespace `google.maps.visualization` not found, cannot construct heatmap. ' + 'Please install the Google Maps JavaScript API with the "visualization" library: ' + 'https://developers.google.com/maps/documentation/javascript/visualization');
-      }
-      if (google.maps.visualization?.HeatmapLayer && this._googleMap.googleMap) {
-        this._initialize(this._googleMap.googleMap, google.maps.visualization.HeatmapLayer);
-      } else {
-        this._ngZone.runOutsideAngular(() => {
-          Promise.all([this._googleMap._resolveMap(), google.maps.importLibrary('visualization')]).then(([map, lib]) => {
-            this._initialize(map, lib.HeatmapLayer);
-          });
-        });
-      }
-    }
-  }
-  _initialize(map, heatmapConstructor) {
-    this._ngZone.runOutsideAngular(() => {
-      this.heatmap = new heatmapConstructor(this._combineOptions());
-      this._assertInitialized();
-      this.heatmap.setMap(map);
-      this.heatmapInitialized.emit(this.heatmap);
-    });
-  }
-  ngOnChanges(changes) {
-    const {
-      _data,
-      heatmap
-    } = this;
-    if (heatmap) {
-      if (changes['options']) {
-        heatmap.setOptions(this._combineOptions());
-      }
-      if (changes['data'] && _data !== undefined) {
-        heatmap.setData(this._normalizeData(_data));
-      }
-    }
-  }
-  ngOnDestroy() {
-    this.heatmap?.setMap(null);
+  constructor() {
+    console.error('As of May 2026, Google Maps no longer supports the heatmap layer APIs. ' + 'As a result, the `<map-heatmap-layer>` component is a no-op that will ' + 'be removed completely in Angular v23.\nMore information: ' + 'https://developers.google.com/maps/deprecations?utm_source=devtools&utm_campaign=stable#heatmap-layer-js-deprecation');
   }
   getData() {
-    this._assertInitialized();
-    return this.heatmap.getData();
-  }
-  _combineOptions() {
-    const options = this._options || {};
-    return {
-      ...options,
-      data: this._normalizeData(this._data || options.data || []),
-      map: this._googleMap.googleMap
-    };
-  }
-  _normalizeData(data) {
-    const result = [];
-    data.forEach(item => {
-      result.push(isLatLngLiteral(item) ? new google.maps.LatLng(item.lat, item.lng) : item);
-    });
-    return result;
-  }
-  _assertInitialized() {
-    if (typeof ngDevMode === 'undefined' || ngDevMode) {
-      if (!this.heatmap) {
-        throw Error('Cannot interact with a Google Map HeatmapLayer before it has been ' + 'initialized. Please wait for the heatmap to load before trying to interact with it.');
-      }
-    }
+    return null;
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
@@ -3223,7 +3154,6 @@ class MapHeatmapLayer {
       heatmapInitialized: "heatmapInitialized"
     },
     exportAs: ["mapHeatmapLayer"],
-    usesOnChanges: true,
     ngImport: i0
   });
 }
@@ -3239,6 +3169,7 @@ i0.ɵɵngDeclareClassMetadata({
       exportAs: 'mapHeatmapLayer'
     }]
   }],
+  ctorParameters: () => [],
   propDecorators: {
     data: [{
       type: Input
@@ -3251,9 +3182,6 @@ i0.ɵɵngDeclareClassMetadata({
     }]
   }
 });
-function isLatLngLiteral(value) {
-  return value && typeof value.lat === 'number' && typeof value.lng === 'number';
-}
 
 const DEFAULT_MARKER_OPTIONS = {
   position: {

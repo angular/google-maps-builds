@@ -533,58 +533,45 @@ declare class MapGroundOverlay implements OnInit, OnDestroy {
     static ɵdir: i0.ɵɵDirectiveDeclaration<MapGroundOverlay, "map-ground-overlay", ["mapGroundOverlay"], { "url": { "alias": "url"; "required": false; }; "bounds": { "alias": "bounds"; "required": false; }; "clickable": { "alias": "clickable"; "required": false; }; "opacity": { "alias": "opacity"; "required": false; }; }, { "mapClick": "mapClick"; "mapDblclick": "mapDblclick"; "groundOverlayInitialized": "groundOverlayInitialized"; }, never, never, true, never>;
 }
 
-/** Possible data that can be shown on a heatmap layer. */
-type HeatmapData = google.maps.MVCArray<google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral> | (google.maps.LatLng | google.maps.visualization.WeightedLocation | google.maps.LatLngLiteral)[];
+/**
+ * Possible data that can be shown on a heatmap layer.
+ * @deprecated Google Maps no longer supports the heatmap API.
+ * @breaking-change 23.0.0
+ */
+type HeatmapData = any;
 /**
  * Angular directive that renders a Google Maps heatmap via the Google Maps JavaScript API.
  *
  * See: https://developers.google.com/maps/documentation/javascript/reference/visualization
+ *
+ * @deprecated Google Maps no longer supports the heatmap API so this component is now a no-op that will be deleted.
+ * @breaking-change 23.0.0
  */
-declare class MapHeatmapLayer implements OnInit, OnChanges, OnDestroy {
-    private readonly _googleMap;
-    private _ngZone;
+declare class MapHeatmapLayer {
     /**
      * Data shown on the heatmap.
      * See: https://developers.google.com/maps/documentation/javascript/reference/visualization
      */
     set data(data: HeatmapData);
-    private _data;
     /**
      * Options used to configure the heatmap. See:
      * developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayerOptions
      */
-    set options(options: Partial<google.maps.visualization.HeatmapLayerOptions>);
-    private _options;
+    set options(options: any);
     /**
      * The underlying google.maps.visualization.HeatmapLayer object.
      *
      * See: https://developers.google.com/maps/documentation/javascript/reference/visualization
      */
-    heatmap?: google.maps.visualization.HeatmapLayer;
+    heatmap?: any;
     /** Event emitted when the heatmap is initialized. */
-    readonly heatmapInitialized: EventEmitter<google.maps.visualization.HeatmapLayer>;
-    ngOnInit(): void;
-    private _initialize;
-    ngOnChanges(changes: SimpleChanges<this>): void;
-    ngOnDestroy(): void;
+    readonly heatmapInitialized: EventEmitter<any>;
+    constructor();
     /**
      * Gets the data that is currently shown on the heatmap.
      * See: developers.google.com/maps/documentation/javascript/reference/visualization#HeatmapLayer
      */
     getData(): HeatmapData;
-    /** Creates a combined options object using the passed-in options and the individual inputs. */
-    private _combineOptions;
-    /**
-     * Most Google Maps APIs support both `LatLng` objects and `LatLngLiteral`. The latter is more
-     * convenient to write out, because the Google Maps API doesn't have to have been loaded in order
-     * to construct them. The `HeatmapLayer` appears to be an exception that only allows a `LatLng`
-     * object, or it throws a runtime error. Since it's more convenient and we expect that Angular
-     * users will load the API asynchronously, we allow them to pass in a `LatLngLiteral` and we
-     * convert it to a `LatLng` object before passing it off to Google Maps.
-     */
-    private _normalizeData;
-    /** Asserts that the heatmap object has been initialized. */
-    private _assertInitialized;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapHeatmapLayer, never>;
     static ɵdir: i0.ɵɵDirectiveDeclaration<MapHeatmapLayer, "map-heatmap-layer", ["mapHeatmapLayer"], { "data": { "alias": "data"; "required": false; }; "options": { "alias": "options"; "required": false; }; }, { "heatmapInitialized": "heatmapInitialized"; }, never, never, true, never>;
 }

@@ -1,5 +1,5 @@
 import * as i0 from '@angular/core';
-import { inject, ElementRef, NgZone, EventEmitter, PLATFORM_ID, Output, Input, ViewEncapsulation, ChangeDetectionStrategy, Component, Directive, InjectionToken, ContentChildren, NgModule, Service } from '@angular/core';
+import { inject, ElementRef, NgZone, EventEmitter, PLATFORM_ID, Output, Input, ViewEncapsulation, Component, Directive, InjectionToken, ContentChildren, NgModule, Service } from '@angular/core';
 import { BehaviorSubject, Observable, Subject, combineLatest, Subscription } from 'rxjs';
 import { switchMap, take, map, takeUntil } from 'rxjs/operators';
 import { isPlatformBrowser } from '@angular/common';
@@ -335,7 +335,6 @@ class GoogleMap {
     ngImport: i0,
     template: '<div class="map-container"></div><ng-content />',
     isInline: true,
-    changeDetection: i0.ChangeDetectionStrategy.OnPush,
     encapsulation: i0.ViewEncapsulation.None
   });
 }
@@ -349,7 +348,6 @@ i0.ɵɵngDeclareClassMetadata({
     args: [{
       selector: 'google-map',
       exportAs: 'googleMap',
-      changeDetection: ChangeDetectionStrategy.OnPush,
       template: '<div class="map-container"></div><ng-content />',
       encapsulation: ViewEncapsulation.None
     }]
@@ -2242,7 +2240,6 @@ class DeprecatedMapMarkerClusterer {
     ngImport: i0,
     template: '<ng-content/>',
     isInline: true,
-    changeDetection: i0.ChangeDetectionStrategy.OnPush,
     encapsulation: i0.ViewEncapsulation.None
   });
 }
@@ -2256,7 +2253,6 @@ i0.ɵɵngDeclareClassMetadata({
     args: [{
       selector: 'deprecated-map-marker-clusterer',
       exportAs: 'mapMarkerClusterer',
-      changeDetection: ChangeDetectionStrategy.OnPush,
       template: '<ng-content/>',
       encapsulation: ViewEncapsulation.None
     }]
@@ -3580,7 +3576,6 @@ class MapMarkerClusterer {
     ngImport: i0,
     template: '<ng-content/>',
     isInline: true,
-    changeDetection: i0.ChangeDetectionStrategy.OnPush,
     encapsulation: i0.ViewEncapsulation.None
   });
 }
@@ -3594,7 +3589,6 @@ i0.ɵɵngDeclareClassMetadata({
     args: [{
       selector: 'map-marker-clusterer',
       exportAs: 'mapMarkerClusterer',
-      changeDetection: ChangeDetectionStrategy.OnPush,
       template: '<ng-content/>',
       encapsulation: ViewEncapsulation.None
     }]

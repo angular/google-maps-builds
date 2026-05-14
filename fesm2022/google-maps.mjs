@@ -287,7 +287,7 @@ class GoogleMap {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: GoogleMap,
     deps: [],
@@ -295,7 +295,7 @@ class GoogleMap {
   });
   static ɵcmp = i0.ɵɵngDeclareComponent({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: GoogleMap,
     isStandalone: true,
     selector: "google-map",
@@ -340,7 +340,7 @@ class GoogleMap {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: GoogleMap,
   decorators: [{
@@ -470,7 +470,7 @@ class MapBaseLayer {
   _unsetMap() {}
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapBaseLayer,
     deps: [],
@@ -478,7 +478,7 @@ class MapBaseLayer {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapBaseLayer,
     isStandalone: true,
     selector: "map-base-layer",
@@ -488,7 +488,7 @@ class MapBaseLayer {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapBaseLayer,
   decorators: [{
@@ -536,7 +536,7 @@ class MapBicyclingLayer {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapBicyclingLayer,
     deps: [],
@@ -544,7 +544,7 @@ class MapBicyclingLayer {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapBicyclingLayer,
     isStandalone: true,
     selector: "map-bicycling-layer",
@@ -557,7 +557,7 @@ class MapBicyclingLayer {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapBicyclingLayer,
   decorators: [{
@@ -705,7 +705,7 @@ class MapCircle {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapCircle,
     deps: [],
@@ -713,7 +713,7 @@ class MapCircle {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapCircle,
     isStandalone: true,
     selector: "map-circle",
@@ -744,7 +744,7 @@ class MapCircle {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapCircle,
   decorators: [{
@@ -889,7 +889,7 @@ class MapDirectionsRenderer {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapDirectionsRenderer,
     deps: [],
@@ -897,7 +897,7 @@ class MapDirectionsRenderer {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapDirectionsRenderer,
     isStandalone: true,
     selector: "map-directions-renderer",
@@ -916,7 +916,7 @@ class MapDirectionsRenderer {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapDirectionsRenderer,
   decorators: [{
@@ -1051,7 +1051,7 @@ class MapGroundOverlay {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapGroundOverlay,
     deps: [],
@@ -1059,7 +1059,7 @@ class MapGroundOverlay {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapGroundOverlay,
     isStandalone: true,
     selector: "map-ground-overlay",
@@ -1080,7 +1080,7 @@ class MapGroundOverlay {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapGroundOverlay,
   decorators: [{
@@ -1240,7 +1240,7 @@ class MapInfoWindow {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapInfoWindow,
     deps: [],
@@ -1248,7 +1248,7 @@ class MapInfoWindow {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapInfoWindow,
     isStandalone: true,
     selector: "map-info-window",
@@ -1273,7 +1273,7 @@ class MapInfoWindow {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapInfoWindow,
   decorators: [{
@@ -1418,7 +1418,7 @@ class MapKmlLayer {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapKmlLayer,
     deps: [],
@@ -1426,7 +1426,7 @@ class MapKmlLayer {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapKmlLayer,
     isStandalone: true,
     selector: "map-kml-layer",
@@ -1446,7 +1446,7 @@ class MapKmlLayer {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapKmlLayer,
   decorators: [{
@@ -1680,7 +1680,7 @@ class MapMarker {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapMarker,
     deps: [],
@@ -1688,7 +1688,7 @@ class MapMarker {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapMarker,
     isStandalone: true,
     selector: "map-marker",
@@ -1736,7 +1736,7 @@ class MapMarker {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapMarker,
   decorators: [{
@@ -2191,7 +2191,7 @@ class DeprecatedMapMarkerClusterer {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: DeprecatedMapMarkerClusterer,
     deps: [],
@@ -2199,7 +2199,7 @@ class DeprecatedMapMarkerClusterer {
   });
   static ɵcmp = i0.ɵɵngDeclareComponent({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: DeprecatedMapMarkerClusterer,
     isStandalone: true,
     selector: "deprecated-map-marker-clusterer",
@@ -2245,7 +2245,7 @@ class DeprecatedMapMarkerClusterer {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: DeprecatedMapMarkerClusterer,
   decorators: [{
@@ -2446,7 +2446,7 @@ class MapPolygon {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapPolygon,
     deps: [],
@@ -2454,7 +2454,7 @@ class MapPolygon {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapPolygon,
     isStandalone: true,
     selector: "map-polygon",
@@ -2482,7 +2482,7 @@ class MapPolygon {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapPolygon,
   decorators: [{
@@ -2644,7 +2644,7 @@ class MapPolyline {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapPolyline,
     deps: [],
@@ -2652,7 +2652,7 @@ class MapPolyline {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapPolyline,
     isStandalone: true,
     selector: "map-polyline",
@@ -2680,7 +2680,7 @@ class MapPolyline {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapPolyline,
   decorators: [{
@@ -2843,7 +2843,7 @@ class MapRectangle {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapRectangle,
     deps: [],
@@ -2851,7 +2851,7 @@ class MapRectangle {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapRectangle,
     isStandalone: true,
     selector: "map-rectangle",
@@ -2880,7 +2880,7 @@ class MapRectangle {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapRectangle,
   decorators: [{
@@ -2999,7 +2999,7 @@ class MapTrafficLayer {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapTrafficLayer,
     deps: [],
@@ -3007,7 +3007,7 @@ class MapTrafficLayer {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapTrafficLayer,
     isStandalone: true,
     selector: "map-traffic-layer",
@@ -3023,7 +3023,7 @@ class MapTrafficLayer {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapTrafficLayer,
   decorators: [{
@@ -3079,7 +3079,7 @@ class MapTransitLayer {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapTransitLayer,
     deps: [],
@@ -3087,7 +3087,7 @@ class MapTransitLayer {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapTransitLayer,
     isStandalone: true,
     selector: "map-transit-layer",
@@ -3100,7 +3100,7 @@ class MapTransitLayer {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapTransitLayer,
   decorators: [{
@@ -3130,7 +3130,7 @@ class MapHeatmapLayer {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapHeatmapLayer,
     deps: [],
@@ -3138,7 +3138,7 @@ class MapHeatmapLayer {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapHeatmapLayer,
     isStandalone: true,
     selector: "map-heatmap-layer",
@@ -3155,7 +3155,7 @@ class MapHeatmapLayer {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapHeatmapLayer,
   decorators: [{
@@ -3319,7 +3319,7 @@ class MapAdvancedMarker {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapAdvancedMarker,
     deps: [],
@@ -3327,7 +3327,7 @@ class MapAdvancedMarker {
   });
   static ɵdir = i0.ɵɵngDeclareDirective({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapAdvancedMarker,
     isStandalone: true,
     selector: "map-advanced-marker",
@@ -3364,7 +3364,7 @@ class MapAdvancedMarker {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapAdvancedMarker,
   decorators: [{
@@ -3544,7 +3544,7 @@ class MapMarkerClusterer {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapMarkerClusterer,
     deps: [],
@@ -3552,7 +3552,7 @@ class MapMarkerClusterer {
   });
   static ɵcmp = i0.ɵɵngDeclareComponent({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     type: MapMarkerClusterer,
     isStandalone: true,
     selector: "map-marker-clusterer",
@@ -3581,7 +3581,7 @@ class MapMarkerClusterer {
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapMarkerClusterer,
   decorators: [{
@@ -3625,7 +3625,7 @@ const COMPONENTS = [GoogleMap, MapBaseLayer, MapBicyclingLayer, MapCircle, MapDi
 class GoogleMapsModule {
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: GoogleMapsModule,
     deps: [],
@@ -3633,7 +3633,7 @@ class GoogleMapsModule {
   });
   static ɵmod = i0.ɵɵngDeclareNgModule({
     minVersion: "14.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: GoogleMapsModule,
     imports: [GoogleMap, MapBaseLayer, MapBicyclingLayer, MapCircle, MapDirectionsRenderer, MapGroundOverlay, MapHeatmapLayer, MapInfoWindow, MapKmlLayer, MapMarker, MapAdvancedMarker, DeprecatedMapMarkerClusterer, MapPolygon, MapPolyline, MapRectangle, MapTrafficLayer, MapTransitLayer, MapMarkerClusterer],
@@ -3641,14 +3641,14 @@ class GoogleMapsModule {
   });
   static ɵinj = i0.ɵɵngDeclareInjector({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: GoogleMapsModule
   });
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: GoogleMapsModule,
   decorators: [{
@@ -3693,7 +3693,7 @@ class MapDirectionsService {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapDirectionsService,
     deps: [],
@@ -3701,14 +3701,14 @@ class MapDirectionsService {
   });
   static ɵprov = i0.ɵɵngDeclareService({
     minVersion: "22.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapDirectionsService
   });
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapDirectionsService,
   decorators: [{
@@ -3749,7 +3749,7 @@ class MapGeocoder {
   }
   static ɵfac = i0.ɵɵngDeclareFactory({
     minVersion: "12.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapGeocoder,
     deps: [],
@@ -3757,14 +3757,14 @@ class MapGeocoder {
   });
   static ɵprov = i0.ɵɵngDeclareService({
     minVersion: "22.0.0",
-    version: "22.0.0-next.12",
+    version: "22.0.0-rc.0",
     ngImport: i0,
     type: MapGeocoder
   });
 }
 i0.ɵɵngDeclareClassMetadata({
   minVersion: "12.0.0",
-  version: "22.0.0-next.12",
+  version: "22.0.0-rc.0",
   ngImport: i0,
   type: MapGeocoder,
   decorators: [{

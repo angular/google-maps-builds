@@ -1,6 +1,6 @@
 {
   "name": "@angular/google-maps",
-  "version": "22.0.0-rc.3+sha-da5c575",
+  "version": "22.0.0+sha-85e1545",
   "description": "Angular Google Maps",
   "repository": {
     "type": "git",
@@ -21,8 +21,8 @@
     "tslib": "^2.3.0"
   },
   "peerDependencies": {
-    "@angular/core": "^22.0.0-0 || ^22.1.0-0 || ^22.2.0-0 || ^22.3.0-0 || ^23.0.0-0",
-    "@angular/common": "^22.0.0-0 || ^22.1.0-0 || ^22.2.0-0 || ^22.3.0-0 || ^23.0.0-0",
+    "@angular/core": "^22.0.0 || ^23.0.0",
+    "@angular/common": "^22.0.0 || ^23.0.0",
     "rxjs": "^6.5.3 || ^7.4.0"
   },
   "sideEffects": false,

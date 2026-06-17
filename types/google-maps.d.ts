@@ -1894,7 +1894,11 @@ declare class MapMarkerClusterer implements OnInit, OnChanges, OnDestroy {
     readonly clusteringbegin: Observable<void>;
     /** Emits when clustering is done. */
     readonly clusteringend: Observable<void>;
-    /** Emits when a cluster has been clicked. */
+    /**
+     * Emits when a cluster has been clicked.
+     * Listening to this output will replace the default click handler on the cluster,
+     * disabling the default behavior of zooming into the markers in the cluster.
+     */
     readonly clusterClick: EventEmitter<Cluster>;
     /** Event emitted when the marker clusterer is initialized. */
     readonly markerClustererInitialized: EventEmitter<MarkerClusterer>;

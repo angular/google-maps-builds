@@ -1944,7 +1944,7 @@ declare class MapDirectionsService {
     route(request: google.maps.DirectionsRequest): Observable<MapDirectionsResponse>;
     private _getService;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapDirectionsService, never>;
-    static ɵprov: i0.ɵɵInjectableDeclaration<MapDirectionsService>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 interface MapGeocoderResponse {
@@ -1964,7 +1964,7 @@ declare class MapGeocoder {
     geocode(request: google.maps.GeocoderRequest): Observable<MapGeocoderResponse>;
     private _getGeocoder;
     static ɵfac: i0.ɵɵFactoryDeclaration<MapGeocoder, never>;
-    static ɵprov: i0.ɵɵInjectableDeclaration<MapGeocoder>;
+    static ɵprov: i0.ɵɵInjectableDeclaration<any>;
 }
 
 type MapEventManagerTarget = {

@@ -1926,21 +1926,25 @@ class DeprecatedMapMarkerClusterer {
   markerClusterer;
   markerClustererInitialized = new EventEmitter();
   ngOnInit() {
-    if (this._canInitialize) {
-      this._ngZone.runOutsideAngular(() => {
-        this._googleMap._resolveMap().then(map => {
-          if (typeof MarkerClusterer !== 'function' && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-            throw Error('MarkerClusterer class not found, cannot construct a marker cluster. ' + 'Please install the MarkerClustererPlus library: ' + 'https://github.com/googlemaps/js-markerclustererplus');
-          }
-          this.markerClusterer = this._ngZone.runOutsideAngular(() => {
-            return new MarkerClusterer(map, [], this._combineOptions());
-          });
-          this._assertInitialized();
-          this._eventManager.setTarget(this.markerClusterer);
-          this.markerClustererInitialized.emit(this.markerClusterer);
-        });
-      });
+    if (!this._canInitialize) {
+      return;
     }
+    this._ngZone.runOutsideAngular(() => {
+      this._googleMap._resolveMap().then(map => {
+        if (typeof MarkerClusterer !== 'function') {
+          if (typeof ngDevMode === 'undefined' || ngDevMode) {
+            console.error('MarkerClusterer class not found, cannot construct a marker cluster. ' + 'Please install the MarkerClustererPlus library: ' + 'https://github.com/googlemaps/js-markerclustererplus');
+          }
+          return;
+        }
+        this.markerClusterer = this._ngZone.runOutsideAngular(() => {
+          return new MarkerClusterer(map, [], this._combineOptions());
+        });
+        this._assertInitialized();
+        this._eventManager.setTarget(this.markerClusterer);
+        this.markerClustererInitialized.emit(this.markerClusterer);
+      });
+    });
   }
   ngAfterContentInit() {
     if (this._canInitialize) {
@@ -3469,8 +3473,11 @@ class MapMarkerClusterer {
     this._destroyCluster();
   }
   async _createCluster() {
-    if (!markerClusterer?.MarkerClusterer && (typeof ngDevMode === 'undefined' || ngDevMode)) {
-      throw Error('MarkerClusterer class not found, cannot construct a marker cluster. ' + 'Please install the MarkerClusterer library: ' + 'https://github.com/googlemaps/js-markerclusterer');
+    if (!markerClusterer?.MarkerClusterer) {
+      if (typeof ngDevMode === 'undefined' || ngDevMode) {
+        console.error('MarkerClusterer class not found, cannot construct a marker cluster. ' + 'Please install the MarkerClusterer library: ' + 'https://github.com/googlemaps/js-markerclusterer');
+      }
+      return;
     }
     const map = await this._googleMap._resolveMap();
     this._destroyCluster();

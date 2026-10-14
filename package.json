@@ -1,6 +1,6 @@
 {
   "name": "@angular/google-maps",
-  "version": "22.2.2+sha-a307978-with-local-changes",
+  "version": "22.2.3+sha-7c47fa5-with-local-changes",
   "description": "Angular Google Maps",
   "repository": {
     "type": "git",
